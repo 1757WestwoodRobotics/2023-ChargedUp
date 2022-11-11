@@ -1,0 +1,10 @@
+[
+  {
+    "name": "/Preferences/Robot Relative Sensitivity",
+    "type": "float",
+    "value": 0.20000000298023224,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "autoBallIntake": [
+    0,
+    {
+      "Button": 4
+    },
+    "right button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "chassisForwardsBackwards": [
+    0,
+    {
+      "Axis": 1
+    },
+    "Joystick Vertical (ThrustmasterTWCSThrottle)"
+  ],
+  "chassisSideToSide": [
+    0,
+    {
+      "Axis": 0
+    },
+    "Joystick Horizontal (ThrustmasterTWCSThrottle)"
+  ],
+  "chassisXRotation": [
+    1,
+    {
+      "Axis": 0
+    },
+    "Joystick Horizontal (ThrustmasterTWCSThrottle)"
+  ],
+  "chassisYRotation": [
+    1,
+    {
+      "Axis": 1
+    },
+    "Joystick Vertical (ThrustmasterTWCSThrottle)"
+  ],
+  "defenseStateControl": [
+    0,
+    {
+      "Button": 3
+    },
+    "left button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "driveToTargetControl": [
+    0,
+    {
+      "Button": 2
+    },
+    "B (Xbox)"
+  ],
+  "fieldRelativeCoordinateModeControl": [
+    1,
+    {
+      "Button": 6
+    },
+    "Middle Down (ThrustmasterTWCSThrottle)"
+  ],
+  "resetGyro": [
+    1,
+    {
+      "Button": 10
+    },
+    "Middle POV left (ThrustmasterTWCSThrottle)"
+  ],
+  "targetRelativeCoordinateModeControl": [
+    1,
+    {
+      "Button": 7
+    },
+    "Middle Up (ThrustmasterTWCSThrottle)"
+  ],
+  "turboSpeed": [
+    0,
+    {
+      "Button": 2
+    },
+    "bottom button on top of joystick (ThrustmasterT16000M)"
+  ]
+}

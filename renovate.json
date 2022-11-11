@@ -1,0 +1,20 @@
+{
+    "extends": [
+        "config:base"
+    ],
+    "schedule": [
+        "before 8am"
+    ],
+    "reviewers": [
+        "agelsomini",
+        "caloisio",
+        "lmaxwell24"
+    ],
+    "labels": ["dependencies"],
+    "packageRules": [
+        {
+            "matchPackagePatterns": ["^robotpy|^wpilib|^pyntcore|^pyfrc|^pynetconsole|^pynetworktables"],
+            "groupName": "robotpy packages"
+        }
+    ]
+}
