@@ -81,6 +81,8 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotationY,
             )
         )
+        wpilib.DataLogManager.start()
+        wpilib.DataLogManager.logNetworkTables(True)
 
     def configureButtonBindings(self):
         """

@@ -1,6 +1,8 @@
 from commands2 import CommandBase
 from wpimath.geometry import Pose2d
 
+from wpilib import DataLogManager
+
 from subsystems.drivesubsystem import DriveSubsystem
 
 
@@ -13,7 +15,7 @@ class ResetDrive(CommandBase):
         self.addRequirements([self.drive])
 
     def initialize(self) -> None:
-        print(f"Command: {self.getName()}")
+        DataLogManager.log(f"Command: {self.getName()}")
 
     def execute(self) -> None:
         self.drive.resetSwerveModules()
