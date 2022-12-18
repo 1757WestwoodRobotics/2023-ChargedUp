@@ -491,3 +491,4 @@ kMotorBaseKey = "motors"
 # Logging
 kSwerveActualStatesKey = "swerve/actual"
 kSwerveExpectedStatesKey = "swerve/expected"
+kConsoleLog = "log"
