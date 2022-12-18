@@ -1,8 +1,9 @@
 from ctre import ErrorCode
+from wpilib import DataLogManager
 
 
 def ctreCheckError(name: str, errorCode: ErrorCode) -> bool:
     if (errorCode is not None) and (errorCode != ErrorCode.OK):
-        print(f"ERROR: {name}: {errorCode}")
+        DataLogManager.log(f"ERROR: {name}: {errorCode}")
         return False
     return True

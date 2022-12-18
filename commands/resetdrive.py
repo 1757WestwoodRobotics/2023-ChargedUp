@@ -22,7 +22,7 @@ class ResetDrive(CommandBase):
         self.drive.setOdometryPosition(self.position)
 
     def end(self, _interrupted: bool) -> None:
-        print("... DONE")
+        DataLogManager.log("... DONE")
 
     def isFinished(self) -> bool:
         return True
