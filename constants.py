@@ -486,3 +486,8 @@ kSimBackRightSteerEncoderPorts = (14, 15)
 
 
 kMotorBaseKey = "motors"
+
+
+# Logging
+kSwerveActualStatesKey = "swerve/actual"
+kSwerveExpectedStatesKey = "swerve/expected"

@@ -473,6 +473,20 @@ class DriveSubsystem(SubsystemBase):
         ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
             moduleStates, constants.kMaxWheelLinearVelocity
         )
+
+        SmartDashboard.putNumberArray(
+            constants.kSwerveExpectedStatesKey,
+            [
+                frontLeftState.angle.degrees(),
+                frontLeftState.speed,
+                frontRightState.angle.degrees(),
+                frontRightState.speed,
+                backLeftState.angle.degrees(),
+                backLeftState.speed,
+                backRightState.angle.degrees(),
+                backRightState.speed,
+            ],
+        )
         self.frontLeftModule.applyState(frontLeftState)
         self.frontRightModule.applyState(frontRightState)
         self.backLeftModule.applyState(backLeftState)
@@ -509,6 +523,19 @@ class DriveSubsystem(SubsystemBase):
         robotPose = self.odometry.getPose()
 
         deltaPose = robotPose - pastPose
+        SmartDashboard.putNumberArray(
+            constants.kSwerveActualStatesKey,
+            [
+                self.frontLeftModule.getSwerveAngle().degrees(),
+                self.frontLeftModule.getWheelLinearVelocity(),
+                self.frontRightModule.getSwerveAngle().degrees(),
+                self.frontRightModule.getWheelLinearVelocity(),
+                self.backLeftModule.getSwerveAngle().degrees(),
+                self.backLeftModule.getWheelLinearVelocity(),
+                self.backRightModule.getSwerveAngle().degrees(),
+                self.backRightModule.getWheelLinearVelocity(),
+            ],
+        )
         SmartDashboard.putNumberArray(
             constants.kDriveVelocityKeys,
             [
