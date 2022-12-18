@@ -1,4 +1,5 @@
 from commands2 import CommandBase
+from wpilib import DataLogManager
 from wpimath.geometry import Rotation2d
 from subsystems.drivesubsystem import DriveSubsystem, SwerveModule
 
@@ -12,7 +13,7 @@ class DefenseState(CommandBase):
         self.addRequirements([self.drive])
 
     def initialize(self) -> None:
-        print(f"Command: {self.getName()}")
+        DataLogManager.log(f"Command: {self.getName()}")
 
     def execute(self) -> None:
         def setModuleTo(module: SwerveModule, angle: Rotation2d):
@@ -25,4 +26,4 @@ class DefenseState(CommandBase):
         setModuleTo(self.drive.backRightModule, Rotation2d.fromDegrees(-135))
 
     def end(self, _interrupted: bool) -> None:
-        print("... DONE")
+        DataLogManager.log("... DONE")

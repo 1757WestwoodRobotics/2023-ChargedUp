@@ -2,7 +2,14 @@ from enum import Enum, auto
 
 from typing import Tuple
 from commands2 import SubsystemBase
-from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
+from wpilib import (
+    Encoder,
+    PWMVictorSPX,
+    RobotBase,
+    SmartDashboard,
+    Timer,
+    DataLogManager,
+)
 from ctre import (
     AbsoluteSensorRange,
     CANCoder,
@@ -154,8 +161,8 @@ class CTRESwerveModule(SwerveModule):
         self.swerveEncoder = swerveEncoder
         self.swerveEncoderOffset = swerveEncoderOffset
 
-        print(f"Initializing swerve module: {self.name}")
-        print(
+        DataLogManager.log(f"Initializing swerve module: {self.name}")
+        DataLogManager.log(
             f"   Configuring swerve encoder: CAN ID: {self.swerveEncoder.getDeviceNumber()}"
         )
 
@@ -197,8 +204,10 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
-        print("   ... Done")
-        print(f"   Configuring drive motor: CAN ID: {self.driveMotor.getDeviceID()}")
+        DataLogManager.log("   ... Done")
+        DataLogManager.log(
+            f"   Configuring drive motor: CAN ID: {self.driveMotor.getDeviceID()}"
+        )
         if not ctreCheckError(
             "configFactoryDefault",
             self.driveMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
@@ -240,9 +249,11 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
-        print("   ... Done")
+        DataLogManager.log("   ... Done")
 
-        print(f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}")
+        DataLogManager.log(
+            f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}"
+        )
         if not ctreCheckError(
             "configFactoryDefault",
             self.steerMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
@@ -276,9 +287,9 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
-        print("   ... Done")
+        DataLogManager.log("   ... Done")
 
-        print("... Done")
+        DataLogManager.log("... Done")
 
     def getSwerveAngle(self) -> Rotation2d:
         steerEncoderPulses = self.steerMotor.getSelectedSensorPosition()
@@ -572,7 +583,7 @@ class DriveSubsystem(SubsystemBase):
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasElapsed(constants.kPrintPeriod):
-            print(
+            DataLogManager.log(
                 # pylint:disable-next=consider-using-f-string
                 "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
                     robotPose.X(),

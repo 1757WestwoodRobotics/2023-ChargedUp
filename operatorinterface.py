@@ -2,7 +2,7 @@ import typing
 import json
 
 from os import path
-from wpilib import Joystick
+from wpilib import Joystick, DataLogManager
 
 import constants
 from util.convenientmath import map_range, number
@@ -81,13 +81,13 @@ class OperatorInterface:
         controllerNumbers = set(
             i[0] for i in controlScheme.values()
         )  # set ensures no duplicates
-        print(f"Looking for controllers: {controllerNumbers} ...")
+        DataLogManager.log(f"Looking for controllers: {controllerNumbers} ...")
 
         controllers = {}
 
         for num in controllerNumbers:
             controller = Joystick(num)
-            print(
+            DataLogManager.log(
                 f"Found Controller {num}:{controller.getName()}\n\tAxis: {controller.getAxisCount()}\n\tButtons: {controller.getButtonCount()}\n\tPoV Hats: {controller.getPOVCount()}"
             )
             controllers[num] = controller
