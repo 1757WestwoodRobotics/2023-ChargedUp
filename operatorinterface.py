@@ -83,22 +83,22 @@ class OperatorInterface:
         )  # set ensures no duplicates
         DataLogManager.log(f"Looking for controllers: {controllerNumbers} ...")
 
-        controllers = {}
+        self.controllers = {}
 
         for num in controllerNumbers:
             controller = Joystick(num)
             DataLogManager.log(
                 f"Found Controller {num}:{controller.getName()}\n\tAxis: {controller.getAxisCount()}\n\tButtons: {controller.getButtonCount()}\n\tPoV Hats: {controller.getPOVCount()}"
             )
-            controllers[num] = controller
+            self.controllers[num] = controller
 
         def getButtonBindingOfName(name: str) -> typing.Tuple[Joystick, int]:
             binding = controlScheme[name]
-            return (controllers[binding[0]], binding[1]["Button"])
+            return (self.controllers[binding[0]], binding[1]["Button"])
 
         def getAxisBindingOfName(name: str) -> AnalogInput:
             binding = controlScheme[name]
-            return lambda: controllers[binding[0]].getRawAxis(binding[1]["Axis"])
+            return lambda: self.controllers[binding[0]].getRawAxis(binding[1]["Axis"])
 
         self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kFieldRelativeCoordinateModeControlButtonName
