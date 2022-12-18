@@ -41,15 +41,13 @@ class RobotContainer:
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
-        self.simpleAuto = (
-            commands2.SequentialCommandGroup(
-                ResetDrive(self.drive),
-                DriveDistance(
-                    4 * constants.kWheelCircumference,
-                    constants.kAutoDriveSpeedFactor,
-                    DriveDistance.Axis.X,
-                    self.drive,
-                ),
+        self.simpleAuto = commands2.SequentialCommandGroup(
+            ResetDrive(self.drive),
+            DriveDistance(
+                4 * constants.kWheelCircumference,
+                constants.kAutoDriveSpeedFactor,
+                DriveDistance.Axis.X,
+                self.drive,
             ),
         )
 
