@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from ctre import (
     ControlMode,
     ErrorCode,
@@ -11,6 +12,7 @@ from wpilib import RobotBase, SmartDashboard
 from wpimath.controller import PIDController
 from wpimath.system.plant import DCMotor
 from util.convenientmath import clamp
+from util.ctrecheck import ctreCheckError
 
 import constants
 
@@ -135,6 +137,9 @@ class SimFalcon:  # a simulated Falcon 500
             ControlMode.Velocity, 0
         )  # neutral mode is supposed to coast/brake the motor instead of driving to 0 velocity but for sim this works for now
 
+    def get(self) -> float:
+        return self.motor.get()
+
     def set(self, mode: ControlMode, demand: float) -> None:
         self.motor.set(mode, demand)
         currentPosition = self.motor.getSelectedSensorPosition()
@@ -161,22 +166,48 @@ class SimFalcon:  # a simulated Falcon 500
         )
 
 
-class Falcon(SimFalcon):
+class Falcon:
+    class ControlMode(Enum):
+        Position = auto()
+        Velocity = auto()
+        Percent  = auto()
+
     def __init__(
         self,
         canID: int,
-        canbus: str = "",
         pidSlot: int = 0,
-        pGain: int = 1,
-        iGain: int = 0,
-        dGain: int = 0,
+        pGain: float = 1,
+        iGain: float = 0,
+        dGain: float = 0,
         isReversed: bool = False,
+        canbus: str = "",
     ) -> None:
-        SimFalcon.__init__(self, canID)
         self.motor = createMotor(canID, canbus)
 
-        self.motor.configFactoryDefault()
-        self.motor.config_kP(pidSlot, pGain)
-        self.motor.config_kI(pidSlot, iGain)
-        self.motor.config_kD(pidSlot, dGain)
+        if not ctreCheckError(
+            "configFactoryDefault", self.motor.configFactoryDefault()
+        ):
+            return
+        if not ctreCheckError("config_kP", self.motor.config_kP(pidSlot, pGain)):
+            return
+        if not ctreCheckError("config_kI", self.motor.config_kI(pidSlot, iGain)):
+            return
+        if not ctreCheckError("config_kD", self.motor.config_kD(pidSlot, dGain)):
+            return
         self.motor.setInverted(isReversed)
+
+    def set(self, controlMode: ControlMode, demand: float) -> None:
+        if controlMode ==  Falcon.ControlMode.Position:
+            self.motor.set(ControlMode.Position, demand)
+        elif controlMode == Falcon.ControlMode.Velocity:
+            self.motor.set(ControlMode.Velocity, demand)
+        elif controlMode == Falcon.ControlMode.Percent:
+            self.motor.set(ControlMode.PercentOutput, demand)
+
+    def get(self, controlMode: ControlMode) -> float:
+        if controlMode ==  Falcon.ControlMode.Position:
+            return self.motor.getSelectedSensorPosition()
+        elif controlMode == Falcon.ControlMode.Velocity:
+            return self.motor.getSelectedSensorVelocity()
+        elif controlMode == Falcon.ControlMode.Percent:
+            return self.motor.get()
