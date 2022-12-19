@@ -10,10 +10,17 @@ from commands2 import (
 )
 from pathplannerlib import PathPlannerTrajectory
 from wpilib import DataLogManager
+from commands.arm.statearmposition import (
+    SetArmPositionGroundIntake,
+    SetArmPositionMid,
+    SetArmPositionStored,
+    SetArmPositionTop,
+)
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
 from commands.resetdrive import ResetDrive
+from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 
 
@@ -23,17 +30,20 @@ class AutonomousRoutine(SequentialCommandGroup):
     def __init__(
         self,
         drive: DriveSubsystem,
+        arm: ArmSubsystem,
         name: str,
         simultaneousCommands: List[Command],
     ):
         self.name = name
         self.markerMap = {  # later todo: actual implementation
-            "store": WaitCommand(2),
-            "top": WaitCommand(2),
-            "mid": WaitCommand(2),
-            "hybrid": WaitCommand(2),
+            "store": SetArmPositionStored(arm),
+            "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.8)),
+            "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.4)),
+            "hybrid": SetArmPositionGroundIntake(arm),
             "engage": WaitCommand(5),
-            "intake": WaitCommand(0.25),
+            "intake": ParallelCommandGroup(
+                SetArmPositionGroundIntake(arm), WaitCommand(0.25)
+            ),
             "outtake": WaitCommand(0.25),
         }
         self.paths = trajectoryFromFile(name)

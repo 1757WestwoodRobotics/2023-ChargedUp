@@ -16,17 +16,35 @@ from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
+from commands.arm.demostate import DemoArm
+from commands.arm.resetarm import ResetArm
+from commands.arm.statearmposition import (
+    DecreaseArmFudge,
+    IncreaseArmFudge,
+    SetArmPositionDoubleSubstation,
+    SetArmPositionGroundCone,
+    SetArmPositionGroundIntake,
+    SetArmPositionMid,
+    SetArmPositionOverride,
+    SetArmPositionSafeTop,
+    SetArmPositionSingleSubstation,
+    SetArmPositionStored,
+    SetArmPositionTop,
+)
 from commands.auto.autonomousaction import AutonomousRoutine
 from commands.gripper import (
     GripperIntake,
     GripperOuttake,
     GripperHoldingState,
 )
+from commands.light.cubeLights import ConeLights, CubeLights
 
+from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.grippersubsystem import GripperSubsystem
+from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -47,7 +65,9 @@ class RobotContainer:
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem(self.drive)
         self.log = LoggingSubsystem(self.operatorInterface)
+        self.arm = ArmSubsystem()
         self.grip = GripperSubsystem()
+        self.light = LightSubsystem()
 
         # Autonomous routines
 
@@ -77,7 +97,7 @@ class RobotContainer:
         for file in os.listdir(pathsPath):
             relevantName = file.split(".")[0]
             self.chooser.addOption(
-                relevantName, AutonomousRoutine(self.drive, relevantName, [])
+                relevantName, AutonomousRoutine(self.drive, self.arm, relevantName, [])
             )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
@@ -98,6 +118,7 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotationY,
             )
         )
+        self.arm.setDefaultCommand(SetArmPositionStored(self.arm))
         wpilib.DataLogManager.start()
         wpilib.DataLogManager.logNetworkTables(True)
 
@@ -107,6 +128,57 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+
+        commands2.button.POVButton(*self.operatorInterface.armMid).whileHeld(
+            SetArmPositionMid(self.arm)
+        )
+        commands2.button.POVButton(*self.operatorInterface.armTop).whileHeld(
+            SetArmPositionTop(self.arm)
+        ).whenReleased(
+            commands2.ParallelCommandGroup(
+                SetArmPositionSafeTop(self.arm), commands2.WaitCommand(0.4)
+            )
+        )
+        commands2.button.JoystickButton(
+            *self.operatorInterface.armDoubleSubstation
+        ).whileHeld(SetArmPositionDoubleSubstation(self.arm))
+        commands2.button.JoystickButton(
+            *self.operatorInterface.armSingleSubstation
+        ).whileHeld(SetArmPositionSingleSubstation(self.arm))
+
+        commands2.button.JoystickButton(*self.operatorInterface.armOverride).whileHeld(
+            SetArmPositionOverride(self.arm)
+        )
+        commands2.button.POVButton(*self.operatorInterface.armGroundIntake).whileHeld(
+            SetArmPositionGroundIntake(self.arm)
+        )
+        # .whenReleased(
+        # commands2.ParallelCommandGroup(
+        #     SetArmPositionSafeGround(self.arm), commands2.WaitCommand(0.7)
+        # )
+        # )
+        commands2.button.POVButton(*self.operatorInterface.armGroundCone).whileHeld(
+            SetArmPositionGroundCone(self.arm)
+        ).whenReleased(
+            commands2.ParallelCommandGroup(
+                SetArmPositionMid(self.arm), commands2.WaitCommand(0.2)
+            )
+        )
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.armDemo
+        ).toggleWhenPressed(DemoArm(self.arm))
+
+        commands2.button.JoystickButton(*self.operatorInterface.resetArm).whenPressed(
+            ResetArm(self.arm)
+        )
+
+        commands2.button.POVButton(
+            *self.operatorInterface.armFudgeIncrease
+        ).whenPressed(IncreaseArmFudge(self.arm))
+        commands2.button.POVButton(
+            *self.operatorInterface.armFudgeDecrease
+        ).whenPressed(DecreaseArmFudge(self.arm))
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(
@@ -171,6 +243,13 @@ class RobotContainer:
         )
         commands2.button.JoystickButton(*self.operatorInterface.gripOuttake).whileHeld(
             GripperOuttake(self.grip)
+
+        commands2.button.JoystickButton(*self.operatorInterface.lightCone).whileHeld(
+            ConeLights(self.light)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.lightCube).whileHeld(
+            CubeLights(self.light)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:

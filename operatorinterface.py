@@ -100,6 +100,14 @@ class OperatorInterface:
             binding = controlScheme[name]
             return lambda: self.controllers[binding[0]].getRawAxis(binding[1]["Axis"])
 
+        def getPOVBindingOfName(name: str) -> typing.Tuple[Joystick, int, int]:
+            binding = controlScheme[name]
+            return (
+                self.controllers[binding[0]],
+                binding[1]["POV"][1],
+                binding[1]["POV"][0],
+            )
+
         self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kFieldRelativeCoordinateModeControlButtonName
         )
@@ -143,6 +151,26 @@ class OperatorInterface:
             ),
         )
 
+        # arm controls
+
+        self.armMid = getPOVBindingOfName("armMid")
+        self.armTop = getPOVBindingOfName("armTop")
+        self.armDoubleSubstation = getButtonBindingOfName("armDoubleSubstation")
+        self.armSingleSubstation = getButtonBindingOfName("armSingleSubstation")
+        self.armOverride = getButtonBindingOfName("armOverride")
+        self.armGroundIntake = getPOVBindingOfName("armGroundIntake")
+        self.armGroundCone = getPOVBindingOfName("armGroundCone")
+
+        self.armFudgeIncrease = getPOVBindingOfName("armFudgeFactorIncrease")
+        self.armFudgeDecrease = getPOVBindingOfName("armFudgeFactorDecrease")
+
+        self.armDemo = getButtonBindingOfName("armDemo")
+        self.resetArm = getButtonBindingOfName("resetArm")
+
         # Gripper commands
         self.gripIntake = getButtonBindingOfName("intakeGamepiece")
         self.gripOuttake = getButtonBindingOfName("outtakeGamepiece")
+
+        # light controls
+        self.lightCone = getButtonBindingOfName("lightsCone")
+        self.lightCube = getButtonBindingOfName("lightsCube")

@@ -5,6 +5,7 @@ from ctre import (
     LimitSwitchNormal,
     LimitSwitchSource,
     NeutralMode,
+    SupplyCurrentLimitConfiguration,
     TalonFXSimCollection,
     WPI_TalonFX,
     DemandType,
@@ -58,6 +59,11 @@ class SimFalcon:  # a simulated Falcon 500
 
     def configFactoryDefault(self, timeoutMs: int = 50) -> ErrorCode:
         return self.motor.configFactoryDefault(timeoutMs)
+
+    def configSupplyCurrentLimit(
+        self, limit: SupplyCurrentLimitConfiguration, timeoutMs: int = 50
+    ) -> ErrorCode:
+        return self.motor.configSupplyCurrentLimit(limit, timeoutMs)
 
     def config_kP(self, slotIdx: int, value: float, timeoutMs: int = 0) -> ErrorCode:
         self.pidController.setP(value)
@@ -230,6 +236,9 @@ class Falcon:
             self.motor.set(ControlMode.PercentOutput, demand)
         elif controlMode == Falcon.ControlMode.Amps:
             self.motor.set(ControlMode.Current, demand)
+
+    def setCurrentLimit(self, lim: SupplyCurrentLimitConfiguration):
+        self.motor.configSupplyCurrentLimit(lim)
 
     def neutralOutput(self):
         self.motor.neutralOutput()
