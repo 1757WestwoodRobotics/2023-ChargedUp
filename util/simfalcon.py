@@ -170,7 +170,7 @@ class Falcon:
     class ControlMode(Enum):
         Position = auto()
         Velocity = auto()
-        Percent  = auto()
+        Percent = auto()
 
     def __init__(
         self,
@@ -197,7 +197,7 @@ class Falcon:
         self.motor.setInverted(isReversed)
 
     def set(self, controlMode: ControlMode, demand: float) -> None:
-        if controlMode ==  Falcon.ControlMode.Position:
+        if controlMode == Falcon.ControlMode.Position:
             self.motor.set(ControlMode.Position, demand)
         elif controlMode == Falcon.ControlMode.Velocity:
             self.motor.set(ControlMode.Velocity, demand)
@@ -205,9 +205,10 @@ class Falcon:
             self.motor.set(ControlMode.PercentOutput, demand)
 
     def get(self, controlMode: ControlMode) -> float:
-        if controlMode ==  Falcon.ControlMode.Position:
+        if controlMode == Falcon.ControlMode.Position:
             return self.motor.getSelectedSensorPosition()
         elif controlMode == Falcon.ControlMode.Velocity:
             return self.motor.getSelectedSensorVelocity()
         elif controlMode == Falcon.ControlMode.Percent:
             return self.motor.get()
+        return 0
