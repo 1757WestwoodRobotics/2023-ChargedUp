@@ -172,6 +172,10 @@ class Falcon:
         Velocity = auto()
         Percent = auto()
 
+    class NeutralMode(Enum):
+        Break = auto()
+        Coast = auto()
+
     def __init__(
         self,
         canID: int,
@@ -203,6 +207,15 @@ class Falcon:
             self.motor.set(ControlMode.Velocity, demand)
         elif controlMode == Falcon.ControlMode.Percent:
             self.motor.set(ControlMode.PercentOutput, demand)
+
+    def neutralOutput(self):
+        self.motor.neutralOutput()
+
+    def setNeutralMode(self, mode: NeutralMode):
+        if mode == Falcon.NeutralMode.Coast:
+            self.motor.setNeutralMode(NeutralMode.Coast)
+        elif mode == Falcon.NeutralMode.Break:
+            self.motor.setNeutralMode(NeutralMode.Brake)
 
     def get(self, controlMode: ControlMode) -> float:
         if controlMode == Falcon.ControlMode.Position:
