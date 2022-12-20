@@ -55,6 +55,27 @@
     },
     "Middle Down (ThrustmasterTWCSThrottle)"
   ],
+  "floorIntake": [
+    1,
+    {
+      "Button": 3
+    },
+    "Middle button on ATK3"
+  ],
+  "loadFromHuman": [
+    1,
+    {
+      "Button": 1
+    },
+    "Trigger on ATK3"
+  ],
+  "outtakeBall": [
+    0,
+    {
+      "Button": 1
+    },
+    "Trigger on thrustmaster"
+  ],
   "resetGyro": [
     1,
     {

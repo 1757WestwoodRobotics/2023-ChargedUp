@@ -112,9 +112,7 @@ class OperatorInterface:
         )
 
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
-
         self.turboSpeed = getButtonBindingOfName(constants.kTurboSpeedButtonName)
-
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
@@ -141,3 +139,8 @@ class OperatorInterface:
                 )
             ),
         )
+
+        # ball subsystem related commands
+        self.humanLoading = getButtonBindingOfName("loadFromHuman")
+        self.outtake = getButtonBindingOfName("outtakeBall")
+        self.floorIntake = getButtonBindingOfName("floorIntake")

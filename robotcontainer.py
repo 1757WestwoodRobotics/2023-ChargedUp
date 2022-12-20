@@ -14,9 +14,16 @@ from commands.drive.targetrelativedrive import TargetRelativeDrive
 from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.defensestate import DefenseState
+from commands.ballsetting import (
+    BallFloorIntake,
+    BallHumanStation,
+    BallIdle,
+    BallOuttake,
+)
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.ballsubsystem import BallSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -37,6 +44,7 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
+        self.ball = BallSubsystem()
 
         # Autonomous routines
 
@@ -83,6 +91,8 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotationY,
             )
         )
+
+        self.ball.setDefaultCommand(BallIdle(self.ball))
 
     def configureButtonBindings(self):
         """
@@ -136,6 +146,17 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        # ball subsystem related calls
+        commands2.button.JoystickButton(*self.operatorInterface.humanLoading).whileHeld(
+            BallHumanStation(self.ball)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.outtake).whileHeld(
+            BallOuttake(self.ball)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.floorIntake).whileHeld(
+            BallFloorIntake(self.ball)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

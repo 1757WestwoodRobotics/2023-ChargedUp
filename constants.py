@@ -486,3 +486,23 @@ kSimBackRightSteerEncoderPorts = (14, 15)
 
 
 kMotorBaseKey = "motors"
+
+
+# Ball mechanism
+kBallIntakeCANID = 60
+kBallIntakePIDSlot = 0
+kBallIntakePGain = 0.12
+kBallIntakeIGain = 0
+kBallIntakeDGain = 0
+kBallRotationAmount = 3000
+"""rpm, direct drive"""
+
+kBallLiftCANID = 61
+kBallLiftPIDSlot = 0
+kBallLiftPGain = 0.7
+kBallLiftIGain = 0
+kBallLiftDGain = 0
+kBallLiftUpperPosition = 0
+"""encoder ticks"""
+kBallLiftLowerPosition = 81245  # in this case, downwards is determined to be positive, the starting state of the mechanism is raised
+"""encoder ticks"""
