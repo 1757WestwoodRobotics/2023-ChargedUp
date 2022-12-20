@@ -176,6 +176,10 @@ class Falcon:
         Break = auto()
         Coast = auto()
 
+    class LimitSwitch(Enum):
+        Forwards = auto()
+        Backwards = auto()
+
     def __init__(
         self,
         canID: int,
@@ -216,6 +220,13 @@ class Falcon:
             self.motor.setNeutralMode(NeutralMode.Coast)
         elif mode == Falcon.NeutralMode.Break:
             self.motor.setNeutralMode(NeutralMode.Brake)
+
+    def getLimitSwitch(self, switch: LimitSwitch) -> bool:
+        if switch == Falcon.LimitSwitch.Forwards:
+            return self.motor.isFwdLimitSwitchClosed() == 1
+        elif switch == Falcon.LimitSwitch.Backwards:
+            return self.motor.isRevLimitSwitchClosed() == 1
+
 
     def get(self, controlMode: ControlMode) -> float:
         if controlMode == Falcon.ControlMode.Position:
