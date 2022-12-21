@@ -9,6 +9,8 @@
 # of your robot code without too much extra effort.
 #
 
+import functools
+import operator
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
@@ -177,6 +179,28 @@ class PhysicsEngine:
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
 
         self.sim_initialized = False
+
+        targets = []
+        for target in constants.kApriltagPositionDict.values():
+            x = target.X()
+            y = target.Y()
+            z = target.Z()
+            rotationQuaternion = target.rotation().getQuaternion()
+            w_rot = rotationQuaternion.W()
+            x_rot = rotationQuaternion.X()
+            y_rot = rotationQuaternion.Y()
+            z_rot = rotationQuaternion.Z()
+
+            targets.append(
+                [x, y, z, w_rot, x_rot, y_rot, z_rot]
+            )  # https://github.com/Mechanical-Advantage/AdvantageScope/blob/main/docs/tabs/3D-FIELD.md#cones
+
+        SmartDashboard.putNumberArray(
+            constants.kFieldSimTargetKey,
+            functools.reduce(
+                operator.add, targets, []
+            ),  # adds all the values found within targets (converts [[]] to [])
+        )
 
     # pylint: disable-next=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
