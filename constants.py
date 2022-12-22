@@ -32,6 +32,7 @@ from wpimath.geometry import (
     Pose3d,
     Rotation3d,
     Quaternion,
+    Transform3d,
 )
 from wpimath.system.plant import DCMotor
 
@@ -205,6 +206,22 @@ kLimelightTargetHorizontalAngleKey = "tx"
 kLimelightTargetVerticalAngleKey = "ty"
 kLimelightLEDModeKey = "ledMode"
 kLimelightTrackerModuleName = "limelight"
+kLimelightRelativeToRobotTransform = Transform3d(
+    Pose3d(),
+    Pose3d(
+        0.258,
+        0,
+        1.01,
+        Rotation3d(
+            # Quaternion(
+            #     0.256346704871985,
+            #     0.733236375091038,
+            #     0.367500112071202,
+            #     -0.51146305122881,
+            # )
+        ),
+    ),
+)
 
 # CANivore
 kCANivoreName = "canivore"
@@ -654,3 +671,4 @@ kPDHPublishKey = "powerDistribution"
 
 kJoystickKeyLogPrefix = "DriverStation"
 kFieldSimTargetKey = "SimTargets"
+kFieldRelativeTargets = "RelTargets"
