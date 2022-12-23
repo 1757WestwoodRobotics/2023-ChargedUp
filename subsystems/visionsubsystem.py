@@ -7,9 +7,7 @@ from typing import List, Tuple
 from commands2 import SubsystemBase
 from wpilib import SmartDashboard, Timer
 from wpimath.geometry import (
-    Pose3d,
     Pose2d,
-    Rotation3d,
     Transform3d,
 )
 
@@ -30,20 +28,13 @@ class VisionSubsystem(SubsystemBase):
         robotPose2d = Pose2d(
             *SmartDashboard.getNumberArray(constants.kSimRobotPoseArrayKey, [0, 0, 0])
         )
-        robotPose3d = Pose3d(
-            robotPose2d.X(),
-            robotPose2d.Y(),
-            0,
-            Rotation3d(0, 0, robotPose2d.rotation().radians()),
-        )
+        robotPose3d = pose3dFrom2d(robotPose2d)
 
-        limelightPosition3d = (
-            robotPose3d + constants.kLimelightRelativeToRobotTransform
-        )
+        limelightPosition3d = robotPose3d + constants.kLimelightRelativeToRobotTransform
 
         validPoints = []
 
-        for id, point in zip(
+        for tag_id, point in zip(
             constants.kApriltagPositionDict.keys(),
             constants.kApriltagPositionDict.values(),
         ):
@@ -55,7 +46,7 @@ class VisionSubsystem(SubsystemBase):
                 and abs(math.atan2(poseDelta.Z(), poseDelta.X()))
                 < constants.kLimelightMaxVerticalFoV.radians()
             ):  # view frustum restrictions, inverse tan on XY and XZ axis to get horizontal and vertical restrictions
-                validPoints.append((id, poseDelta))
+                validPoints.append((tag_id, poseDelta))
 
         return validPoints
 
@@ -65,16 +56,18 @@ class VisionSubsystem(SubsystemBase):
         if len(points) == 0:
             return
 
-        objectToRobotPoint = [
-            constants.kApriltagPositionDict[id]
+        derivedRobotPoses = [
+            constants.kApriltagPositionDict[tag_id]
             + point.inverse()
             + constants.kLimelightRelativeToRobotTransform.inverse()
-            for id, point in points
+            for tag_id, point in points
         ]
+        # construct a set of poses from each tag's relative position about where the robot would be
 
-        for delta in objectToRobotPoint:
+        for pose in derivedRobotPoses:
+            # feed each value as a vision measurement into the kalman filter
             self.drive.estimator.addVisionMeasurement(
-                delta.toPose2d(), Timer.getFPGATimestamp()
+                pose.toPose2d(), Timer.getFPGATimestamp()
             )
 
         estimatedPosition = self.drive.estimator.getEstimatedPosition()
@@ -84,7 +77,7 @@ class VisionSubsystem(SubsystemBase):
             + constants.kLimelightRelativeToRobotTransform
             + point
             for _, point in points
-        ]
+        ]  # what the robot thinks the poses of every apriltag is
 
         sendablePoints = []
 
