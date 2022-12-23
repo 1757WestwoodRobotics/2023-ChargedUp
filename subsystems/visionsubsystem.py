@@ -37,7 +37,9 @@ class VisionSubsystem(SubsystemBase):
             Rotation3d(0, 0, robotPose2d.rotation().radians()),
         )
 
-        limelightPosition3d = robotPose3d + constants.kLimelightRelativeToRobotTransform
+        limelightPosition3d = (
+            robotPose3d + constants.kLimelightRelativeToRobotTransform.inverse()
+        )
 
         validPoints = []
 
@@ -52,7 +54,6 @@ class VisionSubsystem(SubsystemBase):
                 < constants.kLimelightMaxHorizontalFoV.radians()
                 and abs(math.atan2(poseDelta.Z(), poseDelta.X()))
                 < constants.kLimelightMaxVerticalFoV.radians()
-                and poseDelta.Y() < 0
             ):  # view frustum restrictions, inverse tan on XY and XZ axis to get horizontal and vertical restrictions
                 validPoints.append((id, poseDelta))
 
@@ -60,6 +61,9 @@ class VisionSubsystem(SubsystemBase):
 
     def periodic(self) -> None:
         points = self.getCameraToTargetTransforms()
+
+        if len(points) == 0:
+            return
 
         objectToRobotPoint = [
             constants.kApriltagPositionDict[id]
@@ -74,10 +78,11 @@ class VisionSubsystem(SubsystemBase):
             )
 
         estimatedPosition = self.drive.estimator.getEstimatedPosition()
+
         simApriltagPoses = [
             pose3dFrom2d(estimatedPosition)
             + point
-            + constants.kLimelightRelativeToRobotTransform
+            + constants.kLimelightRelativeToRobotTransform.inverse()
             for _, point in points
         ]
 
