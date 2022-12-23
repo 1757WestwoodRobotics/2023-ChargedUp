@@ -36,7 +36,7 @@ class RobotContainer:
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
-        self.vision = VisionSubsystem()
+        self.vision = VisionSubsystem(self.drive)
         self.log = LoggingSubsystem(self.operatorInterface)
 
         # Autonomous routines
