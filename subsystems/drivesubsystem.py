@@ -27,6 +27,7 @@ from wpimath.kinematics import (
     SwerveDrive4Odometry,
     SwerveModulePosition,
 )
+from wpimath.estimator import SwerveDrive4PoseEstimator
 
 import constants
 from util import convenientmath
@@ -452,6 +453,17 @@ class DriveSubsystem(SubsystemBase):
             ),
             Pose2d(),
         )
+        self.estimator = SwerveDrive4PoseEstimator(
+            self.kinematics,
+            self.getRotation(),
+            (
+                self.frontLeftModule.getPosition(),
+                self.frontRightModule.getPosition(),
+                self.backLeftModule.getPosition(),
+                self.backRightModule.getPosition(),
+            ),
+            Pose2d(),
+        )
 
         self.printTimer = Timer()
         self.vxLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
@@ -531,6 +543,15 @@ class DriveSubsystem(SubsystemBase):
             self.backLeftModule.getPosition(),
             self.backRightModule.getPosition(),
         )
+        self.estimator.update(
+            self.getRotation(),
+            (
+                self.frontLeftModule.getPosition(),
+                self.frontRightModule.getPosition(),
+                self.backLeftModule.getPosition(),
+                self.backRightModule.getPosition(),
+            ),
+        )
         robotPose = self.odometry.getPose()
 
         deltaPose = robotPose - pastPose
@@ -559,23 +580,16 @@ class DriveSubsystem(SubsystemBase):
 
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
 
-        if SmartDashboard.getBoolean(
-            constants.kRobotVisionPoseArrayKeys.validKey, False
-        ):
-            visionPose = Pose2d(
-                *SmartDashboard.getNumberArray(
-                    constants.kRobotVisionPoseArrayKeys.valueKey, robotPoseArray
-                )
-            )
-            weightedPose = Pose2d(
-                visionPose.X() * constants.kRobotVisionPoseWeight
-                + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
-                visionPose.Y() * constants.kRobotVisionPoseWeight
-                + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
-                visionPose.rotation() * constants.kRobotVisionPoseWeight
-                + robotPose.rotation() * (1 - constants.kRobotVisionPoseWeight),
-            )
-            self.resetOdometryAtPosition(weightedPose)
+        visionPose = self.estimator.getEstimatedPosition()
+        weightedPose = Pose2d(
+            visionPose.X() * constants.kRobotVisionPoseWeight
+            + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
+            visionPose.Y() * constants.kRobotVisionPoseWeight
+            + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
+            visionPose.rotation() * constants.kRobotVisionPoseWeight
+            + robotPose.rotation() * (1 - constants.kRobotVisionPoseWeight),
+        )
+        self.resetOdometryAtPosition(weightedPose)
 
         SmartDashboard.putNumberArray(
             constants.kRobotPoseArrayKeys.valueKey, robotPoseArray

@@ -1,6 +1,8 @@
+import functools
 import math
+import operator
 import typing
-from wpimath.geometry import Rotation2d, Translation2d, Pose2d
+from wpimath.geometry import Rotation2d, Translation2d, Pose2d, Pose3d, Rotation3d
 
 number = typing.Union[float, int]
 
@@ -53,3 +55,20 @@ def map_range(
     return (value - inputMin) * (outputMax - outputMin) / (
         inputMax - inputMin
     ) + outputMin
+
+
+def average(averageable_list: typing.List[typing.Any], initial: typing.Any):
+    length = len(averageable_list)
+    return functools.reduce(operator.add, averageable_list, initial) / length
+
+
+def addPose2d(a: Pose2d, b: Pose2d):
+    return Pose2d(
+        a.X() + b.X(),
+        a.Y() + b.Y(),
+        Rotation2d(a.rotation().radians() + b.rotation().radians()),
+    )
+
+
+def pose3dFrom2d(pose: Pose2d) -> Pose3d:
+    return Pose3d(pose.X(), pose.Y(), 0, Rotation3d(0, 0, pose.rotation().radians()))
