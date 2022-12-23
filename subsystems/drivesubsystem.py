@@ -581,13 +581,13 @@ class DriveSubsystem(SubsystemBase):
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
 
         visionPose = self.estimator.getEstimatedPosition()
+
         weightedPose = Pose2d(
             visionPose.X() * constants.kRobotVisionPoseWeight
             + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
             visionPose.Y() * constants.kRobotVisionPoseWeight
             + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
-            visionPose.rotation() * constants.kRobotVisionPoseWeight
-            + robotPose.rotation() * (1 - constants.kRobotVisionPoseWeight),
+            robotPose.rotation(),
         )
         self.resetOdometryAtPosition(weightedPose)
 
