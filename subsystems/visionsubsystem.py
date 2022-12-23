@@ -70,7 +70,7 @@ class VisionSubsystem(SubsystemBase):
                 pose.toPose2d(), Timer.getFPGATimestamp()
             )
 
-        estimatedPosition = self.drive.estimator.getEstimatedPosition()
+        estimatedPosition = self.drive.getPose()
 
         simApriltagPoses = [
             pose3dFrom2d(estimatedPosition)
