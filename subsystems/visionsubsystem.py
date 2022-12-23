@@ -38,7 +38,7 @@ class VisionSubsystem(SubsystemBase):
         )
 
         limelightPosition3d = (
-            robotPose3d + constants.kLimelightRelativeToRobotTransform.inverse()
+            robotPose3d + constants.kLimelightRelativeToRobotTransform
         )
 
         validPoints = []
@@ -47,7 +47,7 @@ class VisionSubsystem(SubsystemBase):
             constants.kApriltagPositionDict.keys(),
             constants.kApriltagPositionDict.values(),
         ):
-            poseDelta = point - limelightPosition3d
+            poseDelta = Transform3d(limelightPosition3d, point)
 
             if (
                 abs(math.atan2(poseDelta.Y(), poseDelta.X()))
@@ -67,8 +67,8 @@ class VisionSubsystem(SubsystemBase):
 
         objectToRobotPoint = [
             constants.kApriltagPositionDict[id]
-            + constants.kLimelightRelativeToRobotTransform.inverse()
             + point.inverse()
+            + constants.kLimelightRelativeToRobotTransform.inverse()
             for id, point in points
         ]
 
@@ -81,8 +81,8 @@ class VisionSubsystem(SubsystemBase):
 
         simApriltagPoses = [
             pose3dFrom2d(estimatedPosition)
+            + constants.kLimelightRelativeToRobotTransform
             + point
-            + constants.kLimelightRelativeToRobotTransform.inverse()
             for _, point in points
         ]
 
