@@ -485,7 +485,9 @@ class DriveSubsystem(SubsystemBase):
         self.resetOdometryAtPosition(pose)
 
     def getPose(self) -> Pose2d:
-        return self.odometry.getPose()
+        translation = self.odometry.getPose().translation()
+        rotation = self.getRotation()
+        return Pose2d(translation, rotation)
 
     def applyStates(self, moduleStates: Tuple[SwerveModuleState]) -> None:
         (
@@ -552,7 +554,7 @@ class DriveSubsystem(SubsystemBase):
                 self.backRightModule.getPosition(),
             ),
         )
-        robotPose = self.odometry.getPose()
+        robotPose = self.getPose()
 
         deltaPose = robotPose - pastPose
         SmartDashboard.putNumberArray(

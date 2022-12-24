@@ -215,14 +215,7 @@ kLimelightRelativeToRobotTransform = Transform3d(
         0.258,
         0,
         1.01,
-        Rotation3d(
-            # Quaternion(
-            #     0.256346704871985,
-            #     0.733236375091038,
-            #     0.367500112071202,
-            #     -0.51146305122881,
-            # )
-        ),
+        Rotation3d(Quaternion(0.0, 0.336, 0.0, 1)),
     ),
 )
 

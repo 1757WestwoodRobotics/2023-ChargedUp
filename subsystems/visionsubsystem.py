@@ -54,6 +54,7 @@ class VisionSubsystem(SubsystemBase):
         points = self.getCameraToTargetTransforms()
 
         if len(points) == 0:
+            SmartDashboard.putNumberArray(constants.kFieldRelativeTargets, [])
             return
 
         derivedRobotPoses = [
