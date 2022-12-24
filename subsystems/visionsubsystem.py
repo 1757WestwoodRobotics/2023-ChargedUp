@@ -1,5 +1,3 @@
-# this module is a placeholder currently as 2023 vision will include apriltags
-
 import math
 import functools
 import operator
