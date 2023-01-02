@@ -665,3 +665,13 @@ kPDHPublishKey = "powerDistribution"
 kJoystickKeyLogPrefix = "DriverStation"
 kFieldSimTargetKey = "SimTargets"
 kFieldRelativeTargets = "RelTargets"
+
+# photonvision parameters
+kPhotonvisionCameraName = "cam"
+kPhotonvisionAmbiguityCutoff = 0.2
+"""dimensionless"""
+kPhotonvisionCameraDiagonalFOV = 75.1
+"""degrees"""
+kPhotonvisionCameraPixelDimensions = (960,720)
+kApriltagWidth = 8.125 * kMetersPerInch
+kApriltagHeight = kApriltagWidth
