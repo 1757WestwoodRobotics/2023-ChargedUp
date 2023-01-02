@@ -20,7 +20,9 @@ class VisionSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         self.drive = drive
 
-        self.camera = PhotonCamera(NetworkTableInstance.getDefault(),constants.kPhotonvisionCameraName)
+        self.camera = PhotonCamera(
+            NetworkTableInstance.getDefault(), constants.kPhotonvisionCameraName
+        )
 
     def getCameraToTargetTransforms(self) -> List[Tuple[int, Transform3d]]:
         """this function returns a list of the type (target_id, transformCameraToTarget) for every target"""
