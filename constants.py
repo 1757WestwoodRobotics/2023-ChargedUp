@@ -211,12 +211,7 @@ kLimelightLEDModeKey = "ledMode"
 kLimelightTrackerModuleName = "limelight"
 kLimelightRelativeToRobotTransform = Transform3d(
     Pose3d(),
-    Pose3d(
-        0.258,
-        0,
-        1.01,
-        Rotation3d(Quaternion(0.0, 0.336, 0.0, 1)),
-    ),
+    Pose3d(0.258, 0, 1.01, Rotation3d()),
 )
 
 # CANivore
@@ -675,6 +670,6 @@ kPhotonvisionAmbiguityCutoff = 0.2
 """dimensionless"""
 kPhotonvisionCameraDiagonalFOV = 75.1
 """degrees"""
-kPhotonvisionCameraPixelDimensions = (960,720)
+kPhotonvisionCameraPixelDimensions = (960, 720)
 kApriltagWidth = 8.125 * kMetersPerInch
 kApriltagHeight = kApriltagWidth
