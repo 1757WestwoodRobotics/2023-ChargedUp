@@ -1,13 +1,13 @@
-import math
 import functools
 import operator
 from typing import List, Tuple
 from commands2 import SubsystemBase
+from ntcore import NetworkTableInstance
 from wpilib import SmartDashboard, Timer
 from wpimath.geometry import (
-    Pose2d,
     Transform3d,
 )
+from photonvision import PhotonCamera
 
 import constants
 from subsystems.drivesubsystem import DriveSubsystem
@@ -20,33 +20,19 @@ class VisionSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         self.drive = drive
 
+        self.camera = PhotonCamera(NetworkTableInstance.getDefault(),constants.kPhotonvisionCameraName)
+
     def getCameraToTargetTransforms(self) -> List[Tuple[int, Transform3d]]:
         """this function returns a list of the type (target_id, transformCameraToTarget) for every target"""
-        # TODO: actual implementation from PhotonVision or other source
-        robotPose2d = Pose2d(
-            *SmartDashboard.getNumberArray(constants.kSimRobotPoseArrayKey, [0, 0, 0])
-        )
-        robotPose3d = pose3dFrom2d(robotPose2d)
-
-        limelightPosition3d = robotPose3d + constants.kLimelightRelativeToRobotTransform
-
-        validPoints = []
-
-        for tag_id, point in zip(
-            constants.kApriltagPositionDict.keys(),
-            constants.kApriltagPositionDict.values(),
-        ):
-            poseDelta = Transform3d(limelightPosition3d, point)
-
-            if (
-                abs(math.atan2(poseDelta.Y(), poseDelta.X()))
-                < constants.kLimelightMaxHorizontalFoV.radians()
-                and abs(math.atan2(poseDelta.Z(), poseDelta.X()))
-                < constants.kLimelightMaxVerticalFoV.radians()
-            ):  # view frustum restrictions, inverse tan on XY and XZ axis to get horizontal and vertical restrictions
-                validPoints.append((tag_id, poseDelta))
-
-        return validPoints
+        photonResult = self.camera.getLatestResult()
+        if photonResult.hasTargets():
+            return [
+                (target.getFiducialId(), target.getBestCameraToTarget())
+                for target in photonResult.getTargets()
+                if target.getPoseAmbiguity() < constants.kPhotonvisionAmbiguityCutoff
+            ]
+        else:
+            return []
 
     def periodic(self) -> None:
         points = self.getCameraToTargetTransforms()
