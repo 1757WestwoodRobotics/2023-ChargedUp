@@ -8,14 +8,14 @@ wheel
 pyfrc==2023.0.0b4
 pynetconsole==2.0.4
 pynetworktables==2021.0.0
-pyntcore==2023.0.0b7
-robotpy-commands-v2==2023.0.0b7
-robotpy-ctre==2023.0.0b1
-robotpy-hal==2023.0.0b7
-robotpy-halsim-gui==2023.0.0b7
+pyntcore==2023.0.0b7.post1
+robotpy-commands-v2==2023.0.0b7.post2
+robotpy-ctre==2023.0.0b6
+robotpy-hal==2023.0.0b7.post1
+robotpy-halsim-gui==2023.0.0b7.post1
 robotpy-installer==2023.0.0b5
-robotpy-navx==2023.0.0b1
-robotpy-wpimath==2023.0.0b7
-robotpy-wpiutil==2023.0.0b7
-wpilib==2023.0.0b7
+robotpy-navx==2023.0.0b2
+robotpy-wpimath==2023.0.0b7.post2
+robotpy-wpiutil==2023.0.0b7.post2
+wpilib==2023.0.0b7.post1
 
