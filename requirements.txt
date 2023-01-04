@@ -1,6 +1,6 @@
 # Non RobotPy packages that we use
 black
-pylint==2.15.3
+pylint==2.15.9
 pytest
 wheel
 # RobotPy packages.  We explicitly list the version number on all these packages so that when RobotPy
