@@ -504,7 +504,7 @@ class DriveSubsystem(SubsystemBase):
         self.backRightModule.applyState(backRightState)
 
     def getRotation(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(self.gyro.getYaw())
+        return Rotation2d.fromDegrees(-self.gyro.getYaw())
 
     def resetOdometryAtPosition(self, pose: Pose2d):
         self.odometry.resetPosition(
