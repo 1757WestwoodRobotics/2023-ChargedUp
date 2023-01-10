@@ -31,7 +31,6 @@ from wpimath.geometry import (
     Translation2d,
     Pose3d,
     Rotation3d,
-    Quaternion,
     Transform3d,
 )
 from wpimath.system.plant import DCMotor
@@ -367,157 +366,53 @@ kRobotVisionPoseArrayKeys = OptionalValueKeys("VisionRobotPose")
 kTargetName = "Target"
 
 kApriltagPositionDict = {  # this is gathered from a mapping of the field, derived with positions and ZYX order rotations converted to Quaternions in bulk in a spreadsheet
-    0: Pose3d(-0.0035306, 7.5789282, 0.8858504, Rotation3d(Quaternion(1, 0, 0, 0))),
-    1: Pose3d(3.2327088, 5.486654, 1.7254728, Rotation3d(Quaternion(1, 0, 0, 0))),
-    2: Pose3d(
-        3.067812,
-        5.3305202,
-        1.3762228,
-        Rotation3d(Quaternion(0.707106781186548, 0, 0, -0.707106781186548)),
+    1: Pose3d(
+        (kMetersPerInch * 610.77),
+        (kMetersPerInch * 42.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(0.0, 0.0, math.pi),
     ),
-    3: Pose3d(0.0039878, 5.058537, 0.80645, Rotation3d(Quaternion(1, 0, 0, 0))),
-    4: Pose3d(0.0039878, 3.5124898, 0.80645, Rotation3d(Quaternion(1, 0, 0, 0))),
+    2: Pose3d(
+        (kMetersPerInch * 610.77),
+        (kMetersPerInch * 108.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
+    3: Pose3d(
+        (kMetersPerInch * 610.77),
+        (kMetersPerInch * 174.19),  # FIRST's diagram has a typo (it says 147.19)
+        (kMetersPerInch * 18.22),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
+    4: Pose3d(
+        (kMetersPerInch * 636.96),
+        (kMetersPerInch * 265.74),
+        (kMetersPerInch * 27.38),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
     5: Pose3d(
-        0.1211072,
-        1.7178274,
-        0.8906002,
-        Rotation3d(Quaternion(0.919650220405092, 0, 0, 0.392738427084574)),
+        (kMetersPerInch * 14.25),
+        (kMetersPerInch * 265.74),
+        (kMetersPerInch * 27.38),
+        Rotation3d(),
     ),
     6: Pose3d(
-        0.8733028,
-        0.9412986,
-        0.8906002,
-        Rotation3d(Quaternion(0.919650220405092, 0, 0, 0.392738427084574)),
+        (kMetersPerInch * 40.45),
+        (kMetersPerInch * 174.19),  # FIRST's diagram has a typo (it says 147.19)
+        (kMetersPerInch * 18.22),
+        Rotation3d(),
     ),
     7: Pose3d(
-        1.6150844,
-        0.1572514,
-        0.8906002,
-        Rotation3d(Quaternion(0.919650220405092, 0, 0, 0.392738427084574)),
+        (kMetersPerInch * 40.45),
+        (kMetersPerInch * 108.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(),
     ),
-    10: Pose3d(
-        16.4627306,
-        0.6506718,
-        0.8858504,
-        Rotation3d(Quaternion(6.12323399573677e-17, 0, 0, 1)),
-    ),
-    11: Pose3d(
-        13.2350002,
-        2.743454,
-        1.7254728,
-        Rotation3d(Quaternion(6.12323399573677e-17, 0, 0, 1)),
-    ),
-    12: Pose3d(
-        13.391388,
-        2.8998418,
-        1.3762228,
-        Rotation3d(Quaternion(0.707106781186548, 0, 0, 0.707106781186548)),
-    ),
-    13: Pose3d(
-        16.4552122,
-        3.175508,
-        0.80645,
-        Rotation3d(Quaternion(6.12323399573677e-17, 0, 0, 1)),
-    ),
-    14: Pose3d(
-        16.4552122,
-        4.7171356,
-        0.80645,
-        Rotation3d(Quaternion(6.12323399573677e-17, 0, 0, 1)),
-    ),
-    15: Pose3d(
-        16.3350194,
-        6.514973,
-        0.8937752,
-        Rotation3d(Quaternion(-0.372987782575809, 0, 0, 0.92783625389892)),
-    ),
-    16: Pose3d(
-        15.5904946,
-        7.2926956,
-        0.8906002,
-        Rotation3d(Quaternion(-0.372987782575809, 0, 0, 0.92783625389892)),
-    ),
-    17: Pose3d(
-        14.847189,
-        8.0691228,
-        0.8906002,
-        Rotation3d(Quaternion(-0.372987782575809, 0, 0, 0.92783625389892)),
-    ),
-    40: Pose3d(
-        7.874127,
-        4.9131728,
-        0.7032752,
-        Rotation3d(Quaternion(0.544639035015027, 0, 0, 0.838670567945424)),
-    ),
-    41: Pose3d(
-        7.4312272,
-        3.759327,
-        0.7032752,
-        Rotation3d(Quaternion(-0.207911690817759, 0, 0, 0.978147600733806)),
-    ),
-    42: Pose3d(
-        8.585073,
-        3.3164272,
-        0.7032752,
-        Rotation3d(Quaternion(0.838670567945424, 0, 0, -0.544639035015027)),
-    ),
-    43: Pose3d(
-        9.0279728,
-        4.470273,
-        0.7032752,
-        Rotation3d(Quaternion(0.978147600733806, 0, 0, 0.207911690817759)),
-    ),
-    50: Pose3d(
-        7.6790296,
-        4.3261534,
-        2.4177244,
-        Rotation3d(
-            Quaternion(
-                0.177292733967826,
-                -0.227449895715119,
-                0.0421553464416173,
-                0.9565859910054,
-            )
-        ),
-    ),
-    51: Pose3d(
-        8.0182466,
-        3.5642296,
-        2.4177244,
-        Rotation3d(
-            Quaternion(
-                -0.551043546584219,
-                -0.19063969497247,
-                -0.131023032308198,
-                0.801773335471724,
-            )
-        ),
-    ),
-    52: Pose3d(
-        8.7801704,
-        3.9034466,
-        2.4177244,
-        Rotation3d(
-            Quaternion(
-                -0.956585991005399,
-                -0.0421553464416174,
-                -0.227449895715119,
-                0.177292733967826,
-            )
-        ),
-    ),
-    53: Pose3d(
-        8.4409534,
-        4.6653704,
-        2.4177244,
-        Rotation3d(
-            Quaternion(
-                0.801773335471724,
-                -0.131023032308198,
-                0.19063969497247,
-                0.551043546584219,
-            )
-        ),
+    8: Pose3d(
+        (kMetersPerInch * 40.45),
+        (kMetersPerInch * 42.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(),
     ),
 }
 
