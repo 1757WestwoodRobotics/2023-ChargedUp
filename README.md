@@ -1,6 +1,12 @@
-# 2022-RapidReact
+# 2023-ChargedUp
 
-Code for the FRC 1757 2022 Competition Bot
+Code for the FRC 1757 2023 Competition Bot
+
+[Chief delphi form](https://www.chiefdelphi.com/t/frc-1757-wolverines-2022-2023-build-thread/416564)
+
+[The Blue Alliance](https://www.thebluealliance.com/team/1757)
+
+[Website](https://whsrobotics.org)
 
 ## Installation
 
@@ -47,16 +53,17 @@ Code for the FRC 1757 2022 Competition Bot
 
 #### Update device firmware
 
-- PDP
+- PDH
 - FalconFX
 - CANCoder
+- Pneumatics Hub
 
 #### Configure CAN devices
 
 | Device              | Class   | Range   | ID             |
 | ------------------- | ------- | ------- | -------------- |
 | robo_rio            | core    | 0 - 9   | master (no ID) |
-| pdp                 | core    | 0 - 9   | 0              |
+| pdh                 | core    | 0 - 9   | 0              |
 | pneumatic_hub       | core    | 0 - 9   | 1              |
 | front_left_drive    | motors  | 10 - 29 | 10             |
 | front_left_steer    | motors  | 10 - 29 | 11             |
