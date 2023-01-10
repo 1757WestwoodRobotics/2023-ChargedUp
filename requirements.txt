@@ -5,17 +5,17 @@ pytest
 wheel
 # RobotPy packages.  We explicitly list the version number on all these packages so that when RobotPy
 # updates we don't break the world until we have a chance to test/update.
-pyfrc==2023.0.0b4
+pyfrc==2023.0.0
 pynetconsole==2.0.4
 pynetworktables==2021.0.0
-pyntcore==2023.0.0b7.post1
-robotpy-commands-v2==2023.0.0b7.post2
-robotpy-ctre==2023.0.0b6
-robotpy-hal==2023.0.0b7.post1
-robotpy-halsim-gui==2023.0.0b7.post1
-robotpy-installer==2023.0.0b5
-robotpy-navx==2023.0.0b2
-robotpy-wpimath==2023.0.0b7.post2
-robotpy-wpiutil==2023.0.0b7.post2
-wpilib==2023.0.0b7.post1
+pyntcore==2023.1.1.0
+robotpy-commands-v2==2023.1.1.0
+robotpy-ctre==2023.0.0
+robotpy-hal==2023.1.1.0
+robotpy-halsim-gui==2023.1.1.0
+robotpy-installer==2023.0.1
+robotpy-navx==2023.0.1
+robotpy-wpimath==2023.1.1.0
+robotpy-wpiutil==2023.1.1.0
+wpilib==2023.1.1.0
 
