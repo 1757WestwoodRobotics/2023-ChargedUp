@@ -13,8 +13,10 @@ import functools
 import operator
 import typing
 from photonvision import SimVisionSystem, SimVisionTarget
+import typing, math
+from ctre import TalonFXSimCollection
 from wpilib import RobotController, SmartDashboard
-from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
+from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim, SingleJointedArmSim
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 from wpimath.system.plant import DCMotor
 import wpimath.kinematics
@@ -113,6 +115,7 @@ class SwerveDriveSim:
         self.pose = newPose
 
 
+<<<<<<< HEAD
 class VisionSim:
     def __init__(self) -> None:
         self.system = SimVisionSystem(
@@ -135,6 +138,94 @@ class VisionSim:
 
     def update(self, robotPose: Pose2d) -> None:
         self.system.processFrame(robotPose)
+=======
+class ArmSimulation:
+    def __init__(
+        self,
+        bottomSimMotor: TalonFXSimCollection,
+        topSimMotor: TalonFXSimCollection,
+        wristSimMotor: TalonFXSimCollection,
+    ) -> None:
+
+        self.bottomGearbox = DCMotor.falcon500(1)
+        self.topGearbox = DCMotor.falcon500(1)
+        self.wristGearbox = DCMotor.falcon500(1)
+
+        self.topJointSim = SingleJointedArmSim(
+            self.topGearbox,
+            constants.kTopArmGearRatio,
+            SingleJointedArmSim.estimateMOI(
+                constants.kArmtopLength, constants.kArmtopMass
+            ),
+            constants.kArmtopLength,
+            -75 / constants.kRadiansPerDegree,
+            260 / constants.kRadiansPerDegree,
+            constants.kArmtopMass,
+            False,
+            [0],
+        )
+        self.bottomJointSim = SingleJointedArmSim(
+            self.bottomGearbox,
+            constants.kBottomArmGearRatio,
+            SingleJointedArmSim.estimateMOI(
+                constants.kArmbottomLength, constants.kArmbottomMass
+            ),
+            constants.kArmbottomLength,
+            math.radians(-75),
+            math.radians(255),
+            constants.kArmbottomMass,
+            True,
+            [0],
+        )
+        self.wristJointSim = SingleJointedArmSim(
+            self.bottomGearbox,
+            constants.kBottomArmGearRatio,
+            SingleJointedArmSim.estimateMOI(
+                constants.kArmbottomLength, constants.kArmbottomMass
+            ),
+            constants.kArmbottomLength,
+            math.radians(-75),
+            math.radians(255),
+            constants.kArmbottomMass,
+            True,
+            [0],
+        )
+
+        self.bottomSimMotor = bottomSimMotor
+        self.topSimMotor = topSimMotor
+        self.wristSimMotor = wristSimMotor
+
+    def update(self, tm_diff) -> None:
+        self.topJointSim.setInput(0, self.topSimMotor.getMotorOutputLeadVoltage())
+        self.bottomJointSim.setInput(0, self.bottomSimMotor.getMotorOutputLeadVoltage())
+        self.wristJointSim.setInput(0, self.wristSimMotor.getMotorOutputLeadVoltage())
+
+        self.wristJointSim.update(tm_diff)
+        self.topJointSim.update(tm_diff)
+        self.bottomJointSim.update(tm_diff)
+
+        self.topSimMotor.setIntegratedSensorRawPosition(
+            int(
+                self.topJointSim.getAngle()
+                * constants.kTalonEncoderPulsesPerRadian
+                * constants.kTopArmGearRatio
+            )
+        )
+        self.bottomSimMotor.setIntegratedSensorRawPosition(
+            int(
+                self.bottomJointSim.getAngle()
+                * constants.kTalonEncoderPulsesPerRadian
+                * constants.kBottomArmGearRatio
+            )
+        )
+        self.bottomSimMotor.setIntegratedSensorRawPosition(
+            int(
+                self.wristJointSim.getAngle()
+                * constants.kTalonEncoderPulsesPerRadian
+                * constants.kBottomArmGearRatio
+            )
+        )
+>>>>>>> 9a25301 (the start)
 
 
 class PhysicsEngine:
@@ -199,6 +290,11 @@ class PhysicsEngine:
         ]
 
         self.driveSim = SwerveDriveSim(tuple(self.swerveModuleSims))
+        self.armSim = ArmSimulation(
+            robot.container.arm.bottomArm.getSimCollection(),
+            robot.container.arm.topArm.getSimCollection(),
+            robot.container.arm.wristArm.getSimCollection(),
+        )
 
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
@@ -258,6 +354,7 @@ class PhysicsEngine:
         voltage = RobotController.getInputVoltage()
 
         self.driveSim.update(tm_diff, voltage)
+        self.armSim.update(tm_diff)
 
         simRobotPose = self.driveSim.getPose()
         self.physics_controller.field.setRobotPose(simRobotPose)

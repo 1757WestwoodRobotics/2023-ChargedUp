@@ -580,6 +580,44 @@ kTargetWaypointPoseKey = "waypoint/target"
 kTargetWaypointXControllerKey = "waypoint/x"
 kTargetWaypointYControllerKey = "waypoint/y"
 kTargetWaypointThetaControllerKey = "waypoint/theta"
+# Arm
+kArmPIDSlot = 0
+
+kTopArmCANId = 30
+kTopArmPGain = 0.12
+kTopArmIGain = 0.0
+kTopArmDGain = 0
+kTopArmInverted = False
+
+kTopArmGearRatio = 600 / 1
+
+kBottomArmCANId = 31
+kBottomArmPGain = 0.12
+kBottomArmIGain = 0.0
+kBottomArmDGain = 0
+kBottomArmInverted = False
+
+kBottomArmGearRatio = 400 / 1
+
+kWristPivotArmCANId = 32
+kWristPivotArmPGain = 0.12
+kWristPivotArmIGain = 0.0
+kWristPivotArmDGain = 0
+kWristPivotArmInverted = False
+
+kWristPivotArmGearRatio = 500 / 1
+
+
+kArmtopLength = 21.465 * kMetersPerInch
+kArmtopMass = 10  # kg
+
+kArmbottomLength = 34.389 * kMetersPerInch
+kArmbottomMass = 4  # kg
+
+kArmwristLength = 12 * kMetersPerInch
+kArmwristMass = 2 # kg
+
+# scoring positions
 
 # Logging
 kSwerveActualStatesKey = "swerve/actual"

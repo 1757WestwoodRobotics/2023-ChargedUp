@@ -3,6 +3,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.arm.statearmposition import StateArmPosition
 
 
 import constants
@@ -17,6 +18,7 @@ from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.auto.autonomousaction import AutonomousRoutine
+from subsystems.armsubsystem import ArmSubsystem
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
@@ -41,6 +43,7 @@ class RobotContainer:
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem(self.drive)
         self.log = LoggingSubsystem(self.operatorInterface)
+        self.arm = ArmSubsystem()
 
         # Autonomous routines
 
@@ -90,6 +93,7 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotationY,
             )
         )
+        self.arm.setDefaultCommand(StateArmPosition(self.arm))
         wpilib.DataLogManager.start()
         wpilib.DataLogManager.logNetworkTables(True)
 

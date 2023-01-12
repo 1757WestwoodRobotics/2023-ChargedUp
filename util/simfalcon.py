@@ -5,9 +5,10 @@ from ctre import (
     LimitSwitchNormal,
     LimitSwitchSource,
     NeutralMode,
+    TalonFXSimCollection,
     WPI_TalonFX,
 )
-from wpilib import RobotBase, SmartDashboard
+from wpilib import DriverStation, RobotBase, SmartDashboard
 
 from wpimath.controller import PIDController
 from wpimath.system.plant import DCMotor
@@ -165,12 +166,16 @@ class SimFalcon:  # a simulated Falcon 500
             )
         )
 
+    def getSimCollection(self) -> TalonFXSimCollection:
+        return self.motor.getSimCollection()
+
 
 class Falcon:
     class ControlMode(Enum):
         Position = auto()
         Velocity = auto()
         Percent = auto()
+        Amps = auto()
 
     class NeutralMode(Enum):
         Break = auto()
@@ -211,6 +216,8 @@ class Falcon:
             self.motor.set(ControlMode.Velocity, demand)
         elif controlMode == Falcon.ControlMode.Percent:
             self.motor.set(ControlMode.PercentOutput, demand)
+        elif controlMode == Falcon.ControlMode.Amps:
+            self.motor.set(ControlMode.Current, demand)
 
     def neutralOutput(self):
         self.motor.neutralOutput()
@@ -236,3 +243,6 @@ class Falcon:
         elif controlMode == Falcon.ControlMode.Percent:
             return self.motor.get()
         return 0
+
+    def getSimCollection(self) -> TalonFXSimCollection:
+        return self.motor.getSimCollection()
