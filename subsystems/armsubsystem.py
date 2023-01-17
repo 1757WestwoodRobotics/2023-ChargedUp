@@ -1,8 +1,8 @@
 import math
+from enum import Enum, auto
 from commands2 import SubsystemBase
 from wpilib import Color, Color8Bit, Mechanism2d, SmartDashboard
-from wpimath.geometry import Pose2d
-from wpimath.geometry._geometry import Translation2d
+from wpimath.geometry import Pose2d, Translation2d
 
 from util.simfalcon import Falcon
 
@@ -10,11 +10,29 @@ import constants
 
 
 class ArmSubsystem(SubsystemBase):
+    class ArmState(Enum):
+        Stored = auto()
+        Mid = auto()
+        HumanStation = auto()
+        Top = auto()
+
+        def position(self) -> Pose2d:
+            if self == ArmSubsystem.ArmState.Stored:
+                return constants.kArmStoredPosition
+            elif self == ArmSubsystem.ArmState.Mid:
+                return constants.kArmMidScorePosition
+            elif self == ArmSubsystem.ArmState.HumanStation:
+                return constants.kArmDoubleSubstationPosition
+            elif self == ArmSubsystem.ArmState.Top:
+                return constants.kArmTopScorePosition
+            return constants.kArmStoredPosition
+
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
         self.mech = Mechanism2d(90, 90)
+        self.state = ArmSubsystem.ArmState.Stored
 
         midNodeHome = self.mech.getRoot("Mid Node", 27.83, 0)
         self.midNode = midNodeHome.appendLigament(
@@ -36,7 +54,7 @@ class ArmSubsystem(SubsystemBase):
             "Double Substation Ramp", 13.75, 180, 10, Color8Bit(Color.kWhite)
         )
 
-        armPivot = self.mech.getRoot("ArmPivot", 65, 21.75)
+        armPivot = self.mech.getRoot("ArmPivot", 53.5, 8)
         self.armTower = armPivot.appendLigament(
             "ArmTower", 0, -90, 10, Color8Bit(Color.kSilver)
         )
@@ -90,7 +108,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristPivotArmInverted,
         )
 
-    def periodic(self) -> None:
+    def updateMechanism(self) -> None:
         self.armTop.setAngle(
             self.topArm.get(Falcon.ControlMode.Position)
             / constants.kTopArmGearRatio
@@ -109,6 +127,11 @@ class ArmSubsystem(SubsystemBase):
             / constants.kTalonEncoderPulsesPerRadian
             / constants.kRadiansPerDegree
         )
+
+    def periodic(self) -> None:
+        SmartDashboard.putString(constants.kArmStateKey, str(self.state))
+        self.setEndEffectorPosition(self.state.position())
+        self.updateMechanism()
 
     def setEndEffectorPosition(self, pose: Pose2d):
 

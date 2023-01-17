@@ -615,9 +615,31 @@ kArmbottomLength = 34.389 * kMetersPerInch
 kArmbottomMass = 4  # kg
 
 kArmwristLength = 12 * kMetersPerInch
-kArmwristMass = 2 # kg
+kArmwristMass = 2  # kg
+
+kArmStateKey = "armState"
 
 # scoring positions
+kArmTopScorePosition = Pose2d(
+    -42.963 * kMetersPerInch,
+    41.227 * kMetersPerInch,
+    Rotation2d.fromDegrees(200),
+)
+kArmMidScorePosition = Pose2d(
+    -23.537 * kMetersPerInch,
+    29.082532 * kMetersPerInch,
+    Rotation2d.fromDegrees(210),
+)
+kArmStoredPosition = Pose2d(
+    15.544226 * kMetersPerInch,
+    2 * kMetersPerInch,
+    Rotation2d.fromDegrees(-90),
+)
+kArmDoubleSubstationPosition = Pose2d(
+    30.544226 * kMetersPerInch,
+    34.125000 * kMetersPerInch,
+    Rotation2d.fromDegrees(-90),
+)
 
 # Logging
 kSwerveActualStatesKey = "swerve/actual"

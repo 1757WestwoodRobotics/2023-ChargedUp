@@ -3,7 +3,6 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.arm.statearmposition import StateArmPosition
 
 
 import constants
@@ -93,7 +92,6 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotationY,
             )
         )
-        self.arm.setDefaultCommand(StateArmPosition(self.arm))
         wpilib.DataLogManager.start()
         wpilib.DataLogManager.logNetworkTables(True)
 

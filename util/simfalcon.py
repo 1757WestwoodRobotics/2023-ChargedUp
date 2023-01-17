@@ -8,7 +8,7 @@ from ctre import (
     TalonFXSimCollection,
     WPI_TalonFX,
 )
-from wpilib import DriverStation, RobotBase, SmartDashboard
+from wpilib import RobotBase, SmartDashboard
 
 from wpimath.controller import PIDController
 from wpimath.system.plant import DCMotor
@@ -233,7 +233,7 @@ class Falcon:
             return self.motor.isFwdLimitSwitchClosed() == 1
         elif switch == Falcon.LimitSwitch.Backwards:
             return self.motor.isRevLimitSwitchClosed() == 1
-
+        return False
 
     def get(self, controlMode: ControlMode) -> float:
         if controlMode == Falcon.ControlMode.Position:

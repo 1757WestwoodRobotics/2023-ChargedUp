@@ -12,8 +12,9 @@
 import functools
 import operator
 import typing
+import typing
+import math
 from photonvision import SimVisionSystem, SimVisionTarget
-import typing, math
 from ctre import TalonFXSimCollection
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim, SingleJointedArmSim
@@ -115,7 +116,6 @@ class SwerveDriveSim:
         self.pose = newPose
 
 
-<<<<<<< HEAD
 class VisionSim:
     def __init__(self) -> None:
         self.system = SimVisionSystem(
@@ -138,7 +138,7 @@ class VisionSim:
 
     def update(self, robotPose: Pose2d) -> None:
         self.system.processFrame(robotPose)
-=======
+
 class ArmSimulation:
     def __init__(
         self,
@@ -225,7 +225,6 @@ class ArmSimulation:
                 * constants.kBottomArmGearRatio
             )
         )
->>>>>>> 9a25301 (the start)
 
 
 class PhysicsEngine:
