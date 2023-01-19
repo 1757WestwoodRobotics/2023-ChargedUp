@@ -137,6 +137,15 @@ class ArmSubsystem(SubsystemBase):
 
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kArmStateKey, str(self.state))
+        SmartDashboard.putNumber(
+            constants.kTopArmRotationKey, self.getTopArmRotation().degrees()
+        )
+        SmartDashboard.putNumber(
+            constants.kBottomArmRotationKey, self.getBottomArmRotation().degrees()
+        )
+        SmartDashboard.putNumber(
+            constants.kWristPivotArmRotationKey, self.getWristArmRotation().degrees()
+        )
         self.setEndEffectorPosition(self.state.position())
         self.updateMechanism()
 
@@ -163,17 +172,17 @@ class ArmSubsystem(SubsystemBase):
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
         bottomArmEncoderPulses = (
-            optimizeAngle(self.getBottomArmRotation(), Rotation2d(startAngle)).radians()
+            startAngle
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kBottomArmGearRatio
         )
         topArmEncoderPulses = (
-            optimizeAngle(self.getTopArmRotation(), Rotation2d(endAngle)).radians()
+            endAngle
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kTopArmGearRatio
         )
         wristArmEncoderPulses = (
-            optimizeAngle(self.getWristArmRotation(), Rotation2d(wristAngle)).radians()
+            wristAngle
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristPivotArmGearRatio
         )

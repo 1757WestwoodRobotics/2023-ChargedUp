@@ -590,6 +590,7 @@ kTopArmDGain = 0
 kTopArmInverted = False
 
 kTopArmGearRatio = 40 / 1
+kTopArmRotationKey = "topArmRotation"
 
 kBottomArmCANId = 31
 kBottomArmPGain = 0.05
@@ -598,6 +599,7 @@ kBottomArmDGain = 0
 kBottomArmInverted = False
 
 kBottomArmGearRatio = 70 / 1
+kBottomArmRotationKey = "bottomArmRotaion"
 
 kWristPivotArmCANId = 32
 kWristPivotArmPGain = 0.05
@@ -606,6 +608,7 @@ kWristPivotArmDGain = 0
 kWristPivotArmInverted = False
 
 kWristPivotArmGearRatio = 20 / 1
+kWristPivotArmRotationKey = "wristArmRotation"
 
 
 kArmtopLength = 21.465 * kMetersPerInch
