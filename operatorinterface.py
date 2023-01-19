@@ -142,3 +142,9 @@ class OperatorInterface:
                 )
             ),
         )
+
+        # arm controls
+
+        self.armMid = getButtonBindingOfName("armMid")
+        self.armTop = getButtonBindingOfName("armTop")
+        self.armDoubleSubstation = getButtonBindingOfName("armDoubleSubstation")

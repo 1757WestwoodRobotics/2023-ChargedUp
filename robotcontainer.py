@@ -3,6 +3,12 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.arm.statearmposition import (
+    SetArmPositionDoubleSubstation,
+    SetArmPositionMid,
+    SetArmPositionStored,
+    SetArmPositionTop,
+)
 
 
 import constants
@@ -92,6 +98,7 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotationY,
             )
         )
+        self.arm.setDefaultCommand(SetArmPositionStored(self.arm))
         wpilib.DataLogManager.start()
         wpilib.DataLogManager.logNetworkTables(True)
 
@@ -101,6 +108,16 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+
+        commands2.button.JoystickButton(*self.operatorInterface.armMid).whileHeld(
+            SetArmPositionMid(self.arm)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.armTop).whileHeld(
+            SetArmPositionTop(self.arm)
+        )
+        commands2.button.JoystickButton(
+            *self.operatorInterface.armDoubleSubstation
+        ).whileHeld(SetArmPositionDoubleSubstation(self.arm))
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

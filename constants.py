@@ -584,28 +584,28 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 kArmPIDSlot = 0
 
 kTopArmCANId = 30
-kTopArmPGain = 0.12
+kTopArmPGain = 0.05
 kTopArmIGain = 0.0
 kTopArmDGain = 0
 kTopArmInverted = False
 
-kTopArmGearRatio = 600 / 1
+kTopArmGearRatio = 40 / 1
 
 kBottomArmCANId = 31
-kBottomArmPGain = 0.12
+kBottomArmPGain = 0.05
 kBottomArmIGain = 0.0
 kBottomArmDGain = 0
 kBottomArmInverted = False
 
-kBottomArmGearRatio = 400 / 1
+kBottomArmGearRatio = 70 / 1
 
 kWristPivotArmCANId = 32
-kWristPivotArmPGain = 0.12
+kWristPivotArmPGain = 0.05
 kWristPivotArmIGain = 0.0
 kWristPivotArmDGain = 0
 kWristPivotArmInverted = False
 
-kWristPivotArmGearRatio = 500 / 1
+kWristPivotArmGearRatio = 20 / 1
 
 
 kArmtopLength = 21.465 * kMetersPerInch

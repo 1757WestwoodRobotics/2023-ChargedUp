@@ -16,7 +16,8 @@ class SetArmPositionMid(CommandBase):
         self.arm.state = self.state
 
     def isFinished(self) -> bool:
-        return True # instant command
+        return True  # instant command
+
 
 class SetArmPositionTop(SetArmPositionMid):
     state = ArmSubsystem.ArmState.Top

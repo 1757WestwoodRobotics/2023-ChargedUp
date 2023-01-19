@@ -2,7 +2,8 @@ import math
 from enum import Enum, auto
 from commands2 import SubsystemBase
 from wpilib import Color, Color8Bit, Mechanism2d, SmartDashboard
-from wpimath.geometry import Pose2d, Translation2d
+from wpimath.geometry import Pose2d, Rotation2d, Translation2d
+from util.angleoptimize import optimizeAngle
 
 from util.simfalcon import Falcon
 
@@ -108,25 +109,31 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristPivotArmInverted,
         )
 
-    def updateMechanism(self) -> None:
-        self.armTop.setAngle(
+    def getTopArmRotation(self) -> Rotation2d:
+        return Rotation2d(
             self.topArm.get(Falcon.ControlMode.Position)
             / constants.kTopArmGearRatio
             / constants.kTalonEncoderPulsesPerRadian
-            / constants.kRadiansPerDegree
         )
-        self.armBottom.setAngle(
+
+    def getBottomArmRotation(self) -> Rotation2d:
+        return Rotation2d(
             self.bottomArm.get(Falcon.ControlMode.Position)
             / constants.kBottomArmGearRatio
             / constants.kTalonEncoderPulsesPerRadian
-            / constants.kRadiansPerDegree
         )
-        self.armWrist.setAngle(
+
+    def getWristArmRotation(self) -> Rotation2d:
+        return Rotation2d(
             self.wristArm.get(Falcon.ControlMode.Position)
             / constants.kWristPivotArmGearRatio
             / constants.kTalonEncoderPulsesPerRadian
-            / constants.kRadiansPerDegree
         )
+
+    def updateMechanism(self) -> None:
+        self.armTop.setAngle(self.getTopArmRotation().degrees())
+        self.armBottom.setAngle(self.getBottomArmRotation().degrees())
+        self.armWrist.setAngle(self.getWristArmRotation().degrees())
 
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kArmStateKey, str(self.state))
@@ -156,17 +163,17 @@ class ArmSubsystem(SubsystemBase):
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
         bottomArmEncoderPulses = (
-            startAngle
+            optimizeAngle(self.getBottomArmRotation(), Rotation2d(startAngle)).radians()
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kBottomArmGearRatio
         )
         topArmEncoderPulses = (
-            endAngle
+            optimizeAngle(self.getTopArmRotation(), Rotation2d(endAngle)).radians()
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kTopArmGearRatio
         )
         wristArmEncoderPulses = (
-            wristAngle
+            optimizeAngle(self.getWristArmRotation(), Rotation2d(wristAngle)).radians()
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristPivotArmGearRatio
         )

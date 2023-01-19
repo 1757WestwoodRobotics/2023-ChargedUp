@@ -6,6 +6,27 @@
     },
     "replace me"
   ],
+  "armDoubleSubstation": [
+    2,
+    {
+      "Button": 3
+    },
+    "replace me"
+  ],
+  "armMid": [
+    2,
+    {
+      "Button": 1
+    },
+    "replace me"
+  ],
+  "armTop": [
+    2,
+    {
+      "Button": 2
+    },
+    "replace me"
+  ],
   "autoBallIntake": [
     0,
     {
