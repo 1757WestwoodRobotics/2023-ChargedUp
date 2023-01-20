@@ -592,14 +592,15 @@ kTopArmInverted = False
 kTopArmGearRatio = 40 / 1
 kTopArmRotationKey = "topArmRotation"
 
-kBottomArmCANId = 31
-kBottomArmPGain = 0.05
+kBottomArmCANId = 44
+kBottomArmPGain = 0.2
 kBottomArmIGain = 0.0
-kBottomArmDGain = 0
+kBottomArmDGain = 20
 kBottomArmInverted = False
 
-kBottomArmGearRatio = 70 / 1
+kBottomArmGearRatio = 70/14
 kBottomArmRotationKey = "bottomArmRotaion"
+kBottomArmFFFactor = 0.14
 
 kWristPivotArmCANId = 32
 kWristPivotArmPGain = 0.05

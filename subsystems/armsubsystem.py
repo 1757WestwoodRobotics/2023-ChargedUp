@@ -1,9 +1,16 @@
 import math
 from enum import Enum, auto
 from commands2 import SubsystemBase
-from wpilib import Color, Color8Bit, DriverStation, Mechanism2d, RobotBase, SmartDashboard
+from wpilib import (
+    Color,
+    Color8Bit,
+    DriverStation,
+    Mechanism2d,
+    RobotBase,
+    SmartDashboard,
+)
 from wpimath._controls._controls.trajectory import TrapezoidProfile
-from wpimath.controller import ProfiledPIDController
+from wpimath.controller import ProfiledPIDController, ArmFeedforward
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from util.angleoptimize import optimizeAngle
 
@@ -36,6 +43,7 @@ class ArmSubsystem(SubsystemBase):
 
         self.mech = Mechanism2d(90, 90)
         self.state = ArmSubsystem.ArmState.Stored
+        self.armFF = ArmFeedforward(0, constants.kBottomArmFFFactor, 0, 0)
 
         midNodeHome = self.mech.getRoot("Mid Node", 27.83, 0)
         self.midNode = midNodeHome.appendLigament(
@@ -94,6 +102,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kTopArmDGain,
             constants.kTopArmInverted,
         )
+        self.topArm.setNeutralMode(Falcon.NeutralMode.Break)
         self.bottomArm = Falcon(
             constants.kBottomArmCANId,
             constants.kArmPIDSlot,
@@ -102,6 +111,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kBottomArmDGain,
             constants.kBottomArmInverted,
         )
+        self.bottomArm.setNeutralMode(Falcon.NeutralMode.Break)
         self.wristArm = Falcon(
             constants.kWristPivotArmCANId,
             constants.kArmPIDSlot,
@@ -110,6 +120,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristPivotArmDGain,
             constants.kWristPivotArmInverted,
         )
+        self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
 
         self.xProfiledPID = ProfiledPIDController(
             constants.kArmTranslationalPGain,
@@ -175,37 +186,7 @@ class ArmSubsystem(SubsystemBase):
             pose.X() - constants.kArmwristLength * pose.rotation().cos(),
             pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
         )
-        if DriverStation.isTeleopEnabled():
-            twoLinkCurrentPosition = Translation2d(
-                constants.kArmbottomLength * self.getBottomArmRotation().cos()
-                + constants.kArmtopLength
-                * (self.getTopArmRotation().cos() + self.getBottomArmRotation().cos()),
-                constants.kArmbottomLength * self.getBottomArmRotation().sin()
-                + constants.kArmtopLength
-                * (self.getTopArmRotation().sin() + self.getBottomArmRotation().sin()),
-            )
-            twoLinkPosition = (
-                Translation2d(
-                    self.xProfiledPID.calculate(
-                        twoLinkCurrentPosition.X(), twoLinkGoalPosition.X()
-                    ),
-                    self.yProfiledPID.calculate(
-                        twoLinkCurrentPosition.Y(), twoLinkGoalPosition.Y()
-                    ),
-                )
-                + twoLinkCurrentPosition
-            )
-
-            if (
-                twoLinkPosition.distance(Translation2d())
-                > constants.kArmbottomLength + constants.kArmtopLength + 1
-            ) or (
-                twoLinkPosition.distance(Translation2d())
-                < constants.kArmbottomLength - constants.kArmtopLength - 1
-            ):
-                twoLinkPosition = twoLinkGoalPosition
-        else:
-            twoLinkPosition = twoLinkGoalPosition
+        twoLinkPosition = twoLinkGoalPosition
 
         endAngle = math.acos(
             twoLinkPosition.X() * twoLinkPosition.X()
@@ -239,5 +220,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         self.topArm.set(Falcon.ControlMode.Position, topArmEncoderPulses)
-        self.bottomArm.set(Falcon.ControlMode.Position, bottomArmEncoderPulses)
+        self.bottomArm.set(
+            Falcon.ControlMode.Position, bottomArmEncoderPulses, self.armFF.calculate(startAngle, 0, 0)
+        )
         self.wristArm.set(Falcon.ControlMode.Position, wristArmEncoderPulses)
