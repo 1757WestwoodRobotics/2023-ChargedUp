@@ -1,7 +1,9 @@
 import math
 from enum import Enum, auto
 from commands2 import SubsystemBase
-from wpilib import Color, Color8Bit, Mechanism2d, SmartDashboard
+from wpilib import Color, Color8Bit, DriverStation, Mechanism2d, RobotBase, SmartDashboard
+from wpimath._controls._controls.trajectory import TrapezoidProfile
+from wpimath.controller import ProfiledPIDController
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from util.angleoptimize import optimizeAngle
 
@@ -109,6 +111,25 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristPivotArmInverted,
         )
 
+        self.xProfiledPID = ProfiledPIDController(
+            constants.kArmTranslationalPGain,
+            constants.kArmTranslationalIGain,
+            constants.kArmTranslationalDGain,
+            TrapezoidProfile.Constraints(
+                constants.kArmTranslationalMaxVelocity,
+                constants.kArmTranslationalMaxAcceleration,
+            ),
+        )
+        self.yProfiledPID = ProfiledPIDController(
+            constants.kArmTranslationalPGain,
+            constants.kArmTranslationalIGain,
+            constants.kArmTranslationalDGain,
+            TrapezoidProfile.Constraints(
+                constants.kArmTranslationalMaxVelocity,
+                constants.kArmTranslationalMaxAcceleration,
+            ),
+        )
+
     def getTopArmRotation(self) -> Rotation2d:
         return Rotation2d(
             self.topArm.get(Falcon.ControlMode.Position)
@@ -150,11 +171,41 @@ class ArmSubsystem(SubsystemBase):
         self.updateMechanism()
 
     def setEndEffectorPosition(self, pose: Pose2d):
-
-        twoLinkPosition = Translation2d(
+        twoLinkGoalPosition = Translation2d(
             pose.X() - constants.kArmwristLength * pose.rotation().cos(),
             pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
         )
+        if DriverStation.isTeleopEnabled():
+            twoLinkCurrentPosition = Translation2d(
+                constants.kArmbottomLength * self.getBottomArmRotation().cos()
+                + constants.kArmtopLength
+                * (self.getTopArmRotation().cos() + self.getBottomArmRotation().cos()),
+                constants.kArmbottomLength * self.getBottomArmRotation().sin()
+                + constants.kArmtopLength
+                * (self.getTopArmRotation().sin() + self.getBottomArmRotation().sin()),
+            )
+            twoLinkPosition = (
+                Translation2d(
+                    self.xProfiledPID.calculate(
+                        twoLinkCurrentPosition.X(), twoLinkGoalPosition.X()
+                    ),
+                    self.yProfiledPID.calculate(
+                        twoLinkCurrentPosition.Y(), twoLinkGoalPosition.Y()
+                    ),
+                )
+                + twoLinkCurrentPosition
+            )
+
+            if (
+                twoLinkPosition.distance(Translation2d())
+                > constants.kArmbottomLength + constants.kArmtopLength + 1
+            ) or (
+                twoLinkPosition.distance(Translation2d())
+                < constants.kArmbottomLength - constants.kArmtopLength - 1
+            ):
+                twoLinkPosition = twoLinkGoalPosition
+        else:
+            twoLinkPosition = twoLinkGoalPosition
 
         endAngle = math.acos(
             twoLinkPosition.X() * twoLinkPosition.X()

@@ -178,15 +178,15 @@ class ArmSimulation:
             [0],
         )
         self.wristJointSim = SingleJointedArmSim(
-            self.bottomGearbox,
-            constants.kBottomArmGearRatio,
+            self.wristGearbox,
+            constants.kWristPivotArmGearRatio,
             SingleJointedArmSim.estimateMOI(
-                constants.kArmbottomLength, constants.kArmbottomMass
+                constants.kArmwristLength, constants.kArmwristMass
             ),
-            constants.kArmbottomLength,
+            constants.kArmwristLength,
             math.radians(-75),
             math.radians(255),
-            constants.kArmbottomMass,
+            constants.kArmwristMass,
             True,
             [0],
         )

@@ -622,6 +622,15 @@ kArmwristMass = 2  # kg
 
 kArmStateKey = "armState"
 
+kArmTranslationalPGain = 0.1
+kArmTranslationalIGain = 0
+kArmTranslationalDGain = 0
+
+kArmTranslationalMaxVelocity = 3 
+"""m/s"""
+kArmTranslationalMaxAcceleration = 3 
+"""m/s^2"""
+
 # scoring positions
 kArmTopScorePosition = Pose2d(
     -42.963 * kMetersPerInch,
@@ -636,7 +645,7 @@ kArmMidScorePosition = Pose2d(
 kArmStoredPosition = Pose2d(
     15.544226 * kMetersPerInch,
     2 * kMetersPerInch,
-    Rotation2d.fromDegrees(-90),
+    Rotation2d.fromDegrees(270),
 )
 kArmDoubleSubstationPosition = Pose2d(
     30.544226 * kMetersPerInch,
