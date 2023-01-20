@@ -470,11 +470,11 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Trajectory Following
-kTrajectoryPositionPGain = 2.0
+kTrajectoryPositionPGain = 4
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 2.5
+kTrajectoryAnglePGain = 6
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
