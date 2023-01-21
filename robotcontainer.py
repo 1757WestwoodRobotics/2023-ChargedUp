@@ -1,3 +1,4 @@
+import os
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -63,9 +64,15 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        self.chooser.addOption(
-            "Test Auto", AutonomousRoutine(self.drive, "Test Path", [])
+        pathsPath = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "deploy", "pathplanner"
         )
+        for file in os.listdir(pathsPath):
+            relevantName = file.split(".")[0]
+            self.chooser.addOption(
+                relevantName, AutonomousRoutine(self.drive, relevantName, [])
+            )
+
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
 
         # Put the chooser on the dashboard
