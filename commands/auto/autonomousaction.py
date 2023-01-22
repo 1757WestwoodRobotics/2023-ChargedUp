@@ -7,6 +7,7 @@ from commands2 import (
     WaitCommand,
 )
 from pathplannerlib import PathPlannerTrajectory
+from wpilib import DriverStation
 from wpimath.geometry import Pose2d
 
 from commands.auto.autohelper import trajectoryFromFile
@@ -33,7 +34,12 @@ class AutonomousRoutine(SequentialCommandGroup):
             "intake": WaitCommand(0.25),
             "outtake": WaitCommand(0.25),
         }
-        paths = trajectoryFromFile(name)
+        paths = [
+            PathPlannerTrajectory.transformTrajectoryForAlliance(
+                path, DriverStation.getAlliance()
+            )
+            for path in trajectoryFromFile(name)
+        ]
         followCommands = [
             SequentialCommandGroup(
                 self.stopEventGroup(path.getStartStopEvent()),
