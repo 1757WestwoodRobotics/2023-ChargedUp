@@ -13,6 +13,7 @@ from wpimath._controls._controls.trajectory import TrapezoidProfile
 from wpimath.controller import ProfiledPIDController, ArmFeedforward
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from util.angleoptimize import optimizeAngle
+from util.simcoder import CTREEncoder
 
 from util.simfalcon import Falcon
 
@@ -107,6 +108,10 @@ class ArmSubsystem(SubsystemBase):
             constants.kTopArmInverted,
         )
         self.topArm.setNeutralMode(Falcon.NeutralMode.Break)
+        self.topEncoder = CTREEncoder(
+            constants.kTopArmCANCoderID, constants.kTopArmCANCoderOffset
+        )
+
         self.bottomArm = Falcon(
             constants.kBottomArmCANId,
             constants.kArmPIDSlot,
@@ -116,6 +121,10 @@ class ArmSubsystem(SubsystemBase):
             constants.kBottomArmInverted,
         )
         self.bottomArm.setNeutralMode(Falcon.NeutralMode.Break)
+        self.bottomEncoder = CTREEncoder(
+            constants.kBottomArmCANCoderID, constants.kBottomArmCANCoderOffset
+        )
+
         self.wristArm = Falcon(
             constants.kWristPivotArmCANId,
             constants.kArmPIDSlot,
@@ -125,6 +134,9 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristPivotArmInverted,
         )
         self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
+        self.wristEncoder = CTREEncoder(
+            constants.kWristPivotArmCANCoderID, constants.kWristPivotArmCANCoderOffset
+        )
 
         self.xProfiledPID = ProfiledPIDController(
             constants.kArmTranslationalPGain,
@@ -143,6 +155,25 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmTranslationalMaxVelocity,
                 constants.kArmTranslationalMaxAcceleration,
             ),
+        )
+
+        self.reset()
+
+    def reset(self) -> None:
+        self.bottomArm.setEncoderPosition(
+            self.bottomEncoder.getPosition().radians()
+            * constants.kTalonEncoderPulsesPerRadian
+            * constants.kBottomArmGearRatio
+        )
+        self.topArm.setEncoderPosition(
+            self.topEncoder.getPosition().radians()
+            * constants.kTalonEncoderPulsesPerRadian
+            * constants.kTopArmGearRatio
+        )
+        self.wristArm.setEncoderPosition(
+            self.wristEncoder.getPosition().radians()
+            * constants.kTalonEncoderPulsesPerRadian
+            * constants.kWristPivotArmGearRatio
         )
 
     def getTopArmRotation(self) -> Rotation2d:

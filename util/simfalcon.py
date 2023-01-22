@@ -7,7 +7,7 @@ from ctre import (
     NeutralMode,
     TalonFXSimCollection,
     WPI_TalonFX,
-    DemandType
+    DemandType,
 )
 from wpilib import RobotBase, SmartDashboard
 
@@ -210,9 +210,11 @@ class Falcon:
             return
         self.motor.setInverted(isReversed)
 
-    def set(self, controlMode: ControlMode, demand: float, ff: float=0) -> None:
+    def set(self, controlMode: ControlMode, demand: float, ff: float = 0) -> None:
         if controlMode == Falcon.ControlMode.Position:
-            self.motor.set(ControlMode.Position, demand, DemandType.ArbitraryFeedForward, ff)
+            self.motor.set(
+                ControlMode.Position, demand, DemandType.ArbitraryFeedForward, ff
+            )
         elif controlMode == Falcon.ControlMode.Velocity:
             self.motor.set(ControlMode.Velocity, demand)
         elif controlMode == Falcon.ControlMode.Percent:
@@ -244,6 +246,9 @@ class Falcon:
         elif controlMode == Falcon.ControlMode.Percent:
             return self.motor.get()
         return 0
+
+    def setEncoderPosition(self, encoderPulses: float):
+        self.motor.setSelectedSensorPosition(encoderPulses)
 
     def getSimCollection(self) -> TalonFXSimCollection:
         return self.motor.getSimCollection()
