@@ -17,5 +17,6 @@ robotpy-installer==2023.0.1
 robotpy-navx==2023.0.3
 robotpy-wpimath==2023.3.2.1
 robotpy-wpiutil==2023.3.2.1
+robotpy-pathplannerlib==2023.3.4.1
 wpilib==2023.3.2.1
 robotpy-photonvision==2023.3.0
