@@ -20,6 +20,13 @@
     },
     "replace me"
   ],
+  "armOverride": [
+    2,
+    {
+      "Button": 4
+    },
+    "replace me"
+  ],
   "armTop": [
     2,
     {

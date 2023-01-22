@@ -25,6 +25,7 @@ class ArmSubsystem(SubsystemBase):
         Mid = auto()
         HumanStation = auto()
         Top = auto()
+        OverrideValue = auto()
 
         def position(self) -> Pose2d:
             if self == ArmSubsystem.ArmState.Stored:
@@ -93,6 +94,9 @@ class ArmSubsystem(SubsystemBase):
         )
 
         SmartDashboard.putData("Arm Sim", self.mech)
+        SmartDashboard.putNumber(constants.kTopArmOverrideKey, 0)
+        SmartDashboard.putNumber(constants.kBottomArmOverrideKey, 0)
+        SmartDashboard.putNumber(constants.kWristArmOverrideKey, 0)
 
         self.topArm = Falcon(
             constants.kTopArmCANId,
@@ -178,7 +182,18 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(
             constants.kWristPivotArmRotationKey, self.getWristArmRotation().degrees()
         )
-        self.setEndEffectorPosition(self.state.position())
+        if self.state == ArmSubsystem.ArmState.OverrideValue:
+            top = SmartDashboard.getNumber(constants.kTopArmOverrideKey, 0)
+            bottom = SmartDashboard.getNumber(constants.kBottomArmOverrideKey, 0)
+            wrist = SmartDashboard.getNumber(constants.kWristArmOverrideKey, 0)
+
+            self.setRelativeArmAngles(
+                Rotation2d.fromDegrees(top),
+                Rotation2d.fromDegrees(bottom),
+                Rotation2d.fromDegrees(wrist),
+            )
+        else:
+            self.setEndEffectorPosition(self.state.position())
         self.updateMechanism()
 
     def setEndEffectorPosition(self, pose: Pose2d):
@@ -203,24 +218,33 @@ class ArmSubsystem(SubsystemBase):
         )
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
+        self.setRelativeArmAngles(
+            Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(wristAngle)
+        )
+
+    def setRelativeArmAngles(
+        self, bottom: Rotation2d, top: Rotation2d, wrist: Rotation2d
+    ) -> None:
         bottomArmEncoderPulses = (
-            startAngle
+            bottom.radians()
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kBottomArmGearRatio
         )
         topArmEncoderPulses = (
-            endAngle
+            top.radians()
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kTopArmGearRatio
         )
         wristArmEncoderPulses = (
-            wristAngle
+            wrist.radians()
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristPivotArmGearRatio
         )
 
         self.topArm.set(Falcon.ControlMode.Position, topArmEncoderPulses)
         self.bottomArm.set(
-            Falcon.ControlMode.Position, bottomArmEncoderPulses, self.armFF.calculate(startAngle, 0, 0)
+            Falcon.ControlMode.Position,
+            bottomArmEncoderPulses,
+            self.armFF.calculate(bottom.radians(), 0, 0),
         )
         self.wristArm.set(Falcon.ControlMode.Position, wristArmEncoderPulses)

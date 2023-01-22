@@ -6,6 +6,7 @@ import commands2.button
 from commands.arm.statearmposition import (
     SetArmPositionDoubleSubstation,
     SetArmPositionMid,
+    SetArmPositionOverride,
     SetArmPositionStored,
     SetArmPositionTop,
 )
@@ -118,6 +119,10 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.armDoubleSubstation
         ).whileHeld(SetArmPositionDoubleSubstation(self.arm))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.armDoubleSubstation
+        ).toggleWhenPressed(SetArmPositionOverride(self.arm))
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

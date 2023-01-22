@@ -590,7 +590,7 @@ kTopArmDGain = 0
 kTopArmInverted = False
 
 kTopArmGearRatio = 40 / 1
-kTopArmRotationKey = "topArmRotation"
+kTopArmRotationKey = "arm/rotation/top"
 
 kBottomArmCANId = 44
 kBottomArmPGain = 0.2
@@ -599,7 +599,7 @@ kBottomArmDGain = 20
 kBottomArmInverted = False
 
 kBottomArmGearRatio = 70/14
-kBottomArmRotationKey = "bottomArmRotaion"
+kBottomArmRotationKey = "arm/rotation/bottom"
 kBottomArmFFFactor = 0.14
 
 kWristPivotArmCANId = 32
@@ -609,7 +609,7 @@ kWristPivotArmDGain = 0
 kWristPivotArmInverted = False
 
 kWristPivotArmGearRatio = 20 / 1
-kWristPivotArmRotationKey = "wristArmRotation"
+kWristPivotArmRotationKey = "arm/rotaiton/wrist"
 
 
 kArmtopLength = 21.465 * kMetersPerInch
@@ -621,7 +621,7 @@ kArmbottomMass = 4  # kg
 kArmwristLength = 12 * kMetersPerInch
 kArmwristMass = 2  # kg
 
-kArmStateKey = "armState"
+kArmStateKey = "arm/state"
 
 kArmTranslationalPGain = 0.1
 kArmTranslationalIGain = 0
@@ -631,6 +631,10 @@ kArmTranslationalMaxVelocity = 3
 """m/s"""
 kArmTranslationalMaxAcceleration = 3 
 """m/s^2"""
+
+kTopArmOverrideKey = "arm/override/top"
+kBottomArmOverrideKey = "arm/override/bottom"
+kWristArmOverrideKey = "arm/override/wrist"
 
 # scoring positions
 kArmTopScorePosition = Pose2d(
