@@ -3,7 +3,6 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.auto.autonomousaction import AutonomousRoutine
 
 
 import constants
@@ -16,6 +15,7 @@ from commands.drive.targetrelativedrive import TargetRelativeDrive
 from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.defensestate import DefenseState
+from commands.auto.autonomousaction import AutonomousRoutine
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
@@ -64,9 +64,7 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        pathsPath = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), "deploy", "pathplanner"
-        )
+        pathsPath = os.path.join(wpilib.getDeployDirectory(), "pathplanner")
         for file in os.listdir(pathsPath):
             relevantName = file.split(".")[0]
             self.chooser.addOption(

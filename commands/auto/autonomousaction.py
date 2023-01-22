@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 from commands2 import (
     Command,
     ParallelCommandGroup,
@@ -16,19 +16,28 @@ from subsystems.drivesubsystem import DriveSubsystem
 
 
 class AutonomousRoutine(SequentialCommandGroup):
+    markerMap: Dict[str, Command]
+
     def __init__(
         self,
         drive: DriveSubsystem,
         name: str,
         simultaneousCommands: List[Command],
-        **markerIden: Command
     ):
-        self.markerMap = markerIden
+        self.markerMap = {  # later todo: actual implementation
+            "store": WaitCommand(2),
+            "top": WaitCommand(2),
+            "mid": WaitCommand(2),
+            "hybrid": WaitCommand(2),
+            "engage": WaitCommand(5),
+            "intake": WaitCommand(0.25),
+            "outtake": WaitCommand(0.25),
+        }
         paths = trajectoryFromFile(name)
         followCommands = [
             SequentialCommandGroup(
                 self.stopEventGroup(path.getStartStopEvent()),
-                FollowTrajectory(drive, path, path.getMarkers(), markerIden),
+                FollowTrajectory(drive, path, path.getMarkers(), self.markerMap),
                 self.stopEventGroup(path.getEndStopEvent()),
             )
             for path in paths
@@ -53,7 +62,7 @@ class AutonomousRoutine(SequentialCommandGroup):
         commands = [
             self.markerMap.get(name)
             for name in stopEvent.names
-            if name in self.markerMap.keys()
+            if name in self.markerMap
         ]
         if (
             stopEvent.executionBehavior
