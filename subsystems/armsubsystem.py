@@ -106,6 +106,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kTopArmIGain,
             constants.kTopArmDGain,
             constants.kTopArmInverted,
+            useDINSim=False
         )
         self.topArm.setNeutralMode(Falcon.NeutralMode.Break)
         self.topEncoder = CTREEncoder(
@@ -119,6 +120,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kBottomArmIGain,
             constants.kBottomArmDGain,
             constants.kBottomArmInverted,
+            useDINSim=False
         )
         self.bottomArm.setNeutralMode(Falcon.NeutralMode.Break)
         self.bottomEncoder = CTREEncoder(
@@ -132,6 +134,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristPivotArmIGain,
             constants.kWristPivotArmDGain,
             constants.kWristPivotArmInverted,
+            useDINSim=False
         )
         self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
         self.wristEncoder = CTREEncoder(

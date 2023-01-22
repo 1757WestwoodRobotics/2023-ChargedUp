@@ -142,7 +142,9 @@ class SimFalcon:  # a simulated Falcon 500
     def get(self) -> float:
         return self.motor.get()
 
-    def set(self, mode: ControlMode, demand: float) -> None:
+    def set(
+        self, mode: ControlMode, demand: float, _demandType: DemandType, _demand1: float
+    ) -> None:
         self.motor.set(mode, demand)
         currentPosition = self.motor.getSelectedSensorPosition()
         rawPercentOutput = 0
@@ -195,6 +197,7 @@ class Falcon:
         dGain: float = 0,
         isReversed: bool = False,
         canbus: str = "",
+        useDINSim: bool = True,
     ) -> None:
         self.motor = createMotor(canID, canbus)
 
@@ -206,8 +209,9 @@ class Falcon:
             return
         if not ctreCheckError("config_kI", self.motor.config_kI(pidSlot, iGain)):
             return
-        if not ctreCheckError("config_kD", self.motor.config_kD(pidSlot, dGain)):
-            return
+        if RobotBase.isReal() or useDINSim:
+            if not ctreCheckError("config_kD", self.motor.config_kD(pidSlot, dGain)):
+                return
         self.motor.setInverted(isReversed)
 
     def set(self, controlMode: ControlMode, demand: float, ff: float = 0) -> None:
