@@ -603,7 +603,7 @@ kBottomArmInverted = False
 
 kBottomArmGearRatio = 70/14
 kBottomArmRotationKey = "arm/rotation/bottom"
-kBottomArmFFFactor = 0.14
+kBottomArmFFFactor = 0.05
 
 kBottomArmCANCoderID = 45
 kBottomArmCANCoderOffset = -150.996
