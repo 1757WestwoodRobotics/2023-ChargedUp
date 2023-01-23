@@ -142,44 +142,44 @@ class VisionSim:
 class ArmSimulation:
     def __init__(
         self,
-        bottomSimMotor: TalonFXSimCollection,
-        topSimMotor: TalonFXSimCollection,
+        shoulderSimMotor: TalonFXSimCollection,
+        elbowSimMotor: TalonFXSimCollection,
         wristSimMotor: TalonFXSimCollection,
     ) -> None:
 
-        self.bottomGearbox = DCMotor.falcon500(1)
-        self.topGearbox = DCMotor.falcon500(1)
+        self.shoulderGearbox = DCMotor.falcon500(1)
+        self.elbowGearbox = DCMotor.falcon500(1)
         self.wristGearbox = DCMotor.falcon500(1)
 
-        self.topJointSim = SingleJointedArmSim(
-            self.topGearbox,
-            constants.kTopArmGearRatio,
+        self.elbowJointSim = SingleJointedArmSim(
+            self.elbowGearbox,
+            constants.kElbowArmGearRatio,
             SingleJointedArmSim.estimateMOI(
-                constants.kArmtopLength, constants.kArmtopMass
+                constants.kArmelbowLength, constants.kArmelbowMass
             ),
-            constants.kArmtopLength,
+            constants.kArmelbowLength,
             -75 / constants.kRadiansPerDegree,
             260 / constants.kRadiansPerDegree,
-            constants.kArmtopMass,
+            constants.kArmelbowMass,
             False,
             [0],
         )
-        self.bottomJointSim = SingleJointedArmSim(
-            self.bottomGearbox,
-            constants.kBottomArmGearRatio,
+        self.shoulderJointSim = SingleJointedArmSim(
+            self.shoulderGearbox,
+            constants.kShoulderArmGearRatio,
             SingleJointedArmSim.estimateMOI(
-                constants.kArmbottomLength, constants.kArmbottomMass
+                constants.kArmshoulderLength, constants.kArmshoulderMass
             ),
-            constants.kArmbottomLength,
+            constants.kArmshoulderLength,
             math.radians(-75),
             math.radians(255),
-            constants.kArmbottomMass,
+            constants.kArmshoulderMass,
             True,
             [0],
         )
         self.wristJointSim = SingleJointedArmSim(
             self.wristGearbox,
-            constants.kWristPivotArmGearRatio,
+            constants.kWristArmGearRatio,
             SingleJointedArmSim.estimateMOI(
                 constants.kArmwristLength, constants.kArmwristMass
             ),
@@ -191,38 +191,38 @@ class ArmSimulation:
             [0],
         )
 
-        self.bottomSimMotor = bottomSimMotor
-        self.topSimMotor = topSimMotor
+        self.shoulderSimMotor = shoulderSimMotor
+        self.elbowSimMotor = elbowSimMotor
         self.wristSimMotor = wristSimMotor
 
     def update(self, tm_diff) -> None:
-        self.topJointSim.setInput(0, self.topSimMotor.getMotorOutputLeadVoltage())
-        self.bottomJointSim.setInput(0, self.bottomSimMotor.getMotorOutputLeadVoltage())
+        self.elbowJointSim.setInput(0, self.elbowSimMotor.getMotorOutputLeadVoltage())
+        self.shoulderJointSim.setInput(0, self.shoulderSimMotor.getMotorOutputLeadVoltage())
         self.wristJointSim.setInput(0, self.wristSimMotor.getMotorOutputLeadVoltage())
 
         self.wristJointSim.update(tm_diff)
-        self.topJointSim.update(tm_diff)
-        self.bottomJointSim.update(tm_diff)
+        self.elbowJointSim.update(tm_diff)
+        self.shoulderJointSim.update(tm_diff)
 
-        self.topSimMotor.setIntegratedSensorRawPosition(
+        self.elbowSimMotor.setIntegratedSensorRawPosition(
             int(
-                self.topJointSim.getAngle()
+                self.elbowJointSim.getAngle()
                 * constants.kTalonEncoderPulsesPerRadian
-                * constants.kTopArmGearRatio
+                * constants.kElbowArmGearRatio
             )
         )
-        self.bottomSimMotor.setIntegratedSensorRawPosition(
+        self.shoulderSimMotor.setIntegratedSensorRawPosition(
             int(
-                self.bottomJointSim.getAngle()
+                self.shoulderJointSim.getAngle()
                 * constants.kTalonEncoderPulsesPerRadian
-                * constants.kBottomArmGearRatio
+                * constants.kShoulderArmGearRatio
             )
         )
-        self.bottomSimMotor.setIntegratedSensorRawPosition(
+        self.shoulderSimMotor.setIntegratedSensorRawPosition(
             int(
                 self.wristJointSim.getAngle()
                 * constants.kTalonEncoderPulsesPerRadian
-                * constants.kBottomArmGearRatio
+                * constants.kShoulderArmGearRatio
             )
         )
 
@@ -290,8 +290,8 @@ class PhysicsEngine:
 
         self.driveSim = SwerveDriveSim(tuple(self.swerveModuleSims))
         self.armSim = ArmSimulation(
-            robot.container.arm.bottomArm.getSimCollection(),
-            robot.container.arm.topArm.getSimCollection(),
+            robot.container.arm.shoulderArm.getSimCollection(),
+            robot.container.arm.elbowArm.getSimCollection(),
             robot.container.arm.wristArm.getSimCollection(),
         )
 

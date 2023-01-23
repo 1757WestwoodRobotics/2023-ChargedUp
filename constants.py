@@ -16,7 +16,7 @@ Axes Convention (right hand rule):
     Rotation:
         +rotate around X: counterclockwise looking from the front, 0 aligned with +Y
         +rotate around Y: counterclockwise looking from the left, 0 aligned with +Z
-        +rotate around Z: counterclockwise looking from the top, 0 aligned with +X
+        +rotate around Z: counterclockwise looking from the elbow, 0 aligned with +X
 
 Swerve Module Layout:
     Drive (input) -> Drive Gearing -> Wheel (output)
@@ -583,48 +583,48 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 # Arm
 kArmPIDSlot = 0
 
-kTopArmCANId = 30
-kTopArmPGain = 0.05
-kTopArmIGain = 0.0
-kTopArmDGain = 0
-kTopArmInverted = False
+kElbowArmCANId = 30
+kElbowArmPGain = 0.05
+kElbowArmIGain = 0.0
+kElbowArmDGain = 0
+kElbowArmInverted = False
 
-kTopArmGearRatio = 40 / 1
-kTopArmRotationKey = "arm/rotation/top"
+kElbowArmGearRatio = 40 / 1
+kElbowArmRotationKey = "arm/rotation/elbow"
 
-kTopArmCANCoderID = 35
-kTopArmCANCoderOffset = 0
+kElbowArmCANCoderID = 35
+kElbowArmCANCoderOffset = 0
 
-kBottomArmCANId = 44
-kBottomArmPGain = 0.2
-kBottomArmIGain = 0.0
-kBottomArmDGain = 20
-kBottomArmInverted = False
+kShoulderArmCANId = 44
+kShoulderArmPGain = 0.2
+kShoulderArmIGain = 0.0
+kShoulderArmDGain = 20
+kShoulderArmInverted = False
 
-kBottomArmGearRatio = 70/14
-kBottomArmRotationKey = "arm/rotation/bottom"
-kBottomArmFFFactor = 0.05
+kShoulderArmGearRatio = 70/14
+kShoulderArmRotationKey = "arm/rotation/shoulder"
+kShoulderArmFFFactor = 0.05
 
-kBottomArmCANCoderID = 45
-kBottomArmCANCoderOffset = -150.996
+kShoulderArmCANCoderID = 45
+kShoulderArmCANCoderOffset = -150.996
 
-kWristPivotArmCANId = 32
-kWristPivotArmPGain = 0.05
-kWristPivotArmIGain = 0.0
-kWristPivotArmDGain = 0
-kWristPivotArmInverted = False
+kWristArmCANId = 32
+kWristArmPGain = 0.05
+kWristArmIGain = 0.0
+kWristArmDGain = 0
+kWristArmInverted = False
 
-kWristPivotArmGearRatio = 20 / 1
-kWristPivotArmRotationKey = "arm/rotaiton/wrist"
+kWristArmGearRatio = 20 / 1
+kWristArmRotationKey = "arm/rotaiton/wrist"
 
-kWristPivotArmCANCoderID = 46
-kWristPivotArmCANCoderOffset = -150.996
+kWristArmCANCoderID = 46
+kWristArmCANCoderOffset = -150.996
 
-kArmtopLength = 21.465 * kMetersPerInch
-kArmtopMass = 10  # kg
+kArmelbowLength = 21.465 * kMetersPerInch
+kArmelbowMass = 10  # kg
 
-kArmbottomLength = 34.389 * kMetersPerInch
-kArmbottomMass = 4  # kg
+kArmshoulderLength = 34.389 * kMetersPerInch
+kArmshoulderMass = 4  # kg
 
 kArmwristLength = 12 * kMetersPerInch
 kArmwristMass = 2  # kg
@@ -640,8 +640,8 @@ kArmTranslationalMaxVelocity = 3
 kArmTranslationalMaxAcceleration = 3 
 """m/s^2"""
 
-kTopArmOverrideKey = "arm/override/top"
-kBottomArmOverrideKey = "arm/override/bottom"
+kElbowArmOverrideKey = "arm/override/elbow"
+kShoulderArmOverrideKey = "arm/override/shoulder"
 kWristArmOverrideKey = "arm/override/wrist"
 
 # scoring positions
