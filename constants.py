@@ -585,7 +585,7 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 kArmPIDSlot = 0
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.05
+kElbowArmPGain = 0.2
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
@@ -610,7 +610,7 @@ kShoulderArmCANCoderID = 45
 kShoulderArmCANCoderOffset = -150.996
 
 kWristArmCANId = 32
-kWristArmPGain = 0.05
+kWristArmPGain = 0.2
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = False
@@ -621,13 +621,13 @@ kWristArmRotationKey = "arm/rotaiton/wrist"
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
 
-kArmelbowLength = 21.465 * kMetersPerInch
+kArmelbowLength = 22.694612 * kMetersPerInch
 kArmelbowMass = 10  # kg
 
-kArmshoulderLength = 34.389 * kMetersPerInch
+kArmshoulderLength = 24.337114 * kMetersPerInch
 kArmshoulderMass = 4  # kg
 
-kArmwristLength = 12 * kMetersPerInch
+kArmwristLength = 14 * kMetersPerInch
 kArmwristMass = 2  # kg
 
 kArmStateKey = "arm/state"
@@ -646,31 +646,31 @@ kShoulderArmOverrideKey = "arm/override/shoulder"
 kWristArmOverrideKey = "arm/override/wrist"
 
 kShoulderRobotOffset = Transform3d(
-    Translation3d(7.418 * kMetersPerInch, 0, 10 * kMetersPerInch),
+    Translation3d(8 * kMetersPerInch, 0, 9.75 * kMetersPerInch),
     Rotation3d(0, math.pi, 0),
 )
 kArmPosesKey = "arm/poses"
 
-# scoring positions
+# scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
-    -42.963 * kMetersPerInch,
-    41.227 * kMetersPerInch,
-    Rotation2d.fromDegrees(200),
+    -41.031951 * kMetersPerInch,
+    41.869006 * kMetersPerInch,
+    Rotation2d.fromDegrees(110),
 )
 kArmMidScorePosition = Pose2d(
-    -23.537 * kMetersPerInch,
-    29.082532 * kMetersPerInch,
-    Rotation2d.fromDegrees(210),
+    -26.031860 * kMetersPerInch,
+    29.814583 * kMetersPerInch,
+    Rotation2d.fromDegrees(120),
 )
 kArmStoredPosition = Pose2d(
-    15.544226 * kMetersPerInch,
-    2 * kMetersPerInch,
+    -1.5 * kMetersPerInch,
+    13.990 * kMetersPerInch,
     Rotation2d.fromDegrees(270),
 )
 kArmDoubleSubstationPosition = Pose2d(
-    30.544226 * kMetersPerInch,
-    34.125000 * kMetersPerInch,
-    Rotation2d.fromDegrees(-90),
+    -14.764635 * kMetersPerInch,
+    41.666228 * kMetersPerInch,
+    Rotation2d.fromDegrees(145),
 )
 
 # Logging

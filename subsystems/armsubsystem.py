@@ -266,8 +266,11 @@ class ArmSubsystem(SubsystemBase):
             Translation3d(constants.kArmelbowLength, 0, 0),
             Rotation3d(0, self.getWristArmRotation().radians(), 0),
         )
+        endEffectorPose = wristPose + Transform3d(
+            Translation3d(constants.kArmwristLength, 0, 0), Rotation3d()
+        )
         sendableSerialized = convertToSendablePoses(
-            [shoulderPose, elbowPose, wristPose]
+            [shoulderPose, elbowPose, wristPose, endEffectorPose]
         )
         SmartDashboard.putNumberArray(constants.kArmPosesKey, sendableSerialized)
 
