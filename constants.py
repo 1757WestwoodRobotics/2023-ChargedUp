@@ -27,11 +27,12 @@ import math
 from ctre import SupplyCurrentLimitConfiguration
 from wpimath.geometry import (
     Pose2d,
-    Rotation2d,
-    Translation2d,
     Pose3d,
+    Rotation2d,
     Rotation3d,
     Transform3d,
+    Translation2d,
+    Translation3d,
 )
 from wpimath.system.plant import DCMotor
 
@@ -601,7 +602,7 @@ kShoulderArmIGain = 0.0
 kShoulderArmDGain = 20
 kShoulderArmInverted = False
 
-kShoulderArmGearRatio = 70/14
+kShoulderArmGearRatio = 70 / 14
 kShoulderArmRotationKey = "arm/rotation/shoulder"
 kShoulderArmFFFactor = 0.05
 
@@ -635,14 +636,20 @@ kArmTranslationalPGain = 0.1
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 3 
+kArmTranslationalMaxVelocity = 3
 """m/s"""
-kArmTranslationalMaxAcceleration = 3 
+kArmTranslationalMaxAcceleration = 3
 """m/s^2"""
 
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"
 kWristArmOverrideKey = "arm/override/wrist"
+
+kShoulderRobotOffset = Transform3d(
+    Translation3d(7.418 * kMetersPerInch, 0, 10 * kMetersPerInch),
+    Rotation3d(0, math.pi, 0),
+)
+kArmPosesKey = "arm/poses"
 
 # scoring positions
 kArmTopScorePosition = Pose2d(

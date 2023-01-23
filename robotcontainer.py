@@ -120,9 +120,9 @@ class RobotContainer:
             *self.operatorInterface.armDoubleSubstation
         ).whileHeld(SetArmPositionDoubleSubstation(self.arm))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.armOverride
-        ).whileHeld(SetArmPositionOverride(self.arm))
+        commands2.button.JoystickButton(*self.operatorInterface.armOverride).whileHeld(
+            SetArmPositionOverride(self.arm)
+        )
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

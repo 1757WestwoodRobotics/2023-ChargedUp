@@ -11,8 +11,18 @@ from wpilib import (
 )
 from wpimath._controls._controls.trajectory import TrapezoidProfile
 from wpimath.controller import ProfiledPIDController, ArmFeedforward
-from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
+from wpimath.geometry import (
+    Pose2d,
+    Rotation2d,
+    Rotation3d,
+    Transform2d,
+    Transform3d,
+    Translation2d,
+    Translation3d,
+)
+from util.advantagescopeconvert import convertToSendablePoses
 from util.angleoptimize import optimizeAngle
+from util.convenientmath import pose3dFrom2d
 from util.simcoder import CTREEncoder
 
 from util.simfalcon import Falcon
@@ -180,12 +190,33 @@ class ArmSubsystem(SubsystemBase):
         )
 
     def getElbowArmRotation(self) -> Rotation2d:
-        return self.elbowEncoder.getPosition()
+        return Rotation2d(
+            self.elbowArm.get(Falcon.ControlMode.Position)
+            / constants.kElbowArmGearRatio
+            / constants.kTalonEncoderPulsesPerRadian
+        )
 
     def getShoulderArmRotation(self) -> Rotation2d:
-        return self.shoulderEncoder.getPosition()
+        return Rotation2d(
+            self.shoulderArm.get(Falcon.ControlMode.Position)
+            / constants.kShoulderArmGearRatio
+            / constants.kTalonEncoderPulsesPerRadian
+        )
 
     def getWristArmRotation(self) -> Rotation2d:
+        return Rotation2d(
+            self.wristArm.get(Falcon.ControlMode.Position)
+            / constants.kWristArmGearRatio
+            / constants.kTalonEncoderPulsesPerRadian
+        )
+
+    def getElbowArmEncoderRotation(self) -> Rotation2d:
+        return self.elbowEncoder.getPosition()
+
+    def getShoulderArmEncoderRotation(self) -> Rotation2d:
+        return self.shoulderEncoder.getPosition()
+
+    def getWristArmEncoderRotation(self) -> Rotation2d:
         return self.wristEncoder.getPosition()
 
     def getElbowPosition(self) -> Translation2d:
@@ -210,6 +241,35 @@ class ArmSubsystem(SubsystemBase):
             Translation2d(constants.kArmwristLength, wristRot + elbowRot + shoulderRot)
             + wristPosition
         )
+
+    def updateArmPositionsLogging(self) -> None:
+        robotPose3d = pose3dFrom2d(
+            Pose2d(
+                *SmartDashboard.getNumberArray(
+                    constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+                )
+            )
+        )
+        shoulderPose = (
+            robotPose3d
+            + constants.kShoulderRobotOffset
+            + Transform3d(
+                Translation3d(),
+                Rotation3d(0, self.getShoulderArmRotation().radians(), 0),
+            )
+        )
+        elbowPose = shoulderPose + Transform3d(
+            Translation3d(constants.kArmshoulderLength, 0, 0),
+            Rotation3d(0, self.getElbowArmRotation().radians(), 0),
+        )
+        wristPose = elbowPose + Transform3d(
+            Translation3d(constants.kArmelbowLength, 0, 0),
+            Rotation3d(0, self.getWristArmRotation().radians(), 0),
+        )
+        sendableSerialized = convertToSendablePoses(
+            [shoulderPose, elbowPose, wristPose]
+        )
+        SmartDashboard.putNumberArray(constants.kArmPosesKey, sendableSerialized)
 
     def updateMechanism(self) -> None:
         self.armElbow.setAngle(self.getElbowArmRotation().degrees())
@@ -240,6 +300,7 @@ class ArmSubsystem(SubsystemBase):
         else:
             self.setEndEffectorPosition(self.state.position())
         self.updateMechanism()
+        self.updateArmPositionsLogging()
 
     def setEndEffectorPosition(self, pose: Pose2d):
         twoLinkGoalPosition = Translation2d(

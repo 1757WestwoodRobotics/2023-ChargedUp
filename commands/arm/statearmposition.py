@@ -30,5 +30,6 @@ class SetArmPositionDoubleSubstation(SetArmPositionMid):
 class SetArmPositionStored(SetArmPositionMid):
     state = ArmSubsystem.ArmState.Stored
 
+
 class SetArmPositionOverride(SetArmPositionMid):
     state = ArmSubsystem.ArmState.OverrideValue

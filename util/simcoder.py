@@ -53,4 +53,3 @@ class CTREEncoder:
 
     def getSimCollection(self) -> CANCoderSimCollection:
         return self.encoder.getSimCollection()
-
