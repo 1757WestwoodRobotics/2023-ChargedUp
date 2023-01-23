@@ -180,25 +180,13 @@ class ArmSubsystem(SubsystemBase):
         )
 
     def getElbowArmRotation(self) -> Rotation2d:
-        return Rotation2d(
-            self.elbowArm.get(Falcon.ControlMode.Position)
-            / constants.kElbowArmGearRatio
-            / constants.kTalonEncoderPulsesPerRadian
-        )
+        return self.elbowEncoder.getPosition()
 
     def getShoulderArmRotation(self) -> Rotation2d:
-        return Rotation2d(
-            self.shoulderArm.get(Falcon.ControlMode.Position)
-            / constants.kShoulderArmGearRatio
-            / constants.kTalonEncoderPulsesPerRadian
-        )
+        return self.shoulderEncoder.getPosition()
 
     def getWristArmRotation(self) -> Rotation2d:
-        return Rotation2d(
-            self.wristArm.get(Falcon.ControlMode.Position)
-            / constants.kWristArmGearRatio
-            / constants.kTalonEncoderPulsesPerRadian
-        )
+        return self.wristEncoder.getPosition()
 
     def updateMechanism(self) -> None:
         self.armElbow.setAngle(self.getElbowArmRotation().degrees())

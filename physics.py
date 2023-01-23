@@ -15,7 +15,7 @@ import typing
 import typing
 import math
 from photonvision import SimVisionSystem, SimVisionTarget
-from ctre import TalonFXSimCollection
+from ctre import CANCoderSimCollection, TalonFXSimCollection
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim, SingleJointedArmSim
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
@@ -145,6 +145,9 @@ class ArmSimulation:
         shoulderSimMotor: TalonFXSimCollection,
         elbowSimMotor: TalonFXSimCollection,
         wristSimMotor: TalonFXSimCollection,
+        shoulderSimEncoder: CANCoderSimCollection,
+        elbowSimEncoder: CANCoderSimCollection,
+        wristSimEncoder: CANCoderSimCollection,
     ) -> None:
 
         self.shoulderGearbox = DCMotor.falcon500(1)
@@ -195,14 +198,20 @@ class ArmSimulation:
         self.elbowSimMotor = elbowSimMotor
         self.wristSimMotor = wristSimMotor
 
+        self.shoulderSimEncoder = shoulderSimEncoder
+        self.elbowSimEncoder = elbowSimEncoder
+        self.wristSimEncoder = wristSimEncoder
+
     def update(self, tm_diff) -> None:
+        self.shoulderJointSim.setInput(
+            0, self.shoulderSimMotor.getMotorOutputLeadVoltage()
+        )
         self.elbowJointSim.setInput(0, self.elbowSimMotor.getMotorOutputLeadVoltage())
-        self.shoulderJointSim.setInput(0, self.shoulderSimMotor.getMotorOutputLeadVoltage())
         self.wristJointSim.setInput(0, self.wristSimMotor.getMotorOutputLeadVoltage())
 
-        self.wristJointSim.update(tm_diff)
-        self.elbowJointSim.update(tm_diff)
         self.shoulderJointSim.update(tm_diff)
+        self.elbowJointSim.update(tm_diff)
+        self.wristJointSim.update(tm_diff)
 
         self.elbowSimMotor.setIntegratedSensorRawPosition(
             int(
@@ -211,6 +220,10 @@ class ArmSimulation:
                 * constants.kElbowArmGearRatio
             )
         )
+        self.elbowSimEncoder.setRawPosition(
+            int(self.elbowJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
+        )
+
         self.shoulderSimMotor.setIntegratedSensorRawPosition(
             int(
                 self.shoulderJointSim.getAngle()
@@ -218,12 +231,19 @@ class ArmSimulation:
                 * constants.kShoulderArmGearRatio
             )
         )
-        self.shoulderSimMotor.setIntegratedSensorRawPosition(
+        self.shoulderSimEncoder.setRawPosition(
+            int(self.shoulderJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
+        )
+
+        self.wristSimMotor.setIntegratedSensorRawPosition(
             int(
                 self.wristJointSim.getAngle()
                 * constants.kTalonEncoderPulsesPerRadian
-                * constants.kShoulderArmGearRatio
+                * constants.kWristArmGearRatio
             )
+        )
+        self.wristSimEncoder.setRawPosition(
+            int(self.wristJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
         )
 
 
@@ -293,6 +313,9 @@ class PhysicsEngine:
             robot.container.arm.shoulderArm.getSimCollection(),
             robot.container.arm.elbowArm.getSimCollection(),
             robot.container.arm.wristArm.getSimCollection(),
+            robot.container.arm.shoulderEncoder.getSimCollection(),
+            robot.container.arm.elbowEncoder.getSimCollection(),
+            robot.container.arm.wristEncoder.getSimCollection(),
         )
 
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")

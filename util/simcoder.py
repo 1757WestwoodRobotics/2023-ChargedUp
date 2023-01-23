@@ -1,4 +1,4 @@
-from ctre import CANCoder
+from ctre import CANCoder, CANCoderSimCollection
 from ctre.sensors import AbsoluteSensorRange, SensorInitializationStrategy
 from wpimath.geometry import Rotation2d
 
@@ -50,4 +50,7 @@ class CTREEncoder:
 
     def getPosition(self) -> Rotation2d:
         return Rotation2d.fromDegrees(self.encoder.getAbsolutePosition())
+
+    def getSimCollection(self) -> CANCoderSimCollection:
+        return self.encoder.getSimCollection()
 
