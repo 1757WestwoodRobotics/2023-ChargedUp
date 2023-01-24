@@ -27,7 +27,6 @@ import math
 from ctre import SupplyCurrentLimitConfiguration
 from wpimath.geometry import (
     Pose2d,
-    Pose3d,
     Rotation2d,
     Rotation3d,
     Transform3d,

@@ -3,13 +3,6 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.arm.statearmposition import (
-    SetArmPositionDoubleSubstation,
-    SetArmPositionMid,
-    SetArmPositionOverride,
-    SetArmPositionStored,
-    SetArmPositionTop,
-)
 
 
 import constants
@@ -23,9 +16,16 @@ from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
+from commands.arm.statearmposition import (
+    SetArmPositionDoubleSubstation,
+    SetArmPositionMid,
+    SetArmPositionOverride,
+    SetArmPositionStored,
+    SetArmPositionTop,
+)
 from commands.auto.autonomousaction import AutonomousRoutine
-from subsystems.armsubsystem import ArmSubsystem
 
+from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
 from subsystems.visionsubsystem import VisionSubsystem

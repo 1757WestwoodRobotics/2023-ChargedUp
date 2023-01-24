@@ -8,8 +8,8 @@ import constants
 
 
 class CTREEncoder:
-    def __init__(self, id: int, offset: float, canbus: str = "") -> None:
-        self.encoder = CANCoder(id, canbus)
+    def __init__(self, canId: int, offset: float, canbus: str = "") -> None:
+        self.encoder = CANCoder(canId, canbus)
         self.offset = offset
         if not ctreCheckError(
             "configFactoryDefault",

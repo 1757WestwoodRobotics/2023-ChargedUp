@@ -23,7 +23,6 @@ from wpimath.geometry import (
     Translation3d,
 )
 from util.advantagescopeconvert import convertToSendablePoses
-from util.angleoptimize import optimizeAngle
 from util.convenientmath import pose3dFrom2d
 from util.simcoder import CTREEncoder
 
