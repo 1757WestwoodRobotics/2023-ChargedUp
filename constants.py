@@ -79,10 +79,10 @@ kPrintPeriod = 1 / kPrintFrequency
 """seconds"""
 
 # Field Physical parameters
-kFieldLength = 52.5 * kMetersPerFoot
+kFieldLength = 54 * kMetersPerFoot + 3.25 * kMetersPerInch
 """meters"""
 
-kFieldWidth = 27 * kMetersPerFoot
+kFieldWidth = 26 * kMetersPerFoot + 3.5 * kMetersPerInch
 """meters"""
 
 # Robot Physical parameters

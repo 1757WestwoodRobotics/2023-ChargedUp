@@ -7,13 +7,10 @@ from commands2 import (
     WaitCommand,
 )
 from pathplannerlib import PathPlannerTrajectory
-from wpimath.geometry import Pose2d
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
-from commands.resetdrive import ResetDrive
 from subsystems.drivesubsystem import DriveSubsystem
-
 
 
 class AutonomousRoutine(SequentialCommandGroup):
@@ -45,20 +42,10 @@ class AutonomousRoutine(SequentialCommandGroup):
         ]
 
         super().__init__(
-            ResetDrive(
-                drive,
-                Pose2d(
-                    self.paths[0].getInitialState().pose.translation(),
-                    self.paths[0].getInitialState().holonomicRotation,
-                ),
-            ),
             ParallelCommandGroup(
                 SequentialCommandGroup(*followCommands), *simultaneousCommands
             ),
         )
-
-    def initialize(self) -> None:
-        super().initialize()
 
     def getStopEventCommands(
         self, stopEvent: PathPlannerTrajectory.StopEvent
