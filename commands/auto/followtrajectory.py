@@ -1,13 +1,16 @@
 from math import pi
+import functools
+import operator
 from typing import Dict, List
 from commands2 import Command, CommandBase
 from pathplannerlib import PathPlannerTrajectory
-from wpilib import Timer
+from wpilib import DriverStation, SmartDashboard, Timer
 from wpimath.controller import (
     PIDController,
     ProfiledPIDControllerRadians,
     HolonomicDriveController,
 )
+from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.trajectory import TrapezoidProfileRadians
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -63,6 +66,7 @@ class FollowTrajectory(CommandBase):
             self.xController, self.yController, self.thetaController
         )
 
+        self.originTrajectory = trajectory
         self.trajectory = trajectory
 
         self.timer = Timer()
@@ -76,6 +80,33 @@ class FollowTrajectory(CommandBase):
 
         self.unpassedMarkers = []
         self.unpassedMarkers.extend(self.markers)
+
+        self.trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(
+            self.originTrajectory, DriverStation.getAlliance()
+        )
+
+        self.drive.resetOdometryAtPosition(
+            Pose2d(
+                self.trajectory.getInitialState().pose.translation(),
+                self.trajectory.getInitialState().holonomicRotation,
+            ),
+        )
+
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousPathKey,
+            functools.reduce(
+                operator.add,
+                [
+                    [
+                        state.pose.X(),
+                        state.pose.Y(),
+                        state.pose.rotation().radians(),
+                    ]
+                    for state in self.originTrajectory.getStates()
+                ],
+                [],
+            ),
+        )
 
     def execute(self) -> None:
         curTime = self.timer.get()
@@ -103,6 +134,12 @@ class FollowTrajectory(CommandBase):
         return self.timer.hasElapsed(self.trajectory.getTotalTime())
 
     def end(self, _interrupted: bool) -> None:
+        self.drive.resetGyro(
+            Pose2d(
+                self.trajectory.getEndState().pose.translation(),
+                self.trajectory.getEndState().holonomicRotation + Rotation2d(pi),
+            ),
+        )
         self.drive.arcadeDriveWithFactors(
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
         )

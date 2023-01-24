@@ -555,6 +555,7 @@ kPDHPublishKey = "powerDistribution"
 kJoystickKeyLogPrefix = "DriverStation"
 kFieldSimTargetKey = "SimTargets"
 kFieldRelativeTargets = "RelTargets"
+kAutonomousPathKey = "autoPath"
 
 # photonvision parameters
 kPhotonvisionCameraName = "cam"

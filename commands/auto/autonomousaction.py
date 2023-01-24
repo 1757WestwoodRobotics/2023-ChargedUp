@@ -7,13 +7,13 @@ from commands2 import (
     WaitCommand,
 )
 from pathplannerlib import PathPlannerTrajectory
-from wpilib import DriverStation
 from wpimath.geometry import Pose2d
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
 from commands.resetdrive import ResetDrive
 from subsystems.drivesubsystem import DriveSubsystem
+
 
 
 class AutonomousRoutine(SequentialCommandGroup):
@@ -34,33 +34,31 @@ class AutonomousRoutine(SequentialCommandGroup):
             "intake": WaitCommand(0.25),
             "outtake": WaitCommand(0.25),
         }
-        paths = [
-            PathPlannerTrajectory.transformTrajectoryForAlliance(
-                path, DriverStation.getAlliance()
-            )
-            for path in trajectoryFromFile(name)
-        ]
+        self.paths = trajectoryFromFile(name)
         followCommands = [
             SequentialCommandGroup(
                 self.stopEventGroup(path.getStartStopEvent()),
                 FollowTrajectory(drive, path, path.getMarkers(), self.markerMap),
                 self.stopEventGroup(path.getEndStopEvent()),
             )
-            for path in paths
+            for path in self.paths
         ]
 
         super().__init__(
             ResetDrive(
                 drive,
                 Pose2d(
-                    paths[0].getInitialState().pose.translation(),
-                    paths[0].getInitialState().holonomicRotation,
+                    self.paths[0].getInitialState().pose.translation(),
+                    self.paths[0].getInitialState().holonomicRotation,
                 ),
             ),
             ParallelCommandGroup(
                 SequentialCommandGroup(*followCommands), *simultaneousCommands
             ),
         )
+
+    def initialize(self) -> None:
+        super().initialize()
 
     def getStopEventCommands(
         self, stopEvent: PathPlannerTrajectory.StopEvent
