@@ -4,13 +4,15 @@ from commands2 import SubsystemBase
 from wpilib import (
     Color,
     Color8Bit,
-    DriverStation,
     Mechanism2d,
-    RobotBase,
     SmartDashboard,
 )
-from wpimath._controls._controls.trajectory import TrapezoidProfile
-from wpimath.controller import ProfiledPIDController, ArmFeedforward
+from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
+from wpimath.controller import (
+    ProfiledPIDController,
+    ArmFeedforward,
+    ProfiledPIDControllerRadians,
+)
 from wpimath.geometry import (
     Pose2d,
     Rotation2d,
@@ -169,6 +171,15 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmTranslationalMaxAcceleration,
             ),
         )
+        self.thetaProfiledPID = ProfiledPIDControllerRadians(
+            constants.kArmRotationalPGain,
+            constants.kArmRotationalIGain,
+            constants.kArmRotationalDGain,
+            TrapezoidProfileRadians.Constraints(
+                constants.kArmRotationalMaxVelocity,
+                constants.kArmRotationalMaxAcceleration,
+            ),
+        )
 
         self.reset()
 
@@ -219,27 +230,30 @@ class ArmSubsystem(SubsystemBase):
     def getWristArmEncoderRotation(self) -> Rotation2d:
         return self.wristEncoder.getPosition()
 
-    def getElbowPosition(self) -> Translation2d:
+    def getElbowPosition(self) -> Pose2d:
         shoulderRot = self.getShoulderArmRotation()
-        return Translation2d(constants.kArmshoulderLength, shoulderRot)
-
-    def getWristPosition(self) -> Translation2d:
-        elbowPosition = self.getElbowPosition()
-        shoulderRot = self.getShoulderArmRotation()
-        elbowRot = self.getElbowArmRotation()
         return (
-            Translation2d(constants.kArmelbowLength, elbowRot + shoulderRot)
-            + elbowPosition
+            Pose2d()
+            + Transform2d(Translation2d(), shoulderRot)
+            + Transform2d(Translation2d(constants.kArmshoulderLength, 0), Rotation2d())
         )
 
-    def getEndEffectorPosition(self) -> Translation2d:
-        wristPosition = self.getWristPosition()
-        shoulderRot = self.getShoulderArmRotation()
+    def getWristPosition(self) -> Pose2d:
+        elbowPosition = self.getElbowPosition()
         elbowRot = self.getElbowArmRotation()
+        return (
+            elbowPosition
+            + Transform2d(Translation2d(), elbowRot)
+            + Transform2d(Translation2d(constants.kArmelbowLength, 0), Rotation2d())
+        )
+
+    def getEndEffectorPosition(self) -> Pose2d:
+        wristPosition = self.getWristPosition()
         wristRot = self.getWristArmRotation()
         return (
-            Translation2d(constants.kArmwristLength, wristRot + elbowRot + shoulderRot)
-            + wristPosition
+            wristPosition
+            + Transform2d(Translation2d(), wristRot)
+            + Transform2d(Translation2d(constants.kArmwristLength, 0), Rotation2d())
         )
 
     def updateArmPositionsLogging(self) -> None:
@@ -306,30 +320,44 @@ class ArmSubsystem(SubsystemBase):
         self.updateArmPositionsLogging()
 
     def setEndEffectorPosition(self, pose: Pose2d):
-        twoLinkGoalPosition = Translation2d(
+        currentElbow = self.getWristPosition()
+
+        twoLinkPosition = Translation2d(
             pose.X() - constants.kArmwristLength * pose.rotation().cos(),
             pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
         )
-        twoLinkPosition = twoLinkGoalPosition
+
+        targetTwoLink = Translation2d(
+            self.xProfiledPID.calculate(currentElbow.X(), twoLinkPosition.X())
+            + currentElbow.X(),
+            self.yProfiledPID.calculate(currentElbow.Y(), twoLinkPosition.Y())
+            + currentElbow.Y(),
+        )
 
         endAngle = math.acos(
-            twoLinkPosition.X() * twoLinkPosition.X()
-            + twoLinkPosition.Y() * twoLinkPosition.Y()
+            targetTwoLink.X() * targetTwoLink.X()
+            + targetTwoLink.Y() * targetTwoLink.Y()
             - constants.kArmelbowLength * constants.kArmelbowLength
             - constants.kArmshoulderLength
             * constants.kArmshoulderLength
             / (2 * constants.kArmelbowLength * constants.kArmshoulderLength)
         )
 
-        startAngle = math.atan2(twoLinkPosition.Y(), twoLinkPosition.X()) - math.atan2(
+        startAngle = math.atan2(targetTwoLink.Y(), targetTwoLink.X()) - math.atan2(
             math.sin(endAngle) * constants.kArmelbowLength,
             constants.kArmshoulderLength
             + math.cos(endAngle) * constants.kArmelbowLength,
         )
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
+        currentWrist = self.getWristArmRotation()
+        targetWrist = (
+            self.thetaProfiledPID.calculate(currentWrist.radians(), wristAngle)
+            + currentWrist.radians()
+        )
+
         self.setRelativeArmAngles(
-            Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(wristAngle)
+            Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(targetWrist)
         )
 
     def setRelativeArmAngles(

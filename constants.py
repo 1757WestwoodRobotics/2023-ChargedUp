@@ -632,15 +632,23 @@ kArmwristMass = 2  # kg
 
 kArmStateKey = "arm/state"
 
-kArmTranslationalPGain = 0.1
+kArmTranslationalPGain = 0.5
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 3
+kArmTranslationalMaxVelocity = 5
 """m/s"""
-kArmTranslationalMaxAcceleration = 3
+kArmTranslationalMaxAcceleration = 5
 """m/s^2"""
 
+kArmRotationalPGain = 0.8
+kArmRotationalIGain = 0
+kArmRotationalDGain = 0
+
+kArmRotationalMaxVelocity = 15
+"""rad/s"""
+kArmRotationalMaxAcceleration = 120
+"""rad/s^2"""
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"
 kWristArmOverrideKey = "arm/override/wrist"
