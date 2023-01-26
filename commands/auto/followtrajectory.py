@@ -115,7 +115,11 @@ class FollowTrajectory(CommandBase):
     ) -> Tuple[Pose2d, Rotation2d]:
         if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
             return (
-                Pose2d(constants.kFieldLength - pose.X(),  pose.Y(), -pose.rotation() + Rotation2d(pi)),
+                Pose2d(
+                    constants.kFieldLength - pose.X(),
+                    pose.Y(),
+                    -pose.rotation() + Rotation2d(pi),
+                ),
                 -holonomicRotation + Rotation2d(pi),
             )
         else:
@@ -162,7 +166,7 @@ class FollowTrajectory(CommandBase):
         )
 
     def end(self, _interrupted: bool) -> None:
-        self.drive.resetGyro(self.getFinalPosition())
+        self.drive.resetOdometryAtPosition(self.getFinalPosition())
         self.drive.arcadeDriveWithFactors(
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
         )
