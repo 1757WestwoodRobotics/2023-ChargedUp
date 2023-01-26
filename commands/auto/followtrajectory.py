@@ -127,14 +127,28 @@ class FollowTrajectory(CommandBase):
 
     def execute(self) -> None:
         curTime = self.timer.get()
+        currentState = self.drive.getPose()
         desiredState = self.trajectory.sample(curTime)
 
         allianceRespectiveDesiredState = self.getAllianceRespectivePoint(
             desiredState.pose, desiredState.holonomicRotation
         )
 
+        SmartDashboard.putNumber(
+            constants.kAutonomousxError,
+            currentState.X() - allianceRespectiveDesiredState[0].X(),
+        )
+        SmartDashboard.putNumber(
+            constants.kAutonomousyError,
+            currentState.Y() - allianceRespectiveDesiredState[0].Y(),
+        )
+        SmartDashboard.putNumber(
+            constants.kAutonomousRotationError,
+            (currentState.rotation() - allianceRespectiveDesiredState[1]).radians(),
+        )
+
         targetChassisSpeeds = self.controller.calculate(
-            self.drive.getPose(),
+            currentState,
             allianceRespectiveDesiredState[0],
             desiredState.velocity,
             allianceRespectiveDesiredState[1],
