@@ -474,7 +474,7 @@ kTrajectoryPositionPGain = 4
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 6
+kTrajectoryAnglePGain = 15
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -556,9 +556,9 @@ kJoystickKeyLogPrefix = "DriverStation"
 kFieldSimTargetKey = "SimTargets"
 kFieldRelativeTargets = "RelTargets"
 kAutonomousPathKey = "auto/path"
-kAutonomousxError = "auto/xerror"
-kAutonomousyError = "auto/yerror"
-kAutonomousRotationError = "auto/rerror"
+kAutonomousPathSample = "auto/desired"
+kAutonomousPathError = "auto/error"
+kAutonomousChassisSpeeds = "auto/speeds"
 
 # photonvision parameters
 kPhotonvisionCameraName = "cam"

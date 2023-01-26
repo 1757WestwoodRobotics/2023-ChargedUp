@@ -41,6 +41,17 @@ class FollowTrajectory(CommandBase):
                         reqs
                     )  # make sure we require everything our sub commands require
 
+        self.setControllers()
+
+        self.originTrajectory = trajectory
+        self.trajectory = trajectory
+
+        self.timer = Timer()
+
+        self.addRequirements([self.drive])
+        self.setName(__class__.__name__)
+
+    def setControllers(self) -> None:
         self.xController = PIDController(
             constants.kTrajectoryPositionPGain,
             constants.kTrajectoryPositionIGain,
@@ -66,14 +77,6 @@ class FollowTrajectory(CommandBase):
             self.xController, self.yController, self.thetaController
         )
 
-        self.originTrajectory = trajectory
-        self.trajectory = trajectory
-
-        self.timer = Timer()
-
-        self.addRequirements([self.drive])
-        self.setName(__class__.__name__)
-
     def initialize(self):
         self.timer.reset()
         self.timer.start()
@@ -91,6 +94,8 @@ class FollowTrajectory(CommandBase):
                 allianceRespectiveStartingPoint[1],
             ),
         )
+
+        self.setControllers()
 
         transformedStates = [
             self.getAllianceRespectivePoint(state.pose, state.pose.rotation())
@@ -134,17 +139,21 @@ class FollowTrajectory(CommandBase):
             desiredState.pose, desiredState.holonomicRotation
         )
 
-        SmartDashboard.putNumber(
-            constants.kAutonomousxError,
-            currentState.X() - allianceRespectiveDesiredState[0].X(),
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousPathError,
+            [
+                currentState.X() - allianceRespectiveDesiredState[0].X(),
+                currentState.Y() - allianceRespectiveDesiredState[0].Y(),
+                (currentState.rotation() - allianceRespectiveDesiredState[1]).radians(),
+            ],
         )
-        SmartDashboard.putNumber(
-            constants.kAutonomousyError,
-            currentState.Y() - allianceRespectiveDesiredState[0].Y(),
-        )
-        SmartDashboard.putNumber(
-            constants.kAutonomousRotationError,
-            (currentState.rotation() - allianceRespectiveDesiredState[1]).radians(),
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousPathSample,
+            [
+                allianceRespectiveDesiredState[0].X(),
+                allianceRespectiveDesiredState[0].Y(),
+                allianceRespectiveDesiredState[1].radians(),
+            ],
         )
 
         targetChassisSpeeds = self.controller.calculate(
@@ -152,6 +161,11 @@ class FollowTrajectory(CommandBase):
             allianceRespectiveDesiredState[0],
             desiredState.velocity,
             allianceRespectiveDesiredState[1],
+        )
+
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousChassisSpeeds,
+            [targetChassisSpeeds.vx, targetChassisSpeeds.vy, targetChassisSpeeds.omega],
         )
 
         self.drive.arcadeDriveWithSpeeds(

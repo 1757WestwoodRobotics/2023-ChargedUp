@@ -11,6 +11,7 @@ from wpilib import DataLogManager
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
+from commands.resetdrive import ResetDrive
 from subsystems.drivesubsystem import DriveSubsystem
 
 
@@ -44,6 +45,7 @@ class AutonomousRoutine(SequentialCommandGroup):
         ]
 
         super().__init__(
+            ResetDrive(drive),
             ParallelCommandGroup(
                 SequentialCommandGroup(*followCommands), *simultaneousCommands
             ),
