@@ -113,6 +113,8 @@ class OperatorInterface:
 
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
 
+        self.AutoBalance = getButtonBindingOfName("AutoBalance")
+
         self.turboSpeed = getButtonBindingOfName(constants.kTurboSpeedButtonName)
         self.alignClosestWaypoint = getButtonBindingOfName("alignClosestWaypoint")
 

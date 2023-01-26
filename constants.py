@@ -605,3 +605,11 @@ kPhotonvisionCameraDiagonalFOV = 75.1
 kPhotonvisionCameraPixelDimensions = (960, 720)
 kApriltagWidth = 8.125 * kMetersPerInch
 kApriltagHeight = kApriltagWidth
+
+kPitchMultiplicationValue = 0.2
+
+kDriveDistanceAutoBalance = 0.05
+
+kSpeedFactorAutoBalance = 0.1
+
+kTiltThresholdAutoBalance = 10

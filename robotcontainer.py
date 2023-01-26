@@ -17,6 +17,7 @@ from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.auto.autonomousaction import AutonomousRoutine
+from commands.drive.chargestationautobalance import AutoBalance
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
@@ -155,6 +156,10 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        commands2.button.JoystickButton(*self.operatorInterface.AutoBalance).whileHeld(
+            AutoBalance(self.drive)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
