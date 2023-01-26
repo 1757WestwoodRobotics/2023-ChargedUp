@@ -4,7 +4,7 @@ import operator
 from typing import Dict, List, Tuple
 from commands2 import Command, CommandBase
 from pathplannerlib import PathPlannerTrajectory
-from wpilib import DriverStation, SmartDashboard, Timer
+from wpilib import DataLogManager, DriverStation, SmartDashboard, Timer
 from wpimath.controller import (
     PIDController,
     ProfiledPIDControllerRadians,
@@ -108,6 +108,7 @@ class FollowTrajectory(CommandBase):
                 [],
             ),
         )
+        DataLogManager.log("begin trajectory")
 
     def getAllianceRespectivePoint(
         self, pose: Pose2d, holonomicRotation: Rotation2d
@@ -157,7 +158,7 @@ class FollowTrajectory(CommandBase):
         )
         return Pose2d(
             finalAllianceRespectivePose[0].translation(),
-            finalAllianceRespectivePose[1] + Rotation2d(pi),
+            finalAllianceRespectivePose[1],
         )
 
     def end(self, _interrupted: bool) -> None:
@@ -165,3 +166,4 @@ class FollowTrajectory(CommandBase):
         self.drive.arcadeDriveWithFactors(
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
         )
+        DataLogManager.log("end trajectory")

@@ -7,6 +7,7 @@ from commands2 import (
     WaitCommand,
 )
 from pathplannerlib import PathPlannerTrajectory
+from wpilib import DataLogManager
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
@@ -22,6 +23,7 @@ class AutonomousRoutine(SequentialCommandGroup):
         name: str,
         simultaneousCommands: List[Command],
     ):
+        self.name = name
         self.markerMap = {  # later todo: actual implementation
             "store": WaitCommand(2),
             "top": WaitCommand(2),
@@ -46,6 +48,11 @@ class AutonomousRoutine(SequentialCommandGroup):
                 SequentialCommandGroup(*followCommands), *simultaneousCommands
             ),
         )
+        self.setName(name)
+
+    def execute(self) -> None:
+        DataLogManager.log(f"Starting auto: {self.name}")
+        return super().execute()
 
     def getStopEventCommands(
         self, stopEvent: PathPlannerTrajectory.StopEvent
