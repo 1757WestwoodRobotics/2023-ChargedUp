@@ -496,3 +496,11 @@ kPDHCanID = 1
 kPDHPublishKey = "powerDistribution"
 
 kJoystickKeyLogPrefix = "DriverStation"
+
+kPitchMultiplicationValue = 0.2
+
+kDriveDistanceAutoBalance = 0.05
+
+kSpeedFactorAutoBalance = 0.1
+
+kTiltThresholdAutoBalance = 10
