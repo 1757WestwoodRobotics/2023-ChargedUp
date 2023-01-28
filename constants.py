@@ -615,7 +615,7 @@ kWristArmDGain = 0
 kWristArmInverted = False
 
 kWristArmGearRatio = 20 / 1
-kWristArmRotationKey = "arm/rotaiton/wrist"
+kWristArmRotationKey = "arm/rotation/wrist"
 
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
