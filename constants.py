@@ -620,13 +620,13 @@ kWristArmRotationKey = "arm/rotation/wrist"
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
 
-kArmelbowLength = 22.694612 * kMetersPerInch
+kArmelbowLength = 22.347 * kMetersPerInch
 kArmelbowMass = 10  # kg
 
-kArmshoulderLength = 24.337114 * kMetersPerInch
+kArmshoulderLength = 26.616 * kMetersPerInch
 kArmshoulderMass = 4  # kg
 
-kArmwristLength = 14 * kMetersPerInch
+kArmwristLength = 16 * kMetersPerInch
 kArmwristMass = 2  # kg
 
 kArmStateKey = "arm/state"
@@ -661,24 +661,24 @@ kArmSmoothKey = "arm/smooth"
 
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
-    -41.031951 * kMetersPerInch,
-    41.869006 * kMetersPerInch,
-    Rotation2d.fromDegrees(110),
+    -42.414 * kMetersPerInch,
+    48.122 * kMetersPerInch,
+    Rotation2d.fromDegrees(140),
 )
 kArmMidScorePosition = Pose2d(
-    -26.031860 * kMetersPerInch,
-    29.814583 * kMetersPerInch,
-    Rotation2d.fromDegrees(120),
+    -24.626 * kMetersPerInch,
+    34.672 * kMetersPerInch,
+    Rotation2d.fromDegrees(140),
 )
 kArmStoredPosition = Pose2d(
-    -1.5 * kMetersPerInch,
-    13.990 * kMetersPerInch,
+    -1.074 * kMetersPerInch,
+    21.667 * kMetersPerInch,
     Rotation2d.fromDegrees(270),
 )
 kArmDoubleSubstationPosition = Pose2d(
-    -14.764635 * kMetersPerInch,
-    41.666228 * kMetersPerInch,
-    Rotation2d.fromDegrees(145),
+    -18.602 * kMetersPerInch,
+    44.411 * kMetersPerInch,
+    Rotation2d.fromDegrees(150),
 )
 
 # Logging
