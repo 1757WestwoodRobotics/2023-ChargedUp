@@ -5,6 +5,7 @@ from wpilib import (
     Color,
     Color8Bit,
     Mechanism2d,
+    Preferences,
     SmartDashboard,
 )
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
@@ -181,6 +182,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         self.reset()
+        Preferences.initBoolean(constants.kArmSmoothKey,True)
 
     def reset(self) -> None:
         self.shoulderArm.setEncoderPosition(
@@ -326,12 +328,14 @@ class ArmSubsystem(SubsystemBase):
             pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
         )
 
-        targetTwoLink = Translation2d(
-            self.xProfiledPID.calculate(currentElbow.X(), twoLinkPosition.X())
-            + currentElbow.X(),
-            self.yProfiledPID.calculate(currentElbow.Y(), twoLinkPosition.Y())
-            + currentElbow.Y(),
-        )
+        targetTwoLink = twoLinkPosition
+        if Preferences.getBoolean(constants.kArmSmoothKey, True):
+            targetTwoLink = Translation2d(
+                self.xProfiledPID.calculate(currentElbow.X(), twoLinkPosition.X())
+                + currentElbow.X(),
+                self.yProfiledPID.calculate(currentElbow.Y(), twoLinkPosition.Y())
+                + currentElbow.Y(),
+            )
 
         endAngle = math.acos(
             targetTwoLink.X() * targetTwoLink.X()
