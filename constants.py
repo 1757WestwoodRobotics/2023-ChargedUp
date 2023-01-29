@@ -663,6 +663,8 @@ kShoulderRobotOffset = Transform3d(
 kArmPosesKey = "arm/poses"
 kArmSmoothKey = "arm/smooth"
 
+kArmPositionExtraEpsiolon = 0.01
+
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
     -41.180 * kMetersPerInch,

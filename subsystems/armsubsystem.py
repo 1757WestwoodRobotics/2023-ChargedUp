@@ -347,6 +347,14 @@ class ArmSubsystem(SubsystemBase):
         self.updateMechanism()
         self.updateArmPositionsLogging()
 
+    def canElbowReachPosition(self, position: Translation2d):
+        return (
+            position.distance(Translation2d())
+            < constants.kArmshoulderLength + constants.kArmelbowLength
+            and position.distance(Translation2d())
+            > constants.kArmshoulderLength - constants.kArmelbowLength
+        )
+
     def setEndEffectorPosition(self, pose: Pose2d):
         self.targetPose = pose
         currentElbow = self.getWristPosition()
@@ -363,6 +371,12 @@ class ArmSubsystem(SubsystemBase):
                 + currentElbow.X(),
                 self.yProfiledPID.calculate(currentElbow.Y(), twoLinkPosition.Y())
                 + currentElbow.Y(),
+            )
+
+        while not self.canElbowReachPosition(targetTwoLink):
+            targetTwoLink = Translation2d(
+                targetTwoLink.X(),
+                targetTwoLink.Y() + constants.kArmPositionExtraEpsiolon,
             )
 
         endAngle = math.acos(
