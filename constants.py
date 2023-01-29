@@ -591,6 +591,7 @@ kElbowArmInverted = False
 
 kElbowArmGearRatio = 40 / 1
 kElbowArmRotationKey = "arm/rotation/elbow"
+kElbowArmTargetRotationKey = "arm/target/elbow"
 
 kElbowArmCANCoderID = 35
 kElbowArmCANCoderOffset = 0
@@ -603,6 +604,7 @@ kShoulderArmInverted = False
 
 kShoulderArmGearRatio = 70 / 14
 kShoulderArmRotationKey = "arm/rotation/shoulder"
+kShoulderTargetArmRotationKey = "arm/target/shoulder"
 kShoulderArmFFFactor = 0.05
 
 kShoulderArmCANCoderID = 45
@@ -616,20 +618,22 @@ kWristArmInverted = False
 
 kWristArmGearRatio = 20 / 1
 kWristArmRotationKey = "arm/rotation/wrist"
+kWristTargetArmRotationKey = "arm/target/wrist"
 
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
 
-kArmelbowLength = 22.347 * kMetersPerInch
+kArmelbowLength = 17.459 * kMetersPerInch
 kArmelbowMass = 10  # kg
 
-kArmshoulderLength = 26.616 * kMetersPerInch
+kArmshoulderLength = 25.439 * kMetersPerInch
 kArmshoulderMass = 4  # kg
 
-kArmwristLength = 16 * kMetersPerInch
+kArmwristLength = 17.185293 * kMetersPerInch
 kArmwristMass = 2  # kg
 
 kArmStateKey = "arm/state"
+kArmTargetPositionKey = "arm/target/end"
 
 kArmTranslationalPGain = 0.5
 kArmTranslationalIGain = 0
@@ -661,24 +665,24 @@ kArmSmoothKey = "arm/smooth"
 
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
-    -42.414 * kMetersPerInch,
-    48.122 * kMetersPerInch,
-    Rotation2d.fromDegrees(140),
+    -41.180 * kMetersPerInch,
+    43.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(180-41.579),
 )
 kArmMidScorePosition = Pose2d(
-    -24.626 * kMetersPerInch,
-    34.672 * kMetersPerInch,
-    Rotation2d.fromDegrees(140),
+    -16.618 * kMetersPerInch,
+    40.188 * kMetersPerInch,
+    Rotation2d.fromDegrees(180-30.547),
 )
 kArmStoredPosition = Pose2d(
-    -1.074 * kMetersPerInch,
-    21.667 * kMetersPerInch,
-    Rotation2d.fromDegrees(270),
+    6.167 * kMetersPerInch,
+    29.059 * kMetersPerInch,
+    Rotation2d.fromDegrees(65.081),
 )
 kArmDoubleSubstationPosition = Pose2d(
-    -18.602 * kMetersPerInch,
-    44.411 * kMetersPerInch,
-    Rotation2d.fromDegrees(150),
+    -16.618 * kMetersPerInch,
+    40.188 * kMetersPerInch,
+    Rotation2d.fromDegrees(148.254),
 )
 
 # Logging

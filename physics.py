@@ -161,8 +161,8 @@ class ArmSimulation:
                 constants.kArmelbowLength, constants.kArmelbowMass
             ),
             constants.kArmelbowLength,
-            -75 / constants.kRadiansPerDegree,
-            260 / constants.kRadiansPerDegree,
+            -180 / constants.kRadiansPerDegree,
+            180 / constants.kRadiansPerDegree,
             constants.kArmelbowMass,
             False,
             [0],
@@ -174,10 +174,10 @@ class ArmSimulation:
                 constants.kArmshoulderLength, constants.kArmshoulderMass
             ),
             constants.kArmshoulderLength,
-            math.radians(-75),
-            math.radians(255),
+            math.radians(-180),
+            math.radians(180),
             constants.kArmshoulderMass,
-            True,
+            False,
             [0],
         )
         self.wristJointSim = SingleJointedArmSim(
@@ -187,10 +187,10 @@ class ArmSimulation:
                 constants.kArmwristLength, constants.kArmwristMass
             ),
             constants.kArmwristLength,
-            math.radians(-75),
-            math.radians(255),
+            math.radians(-180),
+            math.radians(180),
             constants.kArmwristMass,
-            True,
+            False,
             [0],
         )
 

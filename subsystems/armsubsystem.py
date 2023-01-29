@@ -16,6 +16,7 @@ from wpimath.controller import (
 )
 from wpimath.geometry import (
     Pose2d,
+    Pose3d,
     Rotation2d,
     Rotation3d,
     Transform2d,
@@ -180,9 +181,11 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
+        self.targetPose = Pose2d()
+        self.targetElbow = Pose2d()
 
         self.reset()
-        Preferences.initBoolean(constants.kArmSmoothKey,True)
+        Preferences.initBoolean(constants.kArmSmoothKey, True)
 
     def reset(self) -> None:
         self.shoulderArm.setEncoderPosition(
@@ -284,8 +287,32 @@ class ArmSubsystem(SubsystemBase):
         endEffectorPose = wristPose + Transform3d(
             Translation3d(constants.kArmwristLength, 0, 0), Rotation3d()
         )
+
+        targetPose = (
+            robotPose3d
+            + constants.kShoulderRobotOffset
+            + Transform3d(
+                Translation3d(self.targetPose.X(), 0, -self.targetPose.Y()),
+                Rotation3d(0, self.targetPose.rotation().radians(), 0),
+            )
+        )
+        targetElbow = (
+            robotPose3d
+            + constants.kShoulderRobotOffset
+            + Transform3d(
+                Translation3d(self.targetElbow.X(), 0, -self.targetElbow.Y()),
+                Rotation3d(0, self.targetElbow.rotation().radians(), 0),
+            )
+        )
         sendableSerialized = convertToSendablePoses(
-            [shoulderPose, elbowPose, wristPose, endEffectorPose]
+            [
+                shoulderPose,
+                elbowPose,
+                wristPose,
+                endEffectorPose,
+                targetPose,
+                targetElbow,
+            ]
         )
         SmartDashboard.putNumberArray(constants.kArmPosesKey, sendableSerialized)
 
@@ -321,6 +348,7 @@ class ArmSubsystem(SubsystemBase):
         self.updateArmPositionsLogging()
 
     def setEndEffectorPosition(self, pose: Pose2d):
+        self.targetPose = pose
         currentElbow = self.getWristPosition()
 
         twoLinkPosition = Translation2d(
@@ -338,11 +366,12 @@ class ArmSubsystem(SubsystemBase):
             )
 
         endAngle = math.acos(
-            targetTwoLink.X() * targetTwoLink.X()
-            + targetTwoLink.Y() * targetTwoLink.Y()
-            - constants.kArmelbowLength * constants.kArmelbowLength
-            - constants.kArmshoulderLength
-            * constants.kArmshoulderLength
+            (
+                targetTwoLink.X() * targetTwoLink.X()
+                + targetTwoLink.Y() * targetTwoLink.Y()
+                - constants.kArmelbowLength * constants.kArmelbowLength
+                - constants.kArmshoulderLength * constants.kArmshoulderLength
+            )
             / (2 * constants.kArmelbowLength * constants.kArmshoulderLength)
         )
 
@@ -358,6 +387,7 @@ class ArmSubsystem(SubsystemBase):
             self.thetaProfiledPID.calculate(currentWrist.radians(), wristAngle)
             + currentWrist.radians()
         )
+        self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         self.setRelativeArmAngles(
             Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(targetWrist)
@@ -366,6 +396,11 @@ class ArmSubsystem(SubsystemBase):
     def setRelativeArmAngles(
         self, shoulder: Rotation2d, elbow: Rotation2d, wrist: Rotation2d
     ) -> None:
+        SmartDashboard.putNumber(constants.kElbowArmTargetRotationKey, elbow.degrees())
+        SmartDashboard.putNumber(
+            constants.kShoulderTargetArmRotationKey, shoulder.degrees()
+        )
+        SmartDashboard.putNumber(constants.kWristTargetArmRotationKey, wrist.degrees())
         shoulderArmEncoderPulses = (
             shoulder.radians()
             * constants.kTalonEncoderPulsesPerRadian
