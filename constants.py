@@ -648,9 +648,9 @@ kArmRotationalPGain = 0.8
 kArmRotationalIGain = 0
 kArmRotationalDGain = 0
 
-kArmRotationalMaxVelocity = 15
+kArmRotationalMaxVelocity = 3
 """rad/s"""
-kArmRotationalMaxAcceleration = 120
+kArmRotationalMaxAcceleration = 15
 """rad/s^2"""
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"
@@ -663,7 +663,7 @@ kShoulderRobotOffset = Transform3d(
 kArmPosesKey = "arm/poses"
 kArmSmoothKey = "arm/smooth"
 
-kArmPositionExtraEpsiolon = 0.01
+kArmPositionExtraEpsiolon = 0.001
 
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(

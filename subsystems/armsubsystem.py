@@ -343,7 +343,23 @@ class ArmSubsystem(SubsystemBase):
                 Rotation2d.fromDegrees(wrist),
             )
         else:
-            self.setEndEffectorPosition(self.state.position())
+            targetState = self.state.position()
+            if Preferences.getBoolean(constants.kArmSmoothKey, True):
+                currentEndEffector = self.getEndEffectorPosition()
+                targetState = Pose2d(
+                    self.xProfiledPID.calculate(currentEndEffector.X(), targetState.X())
+                    + currentEndEffector.X(),
+                    self.yProfiledPID.calculate(currentEndEffector.Y(), targetState.Y())
+                    + currentEndEffector.Y(),
+                    Rotation2d(
+                        self.thetaProfiledPID.calculate(
+                            currentEndEffector.rotation().radians(),
+                            targetState.rotation().radians(),
+                        )
+                        + currentEndEffector.rotation().radians()
+                    ),
+                )
+            self.setEndEffectorPosition(targetState)
         self.updateMechanism()
         self.updateArmPositionsLogging()
 
@@ -354,10 +370,17 @@ class ArmSubsystem(SubsystemBase):
             and position.distance(Translation2d())
             > constants.kArmshoulderLength - constants.kArmelbowLength
         )
+    def nearestPossibleElbowPosition(self, position: Translation2d) -> Translation2d:
+        dist = position.distance(Translation2d())
+        if dist < constants.kArmshoulderLength - constants.kArmelbowLength:
+            return Translation2d(position.X(), position.Y() + constants.kArmPositionExtraEpsiolon)
+        elif dist > constants.kArmelbowLength + constants.kArmshoulderLength:
+            return Translation2d(position.X(), position.Y() - constants.kArmPositionExtraEpsiolon)
+        else:
+            return position
 
     def setEndEffectorPosition(self, pose: Pose2d):
         self.targetPose = pose
-        currentElbow = self.getWristPosition()
 
         twoLinkPosition = Translation2d(
             pose.X() - constants.kArmwristLength * pose.rotation().cos(),
@@ -365,19 +388,8 @@ class ArmSubsystem(SubsystemBase):
         )
 
         targetTwoLink = twoLinkPosition
-        if Preferences.getBoolean(constants.kArmSmoothKey, True):
-            targetTwoLink = Translation2d(
-                self.xProfiledPID.calculate(currentElbow.X(), twoLinkPosition.X())
-                + currentElbow.X(),
-                self.yProfiledPID.calculate(currentElbow.Y(), twoLinkPosition.Y())
-                + currentElbow.Y(),
-            )
-
         while not self.canElbowReachPosition(targetTwoLink):
-            targetTwoLink = Translation2d(
-                targetTwoLink.X(),
-                targetTwoLink.Y() + constants.kArmPositionExtraEpsiolon,
-            )
+            targetTwoLink = self.nearestPossibleElbowPosition(targetTwoLink)
 
         endAngle = math.acos(
             (
@@ -396,15 +408,10 @@ class ArmSubsystem(SubsystemBase):
         )
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
-        currentWrist = self.getWristArmRotation()
-        targetWrist = (
-            self.thetaProfiledPID.calculate(currentWrist.radians(), wristAngle)
-            + currentWrist.radians()
-        )
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         self.setRelativeArmAngles(
-            Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(targetWrist)
+            Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(wristAngle)
         )
 
     def setRelativeArmAngles(
