@@ -8,8 +8,8 @@ wheel
 pyfrc==2023.0.1
 pynetconsole==2.0.4
 pynetworktables==2021.0.0
-pyntcore==2023.2.1.3
-robotpy-commands-v2==2023.2.1.1
+pyntcore==2023.2.1.4
+robotpy-commands-v2==2023.2.1.2
 robotpy-ctre==2023.0.0
 robotpy-hal==2023.2.1.1
 robotpy-halsim-gui==2023.2.1.1
