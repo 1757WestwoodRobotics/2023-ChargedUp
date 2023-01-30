@@ -21,7 +21,6 @@ class SetArmPositionMid(CommandBase):
 
     def end(self, _interrupted: bool) -> None:
         DataLogManager.log(f"Arm End {self.state}")
-        
 
 
 class SetArmPositionTop(SetArmPositionMid):

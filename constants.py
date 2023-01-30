@@ -669,12 +669,12 @@ kArmPositionExtraEpsiolon = 0.001
 kArmTopScorePosition = Pose2d(
     -41.180 * kMetersPerInch,
     43.622 * kMetersPerInch,
-    Rotation2d.fromDegrees(180-41.579),
+    Rotation2d.fromDegrees(180 - 41.579),
 )
 kArmMidScorePosition = Pose2d(
     -16.618 * kMetersPerInch,
     40.188 * kMetersPerInch,
-    Rotation2d.fromDegrees(180-30.547),
+    Rotation2d.fromDegrees(180 - 30.547),
 )
 kArmStoredPosition = Pose2d(
     6.167 * kMetersPerInch,

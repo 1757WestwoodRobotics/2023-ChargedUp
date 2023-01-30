@@ -222,8 +222,7 @@ class ArmSimulation:
         )
         self.elbowSimEncoder.setRawPosition(
             int(
-                self.elbowJointSim.getAngle()
-                * constants.kCANcoderPulsesPerRadian
+                self.elbowJointSim.getAngle() * constants.kCANcoderPulsesPerRadian
             )  # convert relative to 4bar angles
         )
 
@@ -242,18 +241,15 @@ class ArmSimulation:
             int(
                 (
                     self.shoulderJointSim.getAngle()
-                    +self.elbowJointSim.getAngle()
-                    +self.wristJointSim.getAngle()
+                    + self.elbowJointSim.getAngle()
+                    + self.wristJointSim.getAngle()
                 )  # convert relative to 4bar angles
                 * constants.kTalonEncoderPulsesPerRadian
                 * constants.kWristArmGearRatio
             )
         )
         self.wristSimEncoder.setRawPosition(
-            int(
-                self.wristJointSim.getAngle()
-                * constants.kCANcoderPulsesPerRadian
-            )
+            int(self.wristJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
         )
 
 

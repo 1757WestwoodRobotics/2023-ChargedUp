@@ -204,11 +204,14 @@ class ArmSubsystem(SubsystemBase):
         )
 
     def getElbowArmRotation(self) -> Rotation2d:
-        return Rotation2d(
-            self.elbowArm.get(Falcon.ControlMode.Position)
-            / constants.kElbowArmGearRatio
-            / constants.kTalonEncoderPulsesPerRadian
-        ) - self.getShoulderArmRotation() # 4 bar to relative
+        return (
+            Rotation2d(
+                self.elbowArm.get(Falcon.ControlMode.Position)
+                / constants.kElbowArmGearRatio
+                / constants.kTalonEncoderPulsesPerRadian
+            )
+            - self.getShoulderArmRotation()
+        )  # 4 bar to relative
 
     def getShoulderArmRotation(self) -> Rotation2d:
         return Rotation2d(
