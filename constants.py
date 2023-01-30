@@ -596,6 +596,9 @@ kElbowArmTargetRotationKey = "arm/target/elbow"
 kElbowArmCANCoderID = 35
 kElbowArmCANCoderOffset = 0
 
+kElbowMinAngle = Rotation2d.fromDegrees(0)
+kElbowMaxAngle = Rotation2d.fromDegrees(150)
+
 kShoulderArmCANId = 44
 kShoulderArmPGain = 0.2
 kShoulderArmIGain = 0.0
@@ -610,6 +613,9 @@ kShoulderArmFFFactor = 0.05
 kShoulderArmCANCoderID = 45
 kShoulderArmCANCoderOffset = -150.996
 
+kShoulderMinAngle = Rotation2d.fromDegrees(54)
+kShoulderMaxAngle = Rotation2d.fromDegrees(155)
+
 kWristArmCANId = 32
 kWristArmPGain = 0.2
 kWristArmIGain = 0.0
@@ -622,6 +628,9 @@ kWristTargetArmRotationKey = "arm/target/wrist"
 
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
+
+kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
+kWristMaxAngle = Rotation2d.fromDegrees(180)
 
 kArmelbowLength = 17.459 * kMetersPerInch
 kArmelbowMass = 10  # kg

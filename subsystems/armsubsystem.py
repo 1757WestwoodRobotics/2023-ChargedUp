@@ -24,7 +24,7 @@ from wpimath.geometry import (
     Translation3d,
 )
 from util.advantagescopeconvert import convertToSendablePoses
-from util.convenientmath import pose3dFrom2d
+from util.convenientmath import clamp, pose3dFrom2d
 from util.simcoder import CTREEncoder
 
 from util.simfalcon import Falcon
@@ -435,18 +435,41 @@ class ArmSubsystem(SubsystemBase):
             constants.kShoulderTargetArmRotationKey, shoulder.degrees()
         )
         SmartDashboard.putNumber(constants.kWristTargetArmRotationKey, wrist.degrees())
+
+        clampedShoulder = clamp(
+                shoulder.radians(),
+                constants.kShoulderMinAngle.radians(),
+                constants.kShoulderMaxAngle.radians(),
+            )
+        clampedElbow = clamp(
+                elbow.radians(),
+                constants.kElbowMinAngle.radians(),
+                constants.kElbowMaxAngle.radians(),
+            )
+        
+        clampedWrist = clamp(
+                wrist.radians(),
+                constants.kWristMinAngle.radians(),
+                constants.kWristMaxAngle.radians(),
+            )
+        
+
+        trueShoulderPos = clampedShoulder
+        trueElbowPos = clampedElbow + trueShoulderPos
+        trueWristPos = clampedWrist + trueElbowPos
+
         shoulderArmEncoderPulses = (
-            shoulder.radians()
+            trueShoulderPos
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kShoulderArmGearRatio
         )
         elbowArmEncoderPulses = (
-            (elbow.radians() + shoulder.radians())
+            trueElbowPos
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         wristArmEncoderPulses = (
-            (wrist.radians() + elbow.radians() + shoulder.radians())
+            trueWristPos
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
