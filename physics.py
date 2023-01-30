@@ -215,13 +215,16 @@ class ArmSimulation:
 
         self.elbowSimMotor.setIntegratedSensorRawPosition(
             int(
-                self.elbowJointSim.getAngle()
+                (self.shoulderJointSim.getAngle() + self.elbowJointSim.getAngle())
                 * constants.kTalonEncoderPulsesPerRadian
                 * constants.kElbowArmGearRatio
-            )
+            )  # convert relative to 4bar angles
         )
         self.elbowSimEncoder.setRawPosition(
-            int(self.elbowJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
+            int(
+                self.elbowJointSim.getAngle()
+                * constants.kCANcoderPulsesPerRadian
+            )  # convert relative to 4bar angles
         )
 
         self.shoulderSimMotor.setIntegratedSensorRawPosition(
@@ -237,13 +240,20 @@ class ArmSimulation:
 
         self.wristSimMotor.setIntegratedSensorRawPosition(
             int(
-                self.wristJointSim.getAngle()
+                (
+                    self.shoulderJointSim.getAngle()
+                    +self.elbowJointSim.getAngle()
+                    +self.wristJointSim.getAngle()
+                )  # convert relative to 4bar angles
                 * constants.kTalonEncoderPulsesPerRadian
                 * constants.kWristArmGearRatio
             )
         )
         self.wristSimEncoder.setRawPosition(
-            int(self.wristJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
+            int(
+                self.wristJointSim.getAngle()
+                * constants.kCANcoderPulsesPerRadian
+            )
         )
 
 

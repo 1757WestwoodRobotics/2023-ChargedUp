@@ -16,7 +16,6 @@ from wpimath.controller import (
 )
 from wpimath.geometry import (
     Pose2d,
-    Pose3d,
     Rotation2d,
     Rotation3d,
     Transform2d,
@@ -209,7 +208,7 @@ class ArmSubsystem(SubsystemBase):
             self.elbowArm.get(Falcon.ControlMode.Position)
             / constants.kElbowArmGearRatio
             / constants.kTalonEncoderPulsesPerRadian
-        )
+        ) - self.getShoulderArmRotation() # 4 bar to relative
 
     def getShoulderArmRotation(self) -> Rotation2d:
         return Rotation2d(
@@ -219,14 +218,20 @@ class ArmSubsystem(SubsystemBase):
         )
 
     def getWristArmRotation(self) -> Rotation2d:
-        return Rotation2d(
-            self.wristArm.get(Falcon.ControlMode.Position)
-            / constants.kWristArmGearRatio
-            / constants.kTalonEncoderPulsesPerRadian
-        )
+        return (
+            Rotation2d(
+                self.wristArm.get(Falcon.ControlMode.Position)
+                / constants.kWristArmGearRatio
+                / constants.kTalonEncoderPulsesPerRadian
+            )
+            - self.getShoulderArmRotation()
+            - self.getElbowArmRotation()
+        )  # 4 bar to relative
 
     def getElbowArmEncoderRotation(self) -> Rotation2d:
-        return self.elbowEncoder.getPosition()
+        return (
+            self.elbowEncoder.getPosition()
+        )  # encoder positions are already relative to previous joint
 
     def getShoulderArmEncoderRotation(self) -> Rotation2d:
         return self.shoulderEncoder.getPosition()
@@ -370,12 +375,17 @@ class ArmSubsystem(SubsystemBase):
             and position.distance(Translation2d())
             > constants.kArmshoulderLength - constants.kArmelbowLength
         )
+
     def nearestPossibleElbowPosition(self, position: Translation2d) -> Translation2d:
         dist = position.distance(Translation2d())
         if dist < constants.kArmshoulderLength - constants.kArmelbowLength:
-            return Translation2d(position.X(), position.Y() + constants.kArmPositionExtraEpsiolon)
+            return Translation2d(
+                position.X(), position.Y() + constants.kArmPositionExtraEpsiolon
+            )
         elif dist > constants.kArmelbowLength + constants.kArmshoulderLength:
-            return Translation2d(position.X(), position.Y() - constants.kArmPositionExtraEpsiolon)
+            return Translation2d(
+                position.X(), position.Y() - constants.kArmPositionExtraEpsiolon
+            )
         else:
             return position
 
@@ -428,12 +438,12 @@ class ArmSubsystem(SubsystemBase):
             * constants.kShoulderArmGearRatio
         )
         elbowArmEncoderPulses = (
-            elbow.radians()
+            (elbow.radians() + shoulder.radians())
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         wristArmEncoderPulses = (
-            wrist.radians()
+            (wrist.radians() + elbow.radians() + shoulder.radians())
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
