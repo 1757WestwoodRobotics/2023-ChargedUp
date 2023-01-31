@@ -34,6 +34,11 @@
     },
     "replace me"
   ],
+  "armGroundIntake":[
+    2,
+    {"Button": 5},
+    "replace me"
+  ],
   "autoBallIntake": [
     0,
     {

@@ -38,6 +38,7 @@ class ArmSubsystem(SubsystemBase):
         Mid = auto()
         HumanStation = auto()
         Top = auto()
+        GroundLoading = auto()
         OverrideValue = auto()
 
         def position(self) -> Pose2d:
@@ -49,6 +50,8 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmDoubleSubstationPosition
             elif self == ArmSubsystem.ArmState.Top:
                 return constants.kArmTopScorePosition
+            elif self == ArmSubsystem.ArmState.GroundLoading:
+                return constants.kArmGroundIntakePosition
             return constants.kArmStoredPosition
 
     def __init__(self) -> None:

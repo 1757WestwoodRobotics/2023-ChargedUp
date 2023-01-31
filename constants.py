@@ -614,7 +614,7 @@ kShoulderArmCANCoderID = 45
 kShoulderArmCANCoderOffset = -150.996
 
 kShoulderMinAngle = Rotation2d.fromDegrees(54)
-kShoulderMaxAngle = Rotation2d.fromDegrees(155)
+kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
 kWristArmPGain = 0.2
@@ -694,6 +694,11 @@ kArmDoubleSubstationPosition = Pose2d(
     -16.618 * kMetersPerInch,
     40.188 * kMetersPerInch,
     Rotation2d.fromDegrees(148.254),
+)
+kArmGroundIntakePosition = Pose2d(
+    -32.539 * kMetersPerInch,
+    2.806 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 31.579)
 )
 
 # Logging

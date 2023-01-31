@@ -37,3 +37,6 @@ class SetArmPositionStored(SetArmPositionMid):
 
 class SetArmPositionOverride(SetArmPositionMid):
     state = ArmSubsystem.ArmState.OverrideValue
+
+class SetArmPositionGroundIntake(SetArmPositionMid):
+    state = ArmSubsystem.ArmState.GroundLoading

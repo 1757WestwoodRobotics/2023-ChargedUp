@@ -18,6 +18,7 @@ from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.arm.statearmposition import (
     SetArmPositionDoubleSubstation,
+    SetArmPositionGroundIntake,
     SetArmPositionMid,
     SetArmPositionOverride,
     SetArmPositionStored,
@@ -122,6 +123,9 @@ class RobotContainer:
 
         commands2.button.JoystickButton(*self.operatorInterface.armOverride).whileHeld(
             SetArmPositionOverride(self.arm)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.armGroundIntake).whileHeld(
+            SetArmPositionGroundIntake(self.arm)
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
