@@ -8,6 +8,7 @@ from wpilib import (
     Preferences,
     SmartDashboard,
 )
+from wpimath import angleModulus
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
 from wpimath.controller import (
     ProfiledPIDController,
@@ -188,6 +189,7 @@ class ArmSubsystem(SubsystemBase):
 
         self.reset()
         Preferences.initBoolean(constants.kArmSmoothKey, True)
+        Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
     def reset(self) -> None:
         self.shoulderArm.setEncoderPosition(
@@ -355,21 +357,6 @@ class ArmSubsystem(SubsystemBase):
             )
         else:
             targetState = self.state.position()
-            if Preferences.getBoolean(constants.kArmSmoothKey, True):
-                currentEndEffector = self.getEndEffectorPosition()
-                targetState = Pose2d(
-                    self.xProfiledPID.calculate(currentEndEffector.X(), targetState.X())
-                    + currentEndEffector.X(),
-                    self.yProfiledPID.calculate(currentEndEffector.Y(), targetState.Y())
-                    + currentEndEffector.Y(),
-                    Rotation2d(
-                        self.thetaProfiledPID.calculate(
-                            currentEndEffector.rotation().radians(),
-                            targetState.rotation().radians(),
-                        )
-                        + currentEndEffector.rotation().radians()
-                    ),
-                )
             self.setEndEffectorPosition(targetState)
         self.updateMechanism()
         self.updateArmPositionsLogging()
@@ -404,6 +391,14 @@ class ArmSubsystem(SubsystemBase):
         )
 
         targetTwoLink = twoLinkPosition
+        if Preferences.getBoolean(constants.kArmSmoothKey, True):
+            currentWristPose = self.getWristPosition()
+            targetTwoLink = Translation2d(
+                self.xProfiledPID.calculate(currentWristPose.X(), twoLinkPosition.X())
+                + currentWristPose.X(),
+                self.yProfiledPID.calculate(currentWristPose.Y(), twoLinkPosition.Y())
+                + currentWristPose.Y(),
+            )
         while not self.canElbowReachPosition(targetTwoLink):
             targetTwoLink = self.nearestPossibleElbowPosition(targetTwoLink)
 
@@ -424,10 +419,23 @@ class ArmSubsystem(SubsystemBase):
         )
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
+        if Preferences.getBoolean(constants.kArmSmoothKey, True):
+            currentWristRotation = self.getWristArmRotation()
+            currentElbowRotation = self.getElbowArmRotation()
+            currentShoulderRotation = self.getShoulderArmRotation()
+            wristAngle = (
+                self.thetaProfiledPID.calculate(
+                    (currentWristRotation + currentElbowRotation + currentShoulderRotation).radians(), pose.rotation().radians()
+                )
+                + currentWristRotation.radians()
+            )
+
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         self.setRelativeArmAngles(
-            Rotation2d(startAngle), Rotation2d(endAngle), Rotation2d(wristAngle)
+            Rotation2d(angleModulus(startAngle)),
+            Rotation2d(angleModulus(endAngle)),
+            Rotation2d(wristAngle),
         )
 
     def setRelativeArmAngles(
@@ -440,22 +448,26 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(constants.kWristTargetArmRotationKey, wrist.degrees())
 
         clampedShoulder = clamp(
-                shoulder.radians(),
-                constants.kShoulderMinAngle.radians(),
-                constants.kShoulderMaxAngle.radians(),
-            )
+            shoulder.radians(),
+            constants.kShoulderMinAngle.radians(),
+            constants.kShoulderMaxAngle.radians(),
+        )
         clampedElbow = clamp(
-                elbow.radians(),
-                constants.kElbowMinAngle.radians(),
-                constants.kElbowMaxAngle.radians(),
-            )
-        
+            elbow.radians(),
+            constants.kElbowMinAngle.radians(),
+            constants.kElbowMaxAngle.radians(),
+        )
+
         clampedWrist = clamp(
-                wrist.radians(),
-                constants.kWristMinAngle.radians(),
-                constants.kWristMaxAngle.radians(),
-            )
-        
+            wrist.radians(),
+            constants.kWristMinAngle.radians(),
+            constants.kWristMaxAngle.radians(),
+        )
+
+        if not Preferences.getBoolean(constants.kArmObeyEndstopsKey, True):
+            clampedShoulder = shoulder.radians()
+            clampedElbow = elbow.radians()
+            clampedWrist = wrist.radians()
 
         trueShoulderPos = clampedShoulder
         trueElbowPos = clampedElbow + trueShoulderPos
