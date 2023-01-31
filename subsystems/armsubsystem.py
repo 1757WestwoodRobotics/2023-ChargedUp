@@ -425,7 +425,12 @@ class ArmSubsystem(SubsystemBase):
             currentShoulderRotation = self.getShoulderArmRotation()
             wristAngle = (
                 self.thetaProfiledPID.calculate(
-                    (currentWristRotation + currentElbowRotation + currentShoulderRotation).radians(), pose.rotation().radians()
+                    (
+                        currentWristRotation
+                        + currentElbowRotation
+                        + currentShoulderRotation
+                    ).radians(),
+                    pose.rotation().radians(),
                 )
                 + currentWristRotation.radians()
             )
