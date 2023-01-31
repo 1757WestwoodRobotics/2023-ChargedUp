@@ -605,3 +605,11 @@ kPhotonvisionCameraDiagonalFOV = 75.1
 kPhotonvisionCameraPixelDimensions = (960, 720)
 kApriltagWidth = 8.125 * kMetersPerInch
 kApriltagHeight = kApriltagWidth
+
+# CubeCone Motors
+kConeCubeCANID = 1
+kConeCubePIDSlot = 1
+kConeCubePGain = 1
+kConeCubeIGain = 1
+kConeCubeDGain = 1
+setAmount = 58
