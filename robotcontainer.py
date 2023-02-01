@@ -172,9 +172,6 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.gripCone).whileHeld(
             GripperConeGrab(self.grip)
         )
-        commands2.button.JoystickButton(*self.operatorInterface.gripHold).whileHeld(
-            GripperHoldingState(self.grip)
-        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

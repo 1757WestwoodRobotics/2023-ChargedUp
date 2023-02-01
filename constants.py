@@ -608,8 +608,9 @@ kApriltagHeight = kApriltagWidth
 
 # CubeCone Motors
 kConeCubeCANID = 1
-kConeCubePIDSlot = 1
+kConeCubePIDSlot = 0
 kConeCubePGain = 1
-kConeCubeIGain = 1
-kConeCubeDGain = 1
-setAmount = 58
+kConeCubeIGain = 0
+kConeCubeDGain = 0
+kIntakeMotorSpeed = 7000
+"""revolutions per minute (rpm)"""

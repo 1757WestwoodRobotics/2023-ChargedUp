@@ -88,20 +88,20 @@
     {
       "Button": 3
     },
-    "PLACEHOLDER"
+    "intakeCube"
   ],
   "IntakeCone": [
     1,
     {
       "Button": 1
     },
-    "PLACEHOLDER"
+    "intakeCone"
   ],
   "HoldCargo": [
     1,
     {
       "Button": 1
     },
-    "PLACEHOLDER"
+    "holdCargo"
   ]
 }

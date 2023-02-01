@@ -32,17 +32,17 @@ class GripperSubsystem(SubsystemBase):
             constants.kConeCubeDGain,
         )
 
-    def set(self, controlMode: ControlMode, demand: float) -> None:
+    def periodic(self) -> None:
         if self.state == self.GripperState.CubeGrabForward:
             self.ConeCubeMotor.execute(
                 NEOBrushless.ControlMode.Velocity,
-                constants.setAmount
+                constants.kIntakeMotorSpeed
                 # Motor will move forward (right)
             )
         elif self.state == self.GripperState.ConeGrabBackwards:
             self.ConeCubeMotor.execute(
                 NEOBrushless.ControlMode.Velocity,
-                -constants.setAmount
+                -constants.kIntakeMotorSpeed
                 # Motor will move backward (left)
             )
         elif self.state == self.GripperState.HoldingState:
