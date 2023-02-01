@@ -14,9 +14,9 @@ import constants
 
 class GripperSubsystem(SubsystemBase):
     class GripperState(Enum):
-        CubeGrabForward = auto()  # Cube gripper wheels, motor will move right
-        ConeGrabBackwards = auto()  # Cone gripper wheels, motor will move left
-        HoldingState = (
+        cubeGrabForward = auto()  # Cube gripper wheels, motor will move right
+        coneGrabBackwards = auto()  # Cone gripper wheels, motor will move left
+        holdingState = (
             auto()
         )  # holds the cargo in the gripper, no movement in the motor
 
@@ -24,7 +24,7 @@ class GripperSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.ConeCubeMotor = NEOBrushless(
+        self.motorCubeCone = NEOBrushless(
             constants.kConeCubeCANID,
             constants.kConeCubePIDSlot,
             constants.kConeCubePGain,
@@ -33,29 +33,29 @@ class GripperSubsystem(SubsystemBase):
         )
 
     def periodic(self) -> None:
-        if self.state == self.GripperState.CubeGrabForward:
-            self.ConeCubeMotor.execute(
+        if self.state == self.GripperState.cubeGrabForward:
+            self.motorCubeCone.execute(
                 NEOBrushless.ControlMode.Velocity,
                 constants.kIntakeMotorSpeed
                 # Motor will move forward (right)
             )
-        elif self.state == self.GripperState.ConeGrabBackwards:
-            self.ConeCubeMotor.execute(
+        elif self.state == self.GripperState.coneGrabBackwards:
+            self.motorCubeCone.execute(
                 NEOBrushless.ControlMode.Velocity,
                 -constants.kIntakeMotorSpeed
                 # Motor will move backward (left)
             )
-        elif self.state == self.GripperState.HoldingState:
-            self.ConeCubeMotor.execute(NEOBrushless.ControlMode.Velocity, 0)
+        elif self.state == self.GripperState.holdingState:
+            self.motorCubeCone.execute(NEOBrushless.ControlMode.Velocity, 0)
 
     def setGripCube(self) -> None:
-        self.state = GripperSubsystem.GripperState.CubeGrabForward
+        self.state = GripperSubsystem.GripperState.cubeGrabForward
 
     def setGripCone(self) -> None:
-        self.state = GripperSubsystem.GripperState.ConeGrabBackwards
+        self.state = GripperSubsystem.GripperState.coneGrabBackwards
 
     def setGripHold(self) -> None:
-        self.state = GripperSubsystem.GripperState.HoldingState
+        self.state = GripperSubsystem.GripperState.holdingState
 
 
 # Luke said that "each instance of the Falcon class gives reference to that specific motor with that specific canID"
