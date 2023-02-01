@@ -192,18 +192,22 @@ class ArmSubsystem(SubsystemBase):
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
     def reset(self) -> None:
+        shoulderEncoderPosition = self.shoulderEncoder.getPosition().radians()
+        elbowEncoderPosition = self.elbowEncoder.getPosition().radians()
+        wristEncoderPosition = self.wristEncoder.getPosition().radians()
+
         self.shoulderArm.setEncoderPosition(
-            self.shoulderEncoder.getPosition().radians()
+            shoulderEncoderPosition
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kShoulderArmGearRatio
         )
         self.elbowArm.setEncoderPosition(
-            self.elbowEncoder.getPosition().radians()
+            (elbowEncoderPosition + shoulderEncoderPosition)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         self.wristArm.setEncoderPosition(
-            self.wristEncoder.getPosition().radians()
+            (shoulderEncoderPosition + elbowEncoderPosition + wristEncoderPosition)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
