@@ -633,16 +633,18 @@ kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
 
 kArmelbowLength = 17.459 * kMetersPerInch
-kArmelbowMass = 10  # kg
+kArmelbowMass = 5  # kg
+kArmelbowCOM = 9 * kMetersPerInch
 
 kArmshoulderLength = 25.439 * kMetersPerInch
-kArmshoulderMass = 4  # kg
+kArmshoulderMass = 5  # kg
+kArmshoulderCOM = 13 * kMetersPerInch
 
 kArmwristLength = 17.185293 * kMetersPerInch
-kArmwristMass = 2  # kg
+kArmwristMass = 5  # kg
+kArmWristCOM = 9 * kMetersPerInch
 
 kArmStateKey = "arm/state"
-kArmTargetPositionKey = "arm/target/end"
 
 kArmTranslationalPGain = 0.5
 kArmTranslationalIGain = 0
@@ -669,7 +671,9 @@ kShoulderRobotOffset = Transform3d(
     Translation3d(8 * kMetersPerInch, 0, 9.75 * kMetersPerInch),
     Rotation3d(0, math.pi, 0),
 )
-kArmPosesKey = "arm/poses"
+kArmPosesKey = "arm/poses/actual"
+kArmTargetPosesKey = "arm/poses/target"
+kArmCOMs = "arm/coms"
 kArmSmoothKey = "arm/smooth"
 kArmObeyEndstopsKey = "arm/useEndstops"
 

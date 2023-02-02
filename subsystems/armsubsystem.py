@@ -17,6 +17,7 @@ from wpimath.controller import (
 )
 from wpimath.geometry import (
     Pose2d,
+    Pose3d,
     Rotation2d,
     Rotation3d,
     Transform2d,
@@ -187,6 +188,10 @@ class ArmSubsystem(SubsystemBase):
         self.targetPose = Pose2d()
         self.targetElbow = Pose2d()
 
+        self.totalCOM = Translation2d()
+        self.elbowRelativeCOM = Translation2d()
+        self.wristRelativeCOM = Translation2d()
+
         self.reset()
         Preferences.initBoolean(constants.kArmSmoothKey, True)
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
@@ -277,6 +282,61 @@ class ArmSubsystem(SubsystemBase):
             + Transform2d(Translation2d(constants.kArmwristLength, 0), Rotation2d())
         )
 
+    def updateCOMs(self) -> None:
+        shoulderRotation = self.getShoulderArmRotation()
+        elbowRotation = self.getElbowArmRotation() + shoulderRotation
+        wristRotation = self.getWristArmRotation() + elbowRotation
+        # these rotations are relative to the floor
+
+        elbowPose = self.getElbowPosition()
+        wristPose = self.getWristPosition()
+
+        armCOM = Translation2d(constants.kArmshoulderCOM, shoulderRotation)
+        forearmCOM = elbowPose.translation() + Translation2d(
+            constants.kArmelbowCOM, elbowRotation
+        )
+        handCOM = wristPose.translation() + Translation2d(
+            constants.kArmWristCOM, wristRotation
+        )
+
+        self.totalCOM = Translation2d(
+            (
+                armCOM.X() * constants.kArmshoulderMass
+                + forearmCOM.X() * constants.kArmelbowMass
+                + handCOM.X() * constants.kArmwristMass
+            )
+            / (
+                constants.kArmshoulderMass
+                + constants.kArmelbowMass
+                + constants.kArmwristMass
+            ),
+            (
+                armCOM.Y() * constants.kArmshoulderMass
+                + forearmCOM.Y() * constants.kArmelbowMass
+                + handCOM.Y() * constants.kArmwristMass
+            )
+            / (
+                constants.kArmshoulderMass
+                + constants.kArmelbowMass
+                + constants.kArmwristMass
+            ),
+        )
+
+        self.elbowRelativeCOM = Translation2d(
+            (
+                forearmCOM.X() * constants.kArmelbowMass
+                + handCOM.X() * constants.kArmwristMass
+            )
+            / (constants.kArmelbowMass + constants.kArmwristMass),
+            (
+                forearmCOM.Y() * constants.kArmelbowMass
+                + handCOM.Y() * constants.kArmwristMass
+            )
+            / (constants.kArmelbowMass + constants.kArmwristMass),
+        )
+
+        self.wristRelativeCOM = handCOM
+
     def updateArmPositionsLogging(self) -> None:
         robotPose3d = pose3dFrom2d(
             Pose2d(
@@ -321,17 +381,39 @@ class ArmSubsystem(SubsystemBase):
                 Rotation3d(0, self.targetElbow.rotation().radians(), 0),
             )
         )
-        sendableSerialized = convertToSendablePoses(
+        armPosesSerialized = convertToSendablePoses(
             [
                 shoulderPose,
                 elbowPose,
                 wristPose,
                 endEffectorPose,
+            ]
+        )
+
+        targetPosesSerialized = convertToSendablePoses(
+            [
                 targetPose,
                 targetElbow,
             ]
         )
-        SmartDashboard.putNumberArray(constants.kArmPosesKey, sendableSerialized)
+
+        comsSerialized = convertToSendablePoses(
+            [
+                i
+                for i in map(
+                    lambda x: robotPose3d
+                    + Transform3d(Translation3d(-x.X(), 0, x.Y()), Rotation3d())
+                    + constants.kShoulderRobotOffset,
+                    [self.totalCOM, self.elbowRelativeCOM, self.wristRelativeCOM],
+                )
+            ]
+        )
+
+        SmartDashboard.putNumberArray(constants.kArmPosesKey, armPosesSerialized)
+        SmartDashboard.putNumberArray(
+            constants.kArmTargetPosesKey, targetPosesSerialized
+        )
+        SmartDashboard.putNumberArray(constants.kArmCOMs, comsSerialized)
 
     def updateMechanism(self) -> None:
         self.armElbow.setAngle(self.getElbowArmRotation().degrees())
@@ -362,7 +444,9 @@ class ArmSubsystem(SubsystemBase):
         else:
             targetState = self.state.position()
             self.setEndEffectorPosition(targetState)
+
         self.updateMechanism()
+        self.updateCOMs()
         self.updateArmPositionsLogging()
 
     def canElbowReachPosition(self, position: Translation2d):
