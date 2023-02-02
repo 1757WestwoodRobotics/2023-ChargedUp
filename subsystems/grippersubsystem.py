@@ -1,12 +1,6 @@
 # each roller alternates meaning if you were to pick up a cube you would eject a cone
 from enum import Enum, auto
 from commands2 import SubsystemBase
-
-from wpilib import PneumaticsModuleType, Solenoid
-from ctre import ControlMode
-
-from util.simfalcon import createMotor
-from util.simfalcon import Falcon
 from util.simneo import NEOBrushless
 
 import constants
@@ -32,21 +26,23 @@ class GripperSubsystem(SubsystemBase):
             constants.kConeCubeDGain,
         )
 
+        self.state = GripperSubsystem.GripperState.HoldingState
+
     def periodic(self) -> None:
         if self.state == self.GripperState.CubeGrabForward:
-            self.motorCubeCone.execute(
+            self.motorCubeCone.set(
                 NEOBrushless.ControlMode.Velocity,
                 constants.kIntakeMotorSpeed
                 # Motor will move forward (right)
             )
         elif self.state == self.GripperState.ConeGrabBackwards:
-            self.motorCubeCone.execute(
+            self.motorCubeCone.set(
                 NEOBrushless.ControlMode.Velocity,
                 -constants.kIntakeMotorSpeed
                 # Motor will move backward (left)
             )
         elif self.state == self.GripperState.HoldingState:
-            self.motorCubeCone.execute(NEOBrushless.ControlMode.Velocity, 0)
+            self.motorCubeCone.set(NEOBrushless.ControlMode.Velocity, 0)
 
     def setGripCube(self) -> None:
         self.state = GripperSubsystem.GripperState.CubeGrabForward
