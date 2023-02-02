@@ -83,21 +83,21 @@
     },
     "bottom button on top of joystick (ThrustmasterT16000M)"
   ],
-  "IntakeCube": [
+  "intakeCube": [
     1,
     {
       "Button": 3
     },
     "intakeCube"
   ],
-  "IntakeCone": [
+  "intakeCone": [
     1,
     {
       "Button": 1
     },
     "intakeCone"
   ],
-  "HoldCargo": [
+  "holdCargo": [
     1,
     {
       "Button": 1
