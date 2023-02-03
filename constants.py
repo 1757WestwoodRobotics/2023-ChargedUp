@@ -16,7 +16,7 @@ Axes Convention (right hand rule):
     Rotation:
         +rotate around X: counterclockwise looking from the front, 0 aligned with +Y
         +rotate around Y: counterclockwise looking from the left, 0 aligned with +Z
-        +rotate around Z: counterclockwise looking from the elbow, 0 aligned with +X
+        +rotate around Z: counterclockwise looking from the top, 0 aligned with +X
 
 Swerve Module Layout:
     Drive (input) -> Drive Gearing -> Wheel (output)
