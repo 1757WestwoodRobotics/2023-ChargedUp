@@ -339,31 +339,38 @@ class ArmSubsystem(SubsystemBase):
 
     def shoulderFF(self, globalRelativeRotation: Rotation2d) -> float:
         shoulderRelativeRadius = self.totalCOM.norm()
-        return (
+
+        ffAmount = (
             globalRelativeRotation.cos()
             * shoulderRelativeRadius
             * constants.kShoulderArmFFFactor
         )
+        SmartDashboard.putNumber(constants.kShoulderFeedForwardLogKey, ffAmount)
+        return ffAmount
 
     def elbowFF(self, globalRelativeRotation: Rotation2d) -> float:
         elbowRelativeRadius = self.elbowRelativeCOM.distance(
             self.getElbowPosition().translation()
         )
-        return (
+        ffAmount = (
             globalRelativeRotation.cos()
             * elbowRelativeRadius
             * constants.kElbowArmFFFactor
         )
+        SmartDashboard.putNumber(constants.kElbowFeedForwardLogKey, ffAmount)
+        return ffAmount
 
     def wristFF(self, globalRelativeRotation: Rotation2d) -> float:
         wristRelativeRadius = self.wristRelativeCOM.distance(
             self.getWristPosition().translation()
         )
-        return (
+        ffAmount = (
             globalRelativeRotation.cos()
             * wristRelativeRadius
             * constants.kWristArmFFFactor
         )
+        SmartDashboard.putNumber(constants.kWristFeedForwardLogKey, ffAmount)
+        return ffAmount
 
     def updateArmPositionsLogging(self) -> None:
         robotPose3d = pose3dFrom2d(

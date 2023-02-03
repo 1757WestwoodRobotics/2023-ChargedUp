@@ -592,6 +592,7 @@ kElbowArmInverted = False
 kElbowArmGearRatio = 40 / 1
 kElbowArmRotationKey = "arm/rotation/elbow"
 kElbowArmTargetRotationKey = "arm/target/elbow"
+kElbowFeedForwardLogKey = "arm/ff/elbow"
 kElbowArmFFFactor = 0.05
 
 kElbowArmCANCoderID = 35
@@ -609,6 +610,7 @@ kShoulderArmInverted = False
 kShoulderArmGearRatio = 70 / 14
 kShoulderArmRotationKey = "arm/rotation/shoulder"
 kShoulderTargetArmRotationKey = "arm/target/shoulder"
+kShoulderFeedForwardLogKey = "arm/ff/shoulder"
 kShoulderArmFFFactor = 0.05
 
 kShoulderArmCANCoderID = 45
@@ -626,6 +628,7 @@ kWristArmInverted = False
 kWristArmGearRatio = 20 / 1
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
+kWristFeedForwardLogKey = "arm/ff/wrist"
 kWristArmFFFactor = 0.05
 
 kWristArmCANCoderID = 46
