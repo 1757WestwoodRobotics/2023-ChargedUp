@@ -337,6 +337,34 @@ class ArmSubsystem(SubsystemBase):
 
         self.wristRelativeCOM = handCOM
 
+    def shoulderFF(self, globalRelativeRotation: Rotation2d) -> float:
+        shoulderRelativeRadius = self.totalCOM.norm()
+        return (
+            globalRelativeRotation.cos()
+            * shoulderRelativeRadius
+            * constants.kShoulderArmFFFactor
+        )
+
+    def elbowFF(self, globalRelativeRotation: Rotation2d) -> float:
+        elbowRelativeRadius = self.elbowRelativeCOM.distance(
+            self.getElbowPosition().translation()
+        )
+        return (
+            globalRelativeRotation.cos()
+            * elbowRelativeRadius
+            * constants.kElbowArmFFFactor
+        )
+
+    def wristFF(self, globalRelativeRotation: Rotation2d) -> float:
+        wristRelativeRadius = self.wristRelativeCOM.distance(
+            self.getWristPosition().translation()
+        )
+        return (
+            globalRelativeRotation.cos()
+            * wristRelativeRadius
+            * constants.kWristArmFFFactor
+        )
+
     def updateArmPositionsLogging(self) -> None:
         robotPose3d = pose3dFrom2d(
             Pose2d(
@@ -582,10 +610,18 @@ class ArmSubsystem(SubsystemBase):
             * constants.kWristArmGearRatio
         )
 
-        self.elbowArm.set(Falcon.ControlMode.Position, elbowArmEncoderPulses)
+        self.elbowArm.set(
+            Falcon.ControlMode.Position,
+            elbowArmEncoderPulses,
+            self.elbowFF(Rotation2d(trueElbowPos)),
+        )
         self.shoulderArm.set(
             Falcon.ControlMode.Position,
             shoulderArmEncoderPulses,
-            self.armFF.calculate(shoulder.radians(), 0, 0),
+            self.shoulderFF(Rotation2d(trueShoulderPos)),
         )
-        self.wristArm.set(Falcon.ControlMode.Position, wristArmEncoderPulses)
+        self.wristArm.set(
+            Falcon.ControlMode.Position,
+            wristArmEncoderPulses,
+            self.wristFF(Rotation2d(trueWristPos)),
+        )

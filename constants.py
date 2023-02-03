@@ -592,6 +592,7 @@ kElbowArmInverted = False
 kElbowArmGearRatio = 40 / 1
 kElbowArmRotationKey = "arm/rotation/elbow"
 kElbowArmTargetRotationKey = "arm/target/elbow"
+kElbowArmFFFactor = 0.05
 
 kElbowArmCANCoderID = 35
 kElbowArmCANCoderOffset = 0
@@ -625,6 +626,7 @@ kWristArmInverted = False
 kWristArmGearRatio = 20 / 1
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
+kWristArmFFFactor = 0.05
 
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
