@@ -117,7 +117,6 @@ class PhysicsEngine:
 
     # pylint: disable-next=unused-argument
     def __init__(self, physics_controller: PhysicsInterface, robot: "MentorBot"):
-
         self.physics_controller = physics_controller
 
         self.frontLeftModuleSim = SwerveModuleSim(
