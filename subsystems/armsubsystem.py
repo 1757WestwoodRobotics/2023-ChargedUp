@@ -83,7 +83,7 @@ class ArmSubsystem(SubsystemBase):
             "Double Substation Ramp", 13.75, 180, 10, Color8Bit(Color.kWhite)
         )
 
-        armPivot = self.mech.getRoot("ArmPivot", 53.5, 8)
+        armPivot = self.mech.getRoot("ArmPivot", 56.83, 10)
         self.armTower = armPivot.appendLigament(
             "ArmTower", 0, -90, 10, Color8Bit(Color.kSilver)
         )
