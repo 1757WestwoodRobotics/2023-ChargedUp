@@ -29,6 +29,7 @@ def createMotor(
         return SimFalcon(canID)
 
 
+# pylint: disable-next=too-many-public-methods
 class SimFalcon:  # a simulated Falcon 500
     def __init__(
         self,
