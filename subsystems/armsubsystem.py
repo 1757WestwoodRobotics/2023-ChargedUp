@@ -281,7 +281,7 @@ class ArmSubsystem(SubsystemBase):
             + Transform2d(Translation2d(constants.kArmwristLength, 0), Rotation2d())
         )
 
-    def updateCOMs(self) -> None:
+    def _updateCOMs(self) -> None:
         shoulderRotation = self.getShoulderArmRotation()
         elbowRotation = self.getElbowArmRotation() + shoulderRotation
         wristRotation = self.getWristArmRotation() + elbowRotation
@@ -336,7 +336,7 @@ class ArmSubsystem(SubsystemBase):
 
         self.wristRelativeCOM = handCOM
 
-    def shoulderFF(self, globalRelativeRotation: Rotation2d) -> float:
+    def _shoulderFF(self, globalRelativeRotation: Rotation2d) -> float:
         shoulderRelativeRadius = self.totalCOM.norm()
 
         ffAmount = (
@@ -347,7 +347,7 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(constants.kShoulderFeedForwardLogKey, ffAmount)
         return ffAmount
 
-    def elbowFF(self, globalRelativeRotation: Rotation2d) -> float:
+    def _elbowFF(self, globalRelativeRotation: Rotation2d) -> float:
         elbowRelativeRadius = self.elbowRelativeCOM.distance(
             self.getElbowPosition().translation()
         )
@@ -359,7 +359,7 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(constants.kElbowFeedForwardLogKey, ffAmount)
         return ffAmount
 
-    def wristFF(self, globalRelativeRotation: Rotation2d) -> float:
+    def _wristFF(self, globalRelativeRotation: Rotation2d) -> float:
         wristRelativeRadius = self.wristRelativeCOM.distance(
             self.getWristPosition().translation()
         )
@@ -371,7 +371,7 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(constants.kWristFeedForwardLogKey, ffAmount)
         return ffAmount
 
-    def updateArmPositionsLogging(self) -> None:
+    def _updateArmPositionsLogging(self) -> None:
         robotPose3d = pose3dFrom2d(
             Pose2d(
                 *SmartDashboard.getNumberArray(
@@ -448,7 +448,7 @@ class ArmSubsystem(SubsystemBase):
         )
         SmartDashboard.putNumberArray(constants.kArmCOMs, comsSerialized)
 
-    def updateMechanism(self) -> None:
+    def _updateMechanism(self) -> None:
         self.armElbow.setAngle(self.getElbowArmRotation().degrees())
         self.armShoulder.setAngle(self.getShoulderArmRotation().degrees())
         self.armWrist.setAngle(self.getWristArmRotation().degrees())
@@ -478,9 +478,9 @@ class ArmSubsystem(SubsystemBase):
             targetState = self.state.position()
             self.setEndEffectorPosition(targetState)
 
-        self.updateMechanism()
-        self.updateCOMs()
-        self.updateArmPositionsLogging()
+        self._updateMechanism()
+        self._updateCOMs()
+        self._updateArmPositionsLogging()
 
     def canElbowReachPosition(self, position: Translation2d):
         return (
@@ -618,15 +618,15 @@ class ArmSubsystem(SubsystemBase):
         self.elbowArm.set(
             Falcon.ControlMode.Position,
             elbowArmEncoderPulses,
-            self.elbowFF(Rotation2d(trueElbowPos)),
+            self._elbowFF(Rotation2d(trueElbowPos)),
         )
         self.shoulderArm.set(
             Falcon.ControlMode.Position,
             shoulderArmEncoderPulses,
-            self.shoulderFF(Rotation2d(trueShoulderPos)),
+            self._shoulderFF(Rotation2d(trueShoulderPos)),
         )
         self.wristArm.set(
             Falcon.ControlMode.Position,
             wristArmEncoderPulses,
-            self.wristFF(Rotation2d(trueWristPos)),
+            self._wristFF(Rotation2d(trueWristPos)),
         )
