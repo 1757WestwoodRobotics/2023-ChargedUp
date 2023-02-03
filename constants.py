@@ -692,9 +692,9 @@ kArmTopScorePosition = Pose2d(
     Rotation2d.fromDegrees(180 - 41.579),
 )
 kArmMidScorePosition = Pose2d(
-    -16.618 * kMetersPerInch,
-    40.188 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 30.547),
+    -24.18 * kMetersPerInch,
+    31.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 41.579),
 )
 kArmStoredPosition = Pose2d(
     6.167 * kMetersPerInch,
