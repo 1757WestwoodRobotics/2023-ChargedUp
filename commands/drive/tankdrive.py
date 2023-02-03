@@ -40,7 +40,7 @@ class TankDrive(CommandBase):
         self.setName(__class__.__name__)
 
         self.drivetrain = DifferentialDriveKinematics(
-            constants.kSwerveModuleCenterToCenterSideDistance * 2
+            constants.kSwerveModuleCenterToRobotCenterWidth * 2
         )
 
         self.drive = drive

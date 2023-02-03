@@ -79,48 +79,45 @@ kFieldWidth = 27 * kMetersPerFoot
 """meters"""
 
 # Robot Physical parameters
-kRobotWidth = 28 * kMetersPerInch
+kRobotWidth = 26 * kMetersPerInch
 """meters"""
 
-kRobotLength = 28 * kMetersPerInch
+kRobotLength = 24 * kMetersPerInch
 """meters"""
 
-kSwerveModuleCenterToCenterSideDistance = 21.5 * kMetersPerInch
+kSwerveModuleCenterToRobotCenterWidth = 10.375 * kMetersPerInch
 """meters"""
-
-kHalfSwerveModuleCenterToCenterSideDistance = (
-    kSwerveModuleCenterToCenterSideDistance / 2
-)
+kSwerveModuleCenterToRobotCenterLength = 9.375 * kMetersPerInch
 """meters"""
 
 kSwerveModuleDistanceFromRobotCenter = pow(
-    pow(kHalfSwerveModuleCenterToCenterSideDistance, 2)
-    + pow(kHalfSwerveModuleCenterToCenterSideDistance, 2),
+    pow(kSwerveModuleCenterToRobotCenterWidth, 2)
+    + pow(kSwerveModuleCenterToRobotCenterLength, 2),
     0.5,
 )
 """meters (c = (a^2 + b^2) ^ 0.5)"""
 
 kFrontLeftWheelPosition = Translation2d(
-    kHalfSwerveModuleCenterToCenterSideDistance,
-    kHalfSwerveModuleCenterToCenterSideDistance,
+    kSwerveModuleCenterToRobotCenterLength,
+    kSwerveModuleCenterToRobotCenterWidth,
 )
 """[meters, meters]"""
 
 kFrontRightWheelPosition = Translation2d(
-    kHalfSwerveModuleCenterToCenterSideDistance,
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
+    kSwerveModuleCenterToRobotCenterLength,
+    -kSwerveModuleCenterToRobotCenterWidth,
 )
 """[meters, meters]"""
 
 kBackLeftWheelPosition = Translation2d(
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
-    kHalfSwerveModuleCenterToCenterSideDistance,
+    -kSwerveModuleCenterToRobotCenterLength,
+    kSwerveModuleCenterToRobotCenterWidth,
 )
 """[meters, meters]"""
 
 kBackRightWheelPosition = Translation2d(
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
+    -kSwerveModuleCenterToRobotCenterLength,
+    -kSwerveModuleCenterToRobotCenterWidth,
 )
 """[meters, meters]"""
 
@@ -142,7 +139,7 @@ kWheelDistancePerRadian = kWheelDistancePerRevolution / kRadiansPerRevolution
 kDriveGearingRatio = (50 / 14) * (17 / 27) * (45 / 15)
 """dimensionless"""
 
-kSteerGearingRatio = (32 / 15) * (60 / 10)
+kSteerGearingRatio = 150 / 7
 """dimensionless"""
 
 kMaxMotorAngularVelocity = DCMotor.falcon500().freeSpeed
