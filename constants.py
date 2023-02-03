@@ -26,6 +26,7 @@ Swerve Module Layout:
 import math
 from ctre import SupplyCurrentLimitConfiguration
 from wpimath.geometry import (
+    Pose3d,
     Pose2d,
     Rotation2d,
     Rotation3d,

@@ -143,7 +143,11 @@ class SimFalcon:  # a simulated Falcon 500
         return self.motor.get()
 
     def set(
-        self, mode: ControlMode, demand: float, _demandType: DemandType = DemandType.ArbitraryFeedForward, _demand1: float = 0
+        self,
+        mode: ControlMode,
+        demand: float,
+        _demandType: DemandType = DemandType.ArbitraryFeedForward,
+        _demand1: float = 0,
     ) -> None:
         self.motor.set(mode, demand)
         currentPosition = self.motor.getSelectedSensorPosition()

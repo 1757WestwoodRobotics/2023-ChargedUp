@@ -12,7 +12,6 @@
 import functools
 import operator
 import typing
-import typing
 import math
 from photonvision import SimVisionSystem, SimVisionTarget
 from ctre import CANCoderSimCollection, TalonFXSimCollection
@@ -139,6 +138,7 @@ class VisionSim:
     def update(self, robotPose: Pose2d) -> None:
         self.system.processFrame(robotPose)
 
+
 class ArmSimulation:
     def __init__(
         self,
@@ -149,7 +149,6 @@ class ArmSimulation:
         elbowSimEncoder: CANCoderSimCollection,
         wristSimEncoder: CANCoderSimCollection,
     ) -> None:
-
         self.shoulderGearbox = DCMotor.falcon500(1)
         self.elbowGearbox = DCMotor.falcon500(1)
         self.wristGearbox = DCMotor.falcon500(1)

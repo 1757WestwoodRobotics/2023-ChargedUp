@@ -17,7 +17,6 @@ from wpimath.controller import (
 )
 from wpimath.geometry import (
     Pose2d,
-    Pose3d,
     Rotation2d,
     Rotation3d,
     Transform2d,
@@ -433,15 +432,14 @@ class ArmSubsystem(SubsystemBase):
         )
 
         comsSerialized = convertToSendablePoses(
-            [
-                i
-                for i in map(
+            list(
+                map(
                     lambda x: robotPose3d
                     + Transform3d(Translation3d(-x.X(), 0, x.Y()), Rotation3d())
                     + constants.kShoulderRobotOffset,
                     [self.totalCOM, self.elbowRelativeCOM, self.wristRelativeCOM],
                 )
-            ]
+            )
         )
 
         SmartDashboard.putNumberArray(constants.kArmPosesKey, armPosesSerialized)
