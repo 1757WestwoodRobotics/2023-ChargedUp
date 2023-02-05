@@ -297,14 +297,14 @@ kSteerIGain = 0.0
 kSteerDGain = 12.0
 
 kFrontLeftDriveInverted = False
-kFrontRightDriveInverted = True
+kFrontRightDriveInverted = False
 kBackLeftDriveInverted = False
-kBackRightDriveInverted = True
+kBackRightDriveInverted = False
 
-kFrontLeftSteerInverted = False
-kFrontRightSteerInverted = False
-kBackLeftSteerInverted = False
-kBackRightSteerInverted = False
+kFrontLeftSteerInverted = True
+kFrontRightSteerInverted = True
+kBackLeftSteerInverted = True
+kBackRightSteerInverted = True
 
 """
 To determine encoder offsets (with robot ON and DISABLED):
@@ -320,16 +320,16 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = 256.553
+kFrontLeftAbsoluteEncoderOffset = 256.113
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = 305.244
+kFrontRightAbsoluteEncoderOffset = 125.420
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = 341.367
+kBackLeftAbsoluteEncoderOffset = 341.719
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = 150.645
+kBackRightAbsoluteEncoderOffset = 331.260
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
