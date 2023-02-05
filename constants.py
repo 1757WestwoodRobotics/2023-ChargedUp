@@ -499,7 +499,7 @@ kJoystickKeyLogPrefix = "DriverStation"
 
 kPitchMultiplicationValue = 0.2
 
-kDriveDistanceAutoBalance = 0.05
+kDriveDistanceAutoBalance = 5
 
 kSpeedFactorAutoBalance = 0.1
 

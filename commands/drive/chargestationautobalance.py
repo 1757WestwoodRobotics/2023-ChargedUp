@@ -41,24 +41,26 @@ class AutoBalance(CommandBase):
 
     def execute(self) -> None:
         self.pitch = self.drive.gyro.getPitch()
+        SmartDashboard.putNumber("therealgyro", self.pitch)
 
-        if self.pitch > (constants.kTiltThresholdAutoBalance):
-            DriveDistance(
-                constants.kDriveDistanceAutoBalance,
-                constants.kSpeedFactorAutoBalance,
-                DriveDistance.Axis.X,
-                self.drive,
+        if self.pitch >= (constants.kTiltThresholdAutoBalance):
+            self.drive.arcadeDriveWithFactors(
+                constants.kDriveDistanceAutoBalance, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
             )
-        elif self.pitch < (-constants.kTiltThresholdAutoBalance):
-            DriveDistance(
-                -constants.kDriveDistanceAutoBalance,
-                constants.kSpeedFactorAutoBalance,
-                DriveDistance.Axis.X,
-                self.drive,
+            SmartDashboard.putNumber("thegyronumbies", (self.pitch - .1))
+
+
+
+
+        elif self.pitch <= (-constants.kTiltThresholdAutoBalance):
+            self.drive.arcadeDriveWithFactors(
+                -constants.kDriveDistanceAutoBalance, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
             )
+            SmartDashboard.putNumber("thegyronumbies", (self.pitch + .1))
 
     def end(self, _interupted: bool) -> None:
-        print("IT WORKS")
+        for i in range(100):
+            print(self.pitch)
 
     def isFinished(self) -> bool:
         return self.pitch > -15 and self.pitch < 15
