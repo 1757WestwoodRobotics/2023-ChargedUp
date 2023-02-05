@@ -37,7 +37,8 @@ class AutoBalance(CommandBase):
         )
 
     def end(self, _interupted: bool) -> None:
-        print("IT WORKS")
+        for i in range(100):
+            print(self.pitch)
 
     def isFinished(self) -> bool:
         return self.pitch > -15 and self.pitch < 15
