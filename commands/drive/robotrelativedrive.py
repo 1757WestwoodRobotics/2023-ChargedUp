@@ -29,6 +29,6 @@ class RobotRelativeDrive(CommandBase):
             self.forward(),
             self.sideways(),
             self.rotation()
-            * Preferences.getFloat("Robot Relative Sensitivity", 0.2),  # better control
+            * Preferences.getFloat("Robot Relative Sensitivity", 0.8),  # better control
             DriveSubsystem.CoordinateMode.RobotRelative,
         )
