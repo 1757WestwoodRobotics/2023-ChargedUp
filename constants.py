@@ -345,7 +345,7 @@ kBackRightAbsoluteEncoderOffset = 331.260
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
-kRobotVisionPoseWeight = 0.05  # 19% vision data
+kRobotVisionPoseWeight = 0.05  # 5% vision data
 
 kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
@@ -365,7 +365,7 @@ kRobotVisionPoseArrayKeys = OptionalValueKeys("VisionRobotPose")
 
 kTargetName = "Target"
 
-kApriltagPositionDict = {  # this is gathered from a mapping of the field, derived with positions and ZYX order rotations converted to Quaternions in bulk in a spreadsheet
+kApriltagPositionDict = {  # thanks 6328 for FieldConstants!
     1: Pose3d(
         (kMetersPerInch * 610.77),
         (kMetersPerInch * 42.19),
