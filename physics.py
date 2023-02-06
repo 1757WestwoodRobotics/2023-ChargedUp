@@ -201,7 +201,7 @@ class PhysicsEngine:
             )
             simBallObject.setPose(constants.kSimDefaultBallLocation)
 
-        self.gyroYaw.set(-self.driveSim.getHeading().degrees())
+        self.gyroYaw.set(self.driveSim.getHeading().degrees())
 
         # Simulate the drivetrain
         voltage = RobotController.getInputVoltage()
