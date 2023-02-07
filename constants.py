@@ -607,9 +607,9 @@ kApriltagWidth = 8.125 * kMetersPerInch
 kApriltagHeight = kApriltagWidth
 
 # CubeCone Motors
-kConeCubeCANID = 1
+kConeCubeCANID = 3
 kConeCubePIDSlot = 0
-kConeCubePGain = 1
+kConeCubePGain = 0.0001
 kConeCubeIGain = 0
 kConeCubeDGain = 0
 kIntakeMotorSpeed = 7000
