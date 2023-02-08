@@ -1,4 +1,11 @@
 {
+  "alignClosestWaypoint": [
+    1,
+    {
+      "Button": 1
+    },
+    "replace me"
+  ],
   "autoBallIntake": [
     0,
     {

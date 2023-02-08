@@ -2,6 +2,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.drive.drivewaypoint import DriveWaypoint
 
 
 import constants
@@ -124,6 +125,12 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.sideToSide,
                 self.operatorInterface.chassisControls.rotationX,
             )
+        )
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.alignClosestWaypoint
+        ).whileHeld(
+            DriveWaypoint(self.drive)
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(

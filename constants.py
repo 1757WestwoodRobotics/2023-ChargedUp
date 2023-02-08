@@ -545,6 +545,28 @@ kSimBackRightSteerEncoderPorts = (14, 15)
 
 kMotorBaseKey = "motors"
 
+# waypoint setter constraints
+kMaxWaypointTranslationalVelocity = kMaxForwardLinearVelocity
+kMaxWaypointTranslationalAcceleration = kMaxWaypointTranslationalVelocity * 2.5
+
+kPossibleWaypoints = [
+    Pose2d(15.64, 7.34, 0),  # blue loading station
+    Pose2d(15.64, 6.16, 0),
+    Pose2d(0.87, 7.34, math.pi),  # red loading staton
+    Pose2d(0.87, 6.16, math.pi),
+    Pose2d(1.92,5.00,-math.pi), # scoring locations, blue
+    Pose2d(1.92,4.42,-math.pi),
+    Pose2d(1.92,3.83,-math.pi),
+    Pose2d(1.92,3.30,-math.pi),
+    Pose2d(1.92,2.76,-math.pi),
+    Pose2d(1.92,2.19,-math.pi),
+    Pose2d(1.92,1.69,-math.pi),
+    Pose2d(1.92,1.09,-math.pi),
+    Pose2d(1.92,0.51,-math.pi)
+]
+
+kTargetWaypointPoseKey = "targetWaypoint"
+
 # Logging
 kSwerveActualStatesKey = "swerve/actual"
 kSwerveExpectedStatesKey = "swerve/expected"
