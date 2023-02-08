@@ -1,15 +1,13 @@
 from math import pi
 from commands2 import CommandBase
-from wpilib._wpilib import SmartDashboard
-from wpimath._controls._controls.controller import (
-    ProfiledPIDController,
-)
-from wpimath._controls._controls.trajectory import (
+from wpilib import SmartDashboard
+from wpimath.trajectory import (
     TrapezoidProfile,
     TrapezoidProfileRadians,
 )
 from wpimath.geometry import Pose2d
 from wpimath.controller import (
+    ProfiledPIDController,
     ProfiledPIDControllerRadians,
 )
 from wpimath.kinematics import ChassisSpeeds
