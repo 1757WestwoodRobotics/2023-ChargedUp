@@ -554,15 +554,24 @@ kPossibleWaypoints = [
     Pose2d(15.64, 6.16, 0),
     Pose2d(0.87, 7.34, math.pi),  # red loading staton
     Pose2d(0.87, 6.16, math.pi),
-    Pose2d(1.92,5.00,-math.pi), # scoring locations, blue
-    Pose2d(1.92,4.42,-math.pi),
-    Pose2d(1.92,3.83,-math.pi),
-    Pose2d(1.92,3.30,-math.pi),
-    Pose2d(1.92,2.76,-math.pi),
-    Pose2d(1.92,2.19,-math.pi),
-    Pose2d(1.92,1.69,-math.pi),
-    Pose2d(1.92,1.09,-math.pi),
-    Pose2d(1.92,0.51,-math.pi)
+    Pose2d(1.92, 5.00, -math.pi),  # scoring locations, blue
+    Pose2d(1.92, 4.42, -math.pi),
+    Pose2d(1.92, 3.83, -math.pi),
+    Pose2d(1.92, 3.30, -math.pi),
+    Pose2d(1.92, 2.76, -math.pi),
+    Pose2d(1.92, 2.19, -math.pi),
+    Pose2d(1.92, 1.69, -math.pi),
+    Pose2d(1.92, 1.09, -math.pi),
+    Pose2d(1.92, 0.51, -math.pi),
+    Pose2d(14.70, 5.00, 0),  # scoring locations, red
+    Pose2d(14.70, 4.42, 0),
+    Pose2d(14.70, 3.83, 0),
+    Pose2d(14.70, 3.30, 0),
+    Pose2d(14.70, 2.76, 0),
+    Pose2d(14.70, 2.19, 0),
+    Pose2d(14.70, 1.69, 0),
+    Pose2d(14.70, 1.09, 0),
+    Pose2d(14.70, 0.51, 0),
 ]
 
 kTargetWaypointPoseKey = "waypoint/target"
