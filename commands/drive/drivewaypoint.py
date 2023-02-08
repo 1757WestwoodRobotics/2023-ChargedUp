@@ -59,6 +59,16 @@ class DriveWaypoint(CommandBase):
 
         self.waypoint = Pose2d()
 
+        SmartDashboard.putData(
+            constants.kTargetWaypointXControllerKey, self.xController
+        )
+        SmartDashboard.putData(
+            constants.kTargetWaypointYControllerKey, self.yController
+        )
+        SmartDashboard.putData(
+            constants.kTargetWaypointThetaControllerKey, self.thetaController
+        )
+
         self.addRequirements([self.drive])
         self.setName(__class__.__name__)
 
@@ -77,7 +87,10 @@ class DriveWaypoint(CommandBase):
             constants.kPossibleWaypoints,
             key=lambda x: x.relativeTo(currentPose).translation().norm(),
         )
-        SmartDashboard.putNumberArray(constants.kTargetWaypointPoseKey, [self.waypoint.X(), self.waypoint.Y(), self.waypoint.rotation().radians()])
+        SmartDashboard.putNumberArray(
+            constants.kTargetWaypointPoseKey,
+            [self.waypoint.X(), self.waypoint.Y(), self.waypoint.rotation().radians()],
+        )
 
     def execute(self) -> None:
         currentPose = self.drive.getPose()

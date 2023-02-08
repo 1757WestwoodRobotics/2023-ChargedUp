@@ -547,7 +547,7 @@ kMotorBaseKey = "motors"
 
 # waypoint setter constraints
 kMaxWaypointTranslationalVelocity = kMaxForwardLinearVelocity
-kMaxWaypointTranslationalAcceleration = kMaxWaypointTranslationalVelocity * 2.5
+kMaxWaypointTranslationalAcceleration = kMaxWaypointTranslationalVelocity * 3
 
 kPossibleWaypoints = [
     Pose2d(15.64, 7.34, 0),  # blue loading station
@@ -565,7 +565,10 @@ kPossibleWaypoints = [
     Pose2d(1.92,0.51,-math.pi)
 ]
 
-kTargetWaypointPoseKey = "targetWaypoint"
+kTargetWaypointPoseKey = "waypoint/target"
+kTargetWaypointXControllerKey = "waypoint/x"
+kTargetWaypointYControllerKey = "waypoint/y"
+kTargetWaypointThetaControllerKey = "waypoint/theta"
 
 # Logging
 kSwerveActualStatesKey = "swerve/actual"
