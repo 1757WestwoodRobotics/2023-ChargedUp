@@ -25,6 +25,7 @@ class GripperSubsystem(SubsystemBase):
             constants.kConeCubeIGain,
             constants.kConeCubeDGain,
         )
+        self.motorCubeCone.setSmartCurrentLimit(limit=15)
 
         self.state = GripperSubsystem.GripperState.HoldingState
 
