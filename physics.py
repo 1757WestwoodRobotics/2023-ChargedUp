@@ -160,9 +160,8 @@ class ArmSimulation:
                 constants.kArmelbowLength, constants.kArmelbowMass
             ),
             constants.kArmelbowLength,
-            -180 / constants.kRadiansPerDegree,
-            180 / constants.kRadiansPerDegree,
-            constants.kArmelbowMass,
+            -180 * constants.kRadiansPerDegree,
+            180 * constants.kRadiansPerDegree,
             False,
             [0],
         )
@@ -175,7 +174,6 @@ class ArmSimulation:
             constants.kArmshoulderLength,
             math.radians(-180),
             math.radians(180),
-            constants.kArmshoulderMass,
             False,
             [0],
         )
@@ -188,7 +186,6 @@ class ArmSimulation:
             constants.kArmwristLength,
             math.radians(-180),
             math.radians(180),
-            constants.kArmwristMass,
             False,
             [0],
         )
