@@ -13,14 +13,11 @@ class SetArmPositionMid(CommandBase):
         self.arm = armSubsystem
         self.addRequirements([self.arm])
 
-    def initialize(self) -> None:
-        DataLogManager.log(f"Arm Start {self.state}")
-
     def execute(self) -> None:
         self.arm.state = self.state
 
-    def end(self, _interrupted: bool) -> None:
-        DataLogManager.log(f"Arm End {self.state}")
+    def isFinished(self) -> bool:
+        return self.arm.atTarget()
 
 
 class SetArmPositionTop(SetArmPositionMid):

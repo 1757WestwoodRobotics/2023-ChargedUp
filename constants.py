@@ -685,6 +685,12 @@ kArmObeyEndstopsKey = "arm/useEndstops"
 
 kArmPositionExtraEpsiolon = 0.001
 
+kArmPositionTolerence = 0.05
+"""meters"""
+kArmRotationTolerence = 0.1
+"""radians"""
+kArmAtTargetKey = "arm/atTarget"
+
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
     -41.180 * kMetersPerInch,

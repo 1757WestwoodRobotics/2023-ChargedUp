@@ -184,6 +184,10 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
+        self.xProfiledPID.setTolerance(constants.kArmPositionTolerence)
+        self.yProfiledPID.setTolerance(constants.kArmPositionTolerence)
+        self.thetaProfiledPID.setTolerance(constants.kArmRotationTolerence)
+
         self.targetPose = Pose2d()
         self.targetElbow = Pose2d()
 
@@ -464,6 +468,7 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(
             constants.kWristArmRotationKey, self.getWristArmRotation().degrees()
         )
+        SmartDashboard.putBoolean(constants.kArmAtTargetKey, self.atTarget())
         if self.state == ArmSubsystem.ArmState.OverrideValue:
             elbow = SmartDashboard.getNumber(constants.kElbowArmOverrideKey, 0)
             shoulder = SmartDashboard.getNumber(constants.kShoulderArmOverrideKey, 0)
@@ -502,6 +507,13 @@ class ArmSubsystem(SubsystemBase):
             )
         else:
             return position
+
+    def atTarget(self) -> bool:
+        return (
+            self.xProfiledPID.atGoal()
+            and self.yProfiledPID.atGoal()
+            and self.thetaProfiledPID.atGoal()
+        )
 
     def setEndEffectorPosition(self, pose: Pose2d):
         self.targetPose = pose
