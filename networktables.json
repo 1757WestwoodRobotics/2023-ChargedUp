@@ -6,5 +6,21 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/arm/smooth",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/arm/useEndstops",
+    "type": "boolean",
+    "value": true,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

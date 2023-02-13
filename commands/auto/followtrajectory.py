@@ -33,6 +33,8 @@ class FollowTrajectory(CommandBase):
         self.markers = markers
         self.markerMap = markerMap
 
+        self.currentCommands: List[Tuple[Command, bool]] = []
+
         for marker in self.markers:
             for markerName in marker.names:
                 if markerName in self.markerMap.keys():
@@ -131,6 +133,15 @@ class FollowTrajectory(CommandBase):
             return (pose, holonomicRotation)
 
     def execute(self) -> None:
+        for command, running in self.currentCommands:
+            if not running:
+                continue
+            command.execute()
+
+            if command.isFinished():
+                command.end(False)
+                running = False
+
         curTime = self.timer.get()
         currentState = self.drive.getPose()
         desiredState = self.trajectory.sample(curTime)
@@ -178,7 +189,8 @@ class FollowTrajectory(CommandBase):
             for name in marker.names:
                 if name in self.markerMap:
                     eventCommand = self.markerMap[name]
-                    eventCommand.schedule()
+                    eventCommand.initialize()
+                    self.currentCommands.append((eventCommand, True))
 
     def isFinished(self) -> bool:
         return self.timer.hasElapsed(self.trajectory.getTotalTime())
