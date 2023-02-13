@@ -590,7 +590,7 @@ kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
 
-kElbowArmGearRatio = 40 / 1
+kElbowArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
 kElbowArmRotationKey = "arm/rotation/elbow"
 kElbowArmTargetRotationKey = "arm/target/elbow"
 kElbowFeedForwardLogKey = "arm/ff/elbow"
@@ -608,7 +608,7 @@ kShoulderArmIGain = 0.0
 kShoulderArmDGain = 20
 kShoulderArmInverted = False
 
-kShoulderArmGearRatio = 70 / 14
+kShoulderArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
 kShoulderArmRotationKey = "arm/rotation/shoulder"
 kShoulderTargetArmRotationKey = "arm/target/shoulder"
 kShoulderFeedForwardLogKey = "arm/ff/shoulder"
@@ -626,7 +626,7 @@ kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = False
 
-kWristArmGearRatio = 20 / 1
+kWristArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
 kWristFeedForwardLogKey = "arm/ff/wrist"
@@ -652,22 +652,22 @@ kArmWristCOM = 9 * kMetersPerInch
 
 kArmStateKey = "arm/state"
 
-kArmTranslationalPGain = 0.5
+kArmTranslationalPGain = 1
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
 kArmTranslationalMaxVelocity = 5
 """m/s"""
-kArmTranslationalMaxAcceleration = 5
+kArmTranslationalMaxAcceleration = 10
 """m/s^2"""
 
 kArmRotationalPGain = 0.8
 kArmRotationalIGain = 0
 kArmRotationalDGain = 0
 
-kArmRotationalMaxVelocity = 3
+kArmRotationalMaxVelocity = 10
 """rad/s"""
-kArmRotationalMaxAcceleration = 15
+kArmRotationalMaxAcceleration = 20
 """rad/s^2"""
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"
