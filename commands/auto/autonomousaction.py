@@ -1,6 +1,8 @@
 from typing import Dict, List
 from commands2 import (
     Command,
+    CommandBase,
+    FunctionalCommand,
     ParallelCommandGroup,
     ParallelDeadlineGroup,
     SequentialCommandGroup,
@@ -56,11 +58,20 @@ class AutonomousRoutine(SequentialCommandGroup):
         DataLogManager.log(f"Starting auto: {self.name}")
         return super().execute()
 
+    def wrappedEventCommand(self, eventCommand: Command) -> CommandBase:
+        return FunctionalCommand(
+            eventCommand.initialize,
+            eventCommand.execute,
+            eventCommand.end,
+            eventCommand.isFinished,
+            list(eventCommand.getRequirements()),
+        )
+
     def getStopEventCommands(
         self, stopEvent: PathPlannerTrajectory.StopEvent
     ) -> Command:
         commands = [
-            self.markerMap.get(name)
+            self.wrappedEventCommand(self.markerMap.get(name))
             for name in stopEvent.names
             if name in self.markerMap
         ]
