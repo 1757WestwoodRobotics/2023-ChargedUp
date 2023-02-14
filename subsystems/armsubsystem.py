@@ -25,6 +25,7 @@ from wpimath.geometry import (
     Translation3d,
 )
 from util.advantagescopeconvert import convertToSendablePoses
+from util.angleoptimize import optimizeAngle
 from util.convenientmath import clamp, pose3dFrom2d
 from util.simcoder import CTREEncoder
 
@@ -552,10 +553,11 @@ class ArmSubsystem(SubsystemBase):
         )
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
+        currentWristRotation = self.getWristArmRotation()
+        currentElbowRotation = self.getElbowArmRotation()
+        currentShoulderRotation = self.getShoulderArmRotation()
+
         if Preferences.getBoolean(constants.kArmSmoothKey, True):
-            currentWristRotation = self.getWristArmRotation()
-            currentElbowRotation = self.getElbowArmRotation()
-            currentShoulderRotation = self.getShoulderArmRotation()
             wristAngle = (
                 self.thetaProfiledPID.calculate(
                     (
@@ -571,9 +573,9 @@ class ArmSubsystem(SubsystemBase):
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         self.setRelativeArmAngles(
-            Rotation2d(angleModulus(startAngle)),
-            Rotation2d(angleModulus(endAngle)),
-            Rotation2d(wristAngle),
+            optimizeAngle(currentShoulderRotation, Rotation2d(startAngle)),
+            optimizeAngle(currentElbowRotation, Rotation2d(endAngle)),
+            optimizeAngle(currentWristRotation , Rotation2d(wristAngle)),
         )
 
     def setRelativeArmAngles(

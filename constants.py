@@ -621,7 +621,7 @@ kShoulderMinAngle = Rotation2d.fromDegrees(54)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.2
+kWristArmPGain = 0.4
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = False
@@ -638,15 +638,15 @@ kWristArmCANCoderOffset = -150.996
 kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
 
-kArmelbowLength = 17.459 * kMetersPerInch
+kArmelbowLength = 18.555271 * kMetersPerInch
 kArmelbowMass = 5  # kg
 kArmelbowCOM = 9 * kMetersPerInch
 
-kArmshoulderLength = 25.439 * kMetersPerInch
+kArmshoulderLength = 26.791161 * kMetersPerInch
 kArmshoulderMass = 5  # kg
 kArmshoulderCOM = 13 * kMetersPerInch
 
-kArmwristLength = 17.185293 * kMetersPerInch
+kArmwristLength = 16.392506 * kMetersPerInch
 kArmwristMass = 5  # kg
 kArmWristCOM = 9 * kMetersPerInch
 
@@ -693,29 +693,29 @@ kArmAtTargetKey = "arm/atTarget"
 
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
-    -41.180 * kMetersPerInch,
-    43.622 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 41.579),
+    -41.430 * kMetersPerInch,
+    45.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 42.001),
 )
 kArmMidScorePosition = Pose2d(
-    -24.18 * kMetersPerInch,
-    31.622 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 41.579),
+    -24.43 * kMetersPerInch,
+    33.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 42.001),
 )
 kArmStoredPosition = Pose2d(
-    6.167 * kMetersPerInch,
-    29.059 * kMetersPerInch,
-    Rotation2d.fromDegrees(65.081),
+    8.452357 * kMetersPerInch,
+    26.865289 * kMetersPerInch,
+    Rotation2d.fromDegrees(51.338),
 )
 kArmDoubleSubstationPosition = Pose2d(
-    -16.618 * kMetersPerInch,
-    40.188 * kMetersPerInch,
-    Rotation2d.fromDegrees(148.254),
+    -16.868 * kMetersPerInch,
+    42.188 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 32.167),
 )
 kArmGroundIntakePosition = Pose2d(
-    -32.539 * kMetersPerInch,
-    2.806 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 31.579),
+    -27.899 * kMetersPerInch,
+    4.806 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 32.001),
 )
 
 # Logging
