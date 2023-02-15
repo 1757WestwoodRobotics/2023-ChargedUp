@@ -210,10 +210,10 @@ class ArmSubsystem(SubsystemBase):
         self.thetaProfiledPID.setTolerance(constants.kArmRotationTolerence)
 
         self.interpolationMethod = wpilib.SendableChooser()
-        self.interpolationMethod.setDefaultOption(
+        self.interpolationMethod.addOption(
             "Joint Space", ArmSubsystem.InterpolationMethod.JointSpace
         )
-        self.interpolationMethod.addOption(
+        self.interpolationMethod.setDefaultOption(
             "Cartesian Space", ArmSubsystem.InterpolationMethod.CartesianSpace
         )
         self.interpolationMethod.addOption(
