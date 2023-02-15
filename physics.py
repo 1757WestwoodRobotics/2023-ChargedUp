@@ -14,7 +14,7 @@ import operator
 import typing
 import math
 from photonvision import SimVisionSystem, SimVisionTarget
-from ctre import CANCoderSimCollection, TalonFXSimCollection
+from ctre import TalonFXSimCollection
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim, SingleJointedArmSim
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
@@ -145,9 +145,6 @@ class ArmSimulation:
         shoulderSimMotor: TalonFXSimCollection,
         elbowSimMotor: TalonFXSimCollection,
         wristSimMotor: TalonFXSimCollection,
-        shoulderSimEncoder: CANCoderSimCollection,
-        elbowSimEncoder: CANCoderSimCollection,
-        wristSimEncoder: CANCoderSimCollection,
     ) -> None:
         self.shoulderGearbox = DCMotor.falcon500(1)
         self.elbowGearbox = DCMotor.falcon500(1)
@@ -194,10 +191,6 @@ class ArmSimulation:
         self.elbowSimMotor = elbowSimMotor
         self.wristSimMotor = wristSimMotor
 
-        self.shoulderSimEncoder = shoulderSimEncoder
-        self.elbowSimEncoder = elbowSimEncoder
-        self.wristSimEncoder = wristSimEncoder
-
     def update(self, tm_diff) -> None:
         self.shoulderJointSim.setInput(
             0, self.shoulderSimMotor.getMotorOutputLeadVoltage()
@@ -216,11 +209,6 @@ class ArmSimulation:
                 * constants.kElbowArmGearRatio
             )  # convert relative to 4bar angles
         )
-        self.elbowSimEncoder.setRawPosition(
-            int(
-                self.elbowJointSim.getAngle() * constants.kCANcoderPulsesPerRadian
-            )  # convert relative to 4bar angles
-        )
 
         self.shoulderSimMotor.setIntegratedSensorRawPosition(
             int(
@@ -228,9 +216,6 @@ class ArmSimulation:
                 * constants.kTalonEncoderPulsesPerRadian
                 * constants.kShoulderArmGearRatio
             )
-        )
-        self.shoulderSimEncoder.setRawPosition(
-            int(self.shoulderJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
         )
 
         self.wristSimMotor.setIntegratedSensorRawPosition(
@@ -243,9 +228,6 @@ class ArmSimulation:
                 * constants.kTalonEncoderPulsesPerRadian
                 * constants.kWristArmGearRatio
             )
-        )
-        self.wristSimEncoder.setRawPosition(
-            int(self.wristJointSim.getAngle() * constants.kCANcoderPulsesPerRadian)
         )
 
 
@@ -315,9 +297,6 @@ class PhysicsEngine:
             robot.container.arm.shoulderArm.getSimCollection(),
             robot.container.arm.elbowArm.getSimCollection(),
             robot.container.arm.wristArm.getSimCollection(),
-            robot.container.arm.shoulderEncoder.getSimCollection(),
-            robot.container.arm.elbowEncoder.getSimCollection(),
-            robot.container.arm.wristEncoder.getSimCollection(),
         )
 
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")

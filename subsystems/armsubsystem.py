@@ -1,5 +1,6 @@
 import math
 from enum import Enum, auto
+from typing import Tuple
 from commands2 import SubsystemBase
 from wpilib import (
     Color,
@@ -27,7 +28,6 @@ from wpimath.geometry import (
 )
 from util.advantagescopeconvert import convertToSendablePoses
 from util.convenientmath import clamp, pose3dFrom2d
-from util.simcoder import CTREEncoder
 
 from util.simfalcon import Falcon
 
@@ -135,9 +135,6 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.elbowArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.elbowEncoder = CTREEncoder(
-            constants.kElbowArmCANCoderID, constants.kElbowArmCANCoderOffset
-        )
 
         self.shoulderArm = Falcon(
             constants.kShoulderArmCANId,
@@ -149,9 +146,6 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.shoulderArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.shoulderEncoder = CTREEncoder(
-            constants.kShoulderArmCANCoderID, constants.kShoulderArmCANCoderOffset
-        )
 
         self.wristArm = Falcon(
             constants.kWristArmCANId,
@@ -163,9 +157,6 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.wristEncoder = CTREEncoder(
-            constants.kWristArmCANCoderID, constants.kWristArmCANCoderOffset
-        )
 
         self.xProfiledPID = ProfiledPIDController(
             constants.kArmTranslationalPGain,
@@ -243,22 +234,22 @@ class ArmSubsystem(SubsystemBase):
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
     def reset(self) -> None:
-        shoulderEncoderPosition = self.shoulderEncoder.getPosition().radians()
-        elbowEncoderPosition = self.elbowEncoder.getPosition().radians()
-        wristEncoderPosition = self.wristEncoder.getPosition().radians()
+        shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
+            constants.kArmStoredPosition
+        )
 
         self.shoulderArm.setEncoderPosition(
-            shoulderEncoderPosition
+            shoulderAngle
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kShoulderArmGearRatio
         )
         self.elbowArm.setEncoderPosition(
-            (elbowEncoderPosition + shoulderEncoderPosition)
+            (shoulderAngle + elbowAngle)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         self.wristArm.setEncoderPosition(
-            (shoulderEncoderPosition + elbowEncoderPosition + wristEncoderPosition)
+            (shoulderAngle + elbowAngle + wristAngle)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
@@ -296,17 +287,6 @@ class ArmSubsystem(SubsystemBase):
             - self.getShoulderArmRotation()
             - self.getElbowArmRotation()
         )  # 4 bar to relative
-
-    def getElbowArmEncoderRotation(self) -> Rotation2d:
-        return (
-            self.elbowEncoder.getPosition()
-        )  # encoder positions are already relative to previous joint
-
-    def getShoulderArmEncoderRotation(self) -> Rotation2d:
-        return self.shoulderEncoder.getPosition()
-
-    def getWristArmEncoderRotation(self) -> Rotation2d:
-        return self.wristEncoder.getPosition()
 
     def getElbowPosition(self) -> Pose2d:
         shoulderRot = self.getShoulderArmRotation()
@@ -564,6 +544,27 @@ class ArmSubsystem(SubsystemBase):
             and self.thetaProfiledPID.atGoal()
         )
 
+    def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:
+        endAngle = math.acos(
+            (
+                pose.X() * pose.X()
+                + pose.Y() * pose.Y()
+                - constants.kArmelbowLength * constants.kArmelbowLength
+                - constants.kArmshoulderLength * constants.kArmshoulderLength
+            )
+            / (2 * constants.kArmelbowLength * constants.kArmshoulderLength)
+        )
+
+        startAngle = math.atan2(pose.Y(), pose.X()) - math.atan2(
+            math.sin(endAngle) * constants.kArmelbowLength,
+            constants.kArmshoulderLength
+            + math.cos(endAngle) * constants.kArmelbowLength,
+        )
+
+        wristAngle = pose.rotation().radians() - startAngle - endAngle
+
+        return startAngle, endAngle, wristAngle
+
     def setEndEffectorPosition(self, pose: Pose2d):
         desiredInterpolation: ArmSubsystem.InterpolationMethod = (
             self.interpolationMethod.getSelected()
@@ -588,22 +589,9 @@ class ArmSubsystem(SubsystemBase):
         while not self._canElbowReachPosition(targetTwoLink):
             targetTwoLink = self._nearestPossibleElbowPosition(targetTwoLink)
 
-        endAngle = math.acos(
-            (
-                targetTwoLink.X() * targetTwoLink.X()
-                + targetTwoLink.Y() * targetTwoLink.Y()
-                - constants.kArmelbowLength * constants.kArmelbowLength
-                - constants.kArmshoulderLength * constants.kArmshoulderLength
-            )
-            / (2 * constants.kArmelbowLength * constants.kArmshoulderLength)
+        startAngle, endAngle, wristAngle = self._armAnglesAtPosiiton(
+            Pose2d(targetTwoLink, pose.rotation())
         )
-
-        startAngle = math.atan2(targetTwoLink.Y(), targetTwoLink.X()) - math.atan2(
-            math.sin(endAngle) * constants.kArmelbowLength,
-            constants.kArmshoulderLength
-            + math.cos(endAngle) * constants.kArmelbowLength,
-        )
-        wristAngle = pose.rotation().radians() - startAngle - endAngle
 
         if desiredInterpolation == ArmSubsystem.InterpolationMethod.CartesianSpace:
             currentWristRotation = self.getWristArmRotation()
