@@ -680,8 +680,8 @@ kShoulderRobotOffset = Transform3d(
 kArmPosesKey = "arm/poses/actual"
 kArmTargetPosesKey = "arm/poses/target"
 kArmCOMs = "arm/coms"
-kArmSmoothKey = "arm/smooth"
 kArmObeyEndstopsKey = "arm/useEndstops"
+kArmInterpolationMethod = "arm/interpolationMethod"
 
 kArmPositionExtraEpsiolon = 0.001
 

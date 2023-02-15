@@ -1,5 +1,4 @@
 from commands2 import CommandBase
-from wpilib import DataLogManager
 from subsystems.armsubsystem import ArmSubsystem
 
 

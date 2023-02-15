@@ -8,6 +8,7 @@ from wpilib import (
     Preferences,
     SmartDashboard,
 )
+import wpilib
 from wpimath import angleModulus
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
 from wpimath.controller import (
@@ -25,7 +26,6 @@ from wpimath.geometry import (
     Translation3d,
 )
 from util.advantagescopeconvert import convertToSendablePoses
-from util.angleoptimize import optimizeAngle
 from util.convenientmath import clamp, pose3dFrom2d
 from util.simcoder import CTREEncoder
 
@@ -56,14 +56,13 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmGroundIntakePosition
             return constants.kArmStoredPosition
 
-    def __init__(self) -> None:
-        SubsystemBase.__init__(self)
-        self.setName(__class__.__name__)
+    class InterpolationMethod(Enum):
+        JointSpace = auto()
+        CartesianSpace = auto()
+        NoInterp = auto()
 
+    def initMechanism(self) -> None:
         self.mech = Mechanism2d(90, 90)
-        self.state = ArmSubsystem.ArmState.Stored
-        self.armFF = ArmFeedforward(0, constants.kShoulderArmFFFactor, 0, 0)
-
         midNodeHome = self.mech.getRoot("Mid Node", 27.83, 0)
         self.midNode = midNodeHome.appendLigament(
             "Mid Cone Node", 34, 90, 10, Color8Bit(Color.kWhite)
@@ -112,6 +111,16 @@ class ArmSubsystem(SubsystemBase):
         )
 
         SmartDashboard.putData("Arm Sim", self.mech)
+
+    def __init__(self) -> None:
+        SubsystemBase.__init__(self)
+        self.setName(__class__.__name__)
+
+        self.initMechanism()
+
+        self.state = ArmSubsystem.ArmState.Stored
+        self.armFF = ArmFeedforward(0, constants.kShoulderArmFFFactor, 0, 0)
+
         SmartDashboard.putNumber(constants.kElbowArmOverrideKey, 0)
         SmartDashboard.putNumber(constants.kShoulderArmOverrideKey, 0)
         SmartDashboard.putNumber(constants.kWristArmOverrideKey, 0)
@@ -185,9 +194,43 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
+
+        self.shoulderPID = ProfiledPIDControllerRadians(
+            constants.kArmRotationalPGain,
+            constants.kArmRotationalIGain,
+            constants.kArmRotationalDGain,
+            TrapezoidProfileRadians.Constraints(
+                constants.kArmRotationalMaxVelocity,
+                constants.kArmRotationalMaxAcceleration,
+            ),
+        )
+        self.elbowPID = ProfiledPIDControllerRadians(
+            constants.kArmRotationalPGain,
+            constants.kArmRotationalIGain,
+            constants.kArmRotationalDGain,
+            TrapezoidProfileRadians.Constraints(
+                constants.kArmRotationalMaxVelocity,
+                constants.kArmRotationalMaxAcceleration,
+            ),
+        )
+
         self.xProfiledPID.setTolerance(constants.kArmPositionTolerence)
         self.yProfiledPID.setTolerance(constants.kArmPositionTolerence)
         self.thetaProfiledPID.setTolerance(constants.kArmRotationTolerence)
+
+        self.interpolationMethod = wpilib.SendableChooser()
+        self.interpolationMethod.setDefaultOption(
+            "Joint Space", ArmSubsystem.InterpolationMethod.JointSpace
+        )
+        self.interpolationMethod.addOption(
+            "Cartesian Space", ArmSubsystem.InterpolationMethod.CartesianSpace
+        )
+        self.interpolationMethod.addOption(
+            "No Interpolation", ArmSubsystem.InterpolationMethod.NoInterp
+        )
+        SmartDashboard.putData(
+            constants.kArmInterpolationMethod, self.interpolationMethod
+        )
 
         self.targetPose = Pose2d()
         self.targetElbow = Pose2d()
@@ -197,7 +240,6 @@ class ArmSubsystem(SubsystemBase):
         self.wristRelativeCOM = Translation2d()
 
         self.reset()
-        Preferences.initBoolean(constants.kArmSmoothKey, True)
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
     def reset(self) -> None:
@@ -224,26 +266,32 @@ class ArmSubsystem(SubsystemBase):
     def getElbowArmRotation(self) -> Rotation2d:
         return (
             Rotation2d(
-                self.elbowArm.get(Falcon.ControlMode.Position)
-                / constants.kElbowArmGearRatio
-                / constants.kTalonEncoderPulsesPerRadian
+                angleModulus(
+                    self.elbowArm.get(Falcon.ControlMode.Position)
+                    / constants.kElbowArmGearRatio
+                    / constants.kTalonEncoderPulsesPerRadian
+                )
             )
             - self.getShoulderArmRotation()
         )  # 4 bar to relative
 
     def getShoulderArmRotation(self) -> Rotation2d:
         return Rotation2d(
-            self.shoulderArm.get(Falcon.ControlMode.Position)
-            / constants.kShoulderArmGearRatio
-            / constants.kTalonEncoderPulsesPerRadian
+            angleModulus(
+                self.shoulderArm.get(Falcon.ControlMode.Position)
+                / constants.kShoulderArmGearRatio
+                / constants.kTalonEncoderPulsesPerRadian
+            )
         )
 
     def getWristArmRotation(self) -> Rotation2d:
         return (
             Rotation2d(
-                self.wristArm.get(Falcon.ControlMode.Position)
-                / constants.kWristArmGearRatio
-                / constants.kTalonEncoderPulsesPerRadian
+                angleModulus(
+                    self.wristArm.get(Falcon.ControlMode.Position)
+                    / constants.kWristArmGearRatio
+                    / constants.kTalonEncoderPulsesPerRadian
+                )
             )
             - self.getShoulderArmRotation()
             - self.getElbowArmRotation()
@@ -488,7 +536,7 @@ class ArmSubsystem(SubsystemBase):
         self._updateCOMs()
         self._updateArmPositionsLogging()
 
-    def canElbowReachPosition(self, position: Translation2d):
+    def _canElbowReachPosition(self, position: Translation2d):
         return (
             position.distance(Translation2d())
             < constants.kArmshoulderLength + constants.kArmelbowLength
@@ -496,7 +544,7 @@ class ArmSubsystem(SubsystemBase):
             > constants.kArmshoulderLength - constants.kArmelbowLength
         )
 
-    def nearestPossibleElbowPosition(self, position: Translation2d) -> Translation2d:
+    def _nearestPossibleElbowPosition(self, position: Translation2d) -> Translation2d:
         dist = position.distance(Translation2d())
         if dist < constants.kArmshoulderLength - constants.kArmelbowLength:
             return Translation2d(
@@ -517,6 +565,10 @@ class ArmSubsystem(SubsystemBase):
         )
 
     def setEndEffectorPosition(self, pose: Pose2d):
+        desiredInterpolation: ArmSubsystem.InterpolationMethod = (
+            self.interpolationMethod.getSelected()
+        )
+
         self.targetPose = pose
 
         twoLinkPosition = Translation2d(
@@ -525,7 +577,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         targetTwoLink = twoLinkPosition
-        if Preferences.getBoolean(constants.kArmSmoothKey, True):
+        if desiredInterpolation == ArmSubsystem.InterpolationMethod.CartesianSpace:
             currentWristPose = self.getWristPosition()
             targetTwoLink = Translation2d(
                 self.xProfiledPID.calculate(currentWristPose.X(), twoLinkPosition.X())
@@ -533,8 +585,8 @@ class ArmSubsystem(SubsystemBase):
                 self.yProfiledPID.calculate(currentWristPose.Y(), twoLinkPosition.Y())
                 + currentWristPose.Y(),
             )
-        while not self.canElbowReachPosition(targetTwoLink):
-            targetTwoLink = self.nearestPossibleElbowPosition(targetTwoLink)
+        while not self._canElbowReachPosition(targetTwoLink):
+            targetTwoLink = self._nearestPossibleElbowPosition(targetTwoLink)
 
         endAngle = math.acos(
             (
@@ -553,11 +605,10 @@ class ArmSubsystem(SubsystemBase):
         )
         wristAngle = pose.rotation().radians() - startAngle - endAngle
 
-        currentWristRotation = self.getWristArmRotation()
-        currentElbowRotation = self.getElbowArmRotation()
-        currentShoulderRotation = self.getShoulderArmRotation()
-
-        if Preferences.getBoolean(constants.kArmSmoothKey, True):
+        if desiredInterpolation == ArmSubsystem.InterpolationMethod.CartesianSpace:
+            currentWristRotation = self.getWristArmRotation()
+            currentElbowRotation = self.getElbowArmRotation()
+            currentShoulderRotation = self.getShoulderArmRotation()
             wristAngle = (
                 self.thetaProfiledPID.calculate(
                     (
@@ -573,14 +624,18 @@ class ArmSubsystem(SubsystemBase):
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         self.setRelativeArmAngles(
-            optimizeAngle(currentShoulderRotation, Rotation2d(startAngle)),
-            optimizeAngle(currentElbowRotation, Rotation2d(endAngle)),
-            optimizeAngle(currentWristRotation , Rotation2d(wristAngle)),
+            Rotation2d(angleModulus(startAngle)),
+            Rotation2d(angleModulus(endAngle)),
+            Rotation2d(angleModulus(wristAngle)),
         )
 
     def setRelativeArmAngles(
         self, shoulder: Rotation2d, elbow: Rotation2d, wrist: Rotation2d
     ) -> None:
+        desiredInterpolation: ArmSubsystem.InterpolationMethod = (
+            self.interpolationMethod.getSelected()
+        )
+
         SmartDashboard.putNumber(constants.kElbowArmTargetRotationKey, elbow.degrees())
         SmartDashboard.putNumber(
             constants.kShoulderTargetArmRotationKey, shoulder.degrees()
@@ -608,6 +663,24 @@ class ArmSubsystem(SubsystemBase):
             clampedShoulder = shoulder.radians()
             clampedElbow = elbow.radians()
             clampedWrist = wrist.radians()
+
+        if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
+            currentShoulder = self.getShoulderArmRotation()
+            currentElbow = self.getElbowArmRotation()
+            currentWrist = self.getWristArmRotation()
+
+            clampedShoulder = (
+                self.shoulderPID.calculate(currentShoulder.radians(), clampedShoulder)
+                + currentShoulder.radians()
+            )
+            clampedElbow = (
+                self.elbowPID.calculate(currentElbow.radians(), clampedElbow)
+                + currentElbow.radians()
+            )
+            clampedWrist = (
+                self.thetaProfiledPID.calculate(currentWrist.radians(), clampedWrist)
+                + currentWrist.radians()
+            )
 
         trueShoulderPos = clampedShoulder
         trueElbowPos = clampedElbow + trueShoulderPos
