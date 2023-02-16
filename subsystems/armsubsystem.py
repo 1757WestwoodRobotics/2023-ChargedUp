@@ -208,6 +208,8 @@ class ArmSubsystem(SubsystemBase):
         self.xProfiledPID.setTolerance(constants.kArmPositionTolerence)
         self.yProfiledPID.setTolerance(constants.kArmPositionTolerence)
         self.thetaProfiledPID.setTolerance(constants.kArmRotationTolerence)
+        self.elbowPID.setTolerance(constants.kArmRotationTolerence)
+        self.shoulderPID.setTolerance(constants.kArmRotationTolerence)
 
         self.interpolationMethod = wpilib.SendableChooser()
         self.interpolationMethod.addOption(
@@ -539,10 +541,9 @@ class ArmSubsystem(SubsystemBase):
 
     def atTarget(self) -> bool:
         return (
-            self.xProfiledPID.atGoal()
-            and self.yProfiledPID.atGoal()
-            and self.thetaProfiledPID.atGoal()
-        )
+            (self.xProfiledPID.atGoal() and self.yProfiledPID.atGoal())
+            or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
+        ) and self.thetaProfiledPID.atGoal()
 
     def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:
         endAngle = math.acos(

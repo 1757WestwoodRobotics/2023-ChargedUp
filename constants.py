@@ -585,12 +585,12 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 kArmPIDSlot = 0
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.2
+kElbowArmPGain = 0.1
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
 
-kElbowArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
+kElbowArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kElbowArmRotationKey = "arm/rotation/elbow"
 kElbowArmTargetRotationKey = "arm/target/elbow"
 kElbowFeedForwardLogKey = "arm/ff/elbow"
@@ -603,12 +603,12 @@ kElbowMinAngle = Rotation2d.fromDegrees(0)
 kElbowMaxAngle = Rotation2d.fromDegrees(150)
 
 kShoulderArmCANId = 44
-kShoulderArmPGain = 0.2
+kShoulderArmPGain = 0.1
 kShoulderArmIGain = 0.0
 kShoulderArmDGain = 20
 kShoulderArmInverted = False
 
-kShoulderArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
+kShoulderArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kShoulderArmRotationKey = "arm/rotation/shoulder"
 kShoulderTargetArmRotationKey = "arm/target/shoulder"
 kShoulderFeedForwardLogKey = "arm/ff/shoulder"
@@ -621,12 +621,12 @@ kShoulderMinAngle = Rotation2d.fromDegrees(54)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.4
+kWristArmPGain = 0.8
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = False
 
-kWristArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
+kWristArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
 kWristFeedForwardLogKey = "arm/ff/wrist"
