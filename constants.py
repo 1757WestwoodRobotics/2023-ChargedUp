@@ -590,7 +590,7 @@ kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
 
-kElbowArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kElbowArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kElbowArmRotationKey = "arm/rotation/elbow"
 kElbowArmTargetRotationKey = "arm/target/elbow"
 kElbowFeedForwardLogKey = "arm/ff/elbow"
@@ -626,7 +626,7 @@ kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = False
 
-kWristArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kWristArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
 kWristFeedForwardLogKey = "arm/ff/wrist"

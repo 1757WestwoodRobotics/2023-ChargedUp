@@ -600,12 +600,14 @@ class ArmSubsystem(SubsystemBase):
             currentShoulderRotation = self.getShoulderArmRotation()
             wristAngle = (
                 self.thetaProfiledPID.calculate(
-                    (
-                        currentWristRotation
-                        + currentElbowRotation
-                        + currentShoulderRotation
-                    ).radians(),
-                    pose.rotation().radians(),
+                    angleModulus(
+                        (
+                            currentWristRotation
+                            + currentElbowRotation
+                            + currentShoulderRotation
+                        ).radians()
+                    ),
+                    angleModulus(pose.rotation().radians()),
                 )
                 + currentWristRotation.radians()
             )
@@ -667,7 +669,10 @@ class ArmSubsystem(SubsystemBase):
                 + currentElbow.radians()
             )
             clampedWrist = (
-                self.thetaProfiledPID.calculate(currentWrist.radians(), clampedWrist)
+                self.thetaProfiledPID.calculate(
+                    (currentWrist + currentElbow + currentShoulder).radians(),
+                    clampedShoulder + clampedElbow + clampedWrist,
+                )
                 + currentWrist.radians()
             )
 
