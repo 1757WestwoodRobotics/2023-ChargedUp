@@ -621,7 +621,7 @@ kShoulderMinAngle = Rotation2d.fromDegrees(54)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.8
+kWristArmPGain = 0.2
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = False
@@ -652,7 +652,7 @@ kArmWristCOM = 9 * kMetersPerInch
 
 kArmStateKey = "arm/state"
 
-kArmTranslationalPGain = 1
+kArmTranslationalPGain = 0.8
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 

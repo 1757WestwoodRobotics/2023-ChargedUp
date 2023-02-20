@@ -27,6 +27,7 @@ from wpimath.geometry import (
     Translation3d,
 )
 from util.advantagescopeconvert import convertToSendablePoses
+from util.angleoptimize import optimizeAngle
 from util.convenientmath import clamp, pose3dFrom2d
 
 from util.simfalcon import Falcon
@@ -617,18 +618,42 @@ class ArmSubsystem(SubsystemBase):
 
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
+        if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
+            currentWristRotation = self.getWristArmRotation()
+            currentElbowRotation = self.getElbowArmRotation()
+            currentShoulderRotation = self.getShoulderArmRotation()
+            startAngle = (
+                self.shoulderPID.calculate(
+                    currentShoulderRotation.radians(), startAngle
+                )
+                + currentShoulderRotation.radians()
+            )
+            endAngle = (
+                self.elbowPID.calculate(currentElbowRotation.radians(), endAngle)
+                + currentElbowRotation.radians()
+            )
+            wristAngle = (
+                self.thetaProfiledPID.calculate(
+                    currentWristRotation.radians(),
+                    optimizeAngle(
+                        currentWristRotation, Rotation2d(wristAngle)
+                    ).radians(),
+                )
+                + currentWristRotation.radians()
+            )
+
         self.setRelativeArmAngles(
-            Rotation2d(angleModulus(startAngle)),
-            Rotation2d(angleModulus(endAngle)),
-            Rotation2d(angleModulus(wristAngle)),
+            Rotation2d(startAngle),
+            Rotation2d(endAngle),
+            Rotation2d(wristAngle),
         )
 
     def setRelativeArmAngles(
         self, shoulder: Rotation2d, elbow: Rotation2d, wrist: Rotation2d
     ) -> None:
-        desiredInterpolation: ArmSubsystem.InterpolationMethod = (
-            self.interpolationMethod.getSelected()
-        )
+        currentWristRotation = self.getWristArmRotation()
+        currentElbowRotation = self.getElbowArmRotation()
+        currentShoulderRotation = self.getShoulderArmRotation()
 
         SmartDashboard.putNumber(constants.kElbowArmTargetRotationKey, elbow.degrees())
         SmartDashboard.putNumber(
@@ -637,51 +662,36 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber(constants.kWristTargetArmRotationKey, wrist.degrees())
 
         clampedShoulder = clamp(
-            shoulder.radians(),
+            optimizeAngle(Rotation2d.fromDegrees(90), shoulder).radians(),
             constants.kShoulderMinAngle.radians(),
             constants.kShoulderMaxAngle.radians(),
         )
         clampedElbow = clamp(
-            elbow.radians(),
+            angleModulus(elbow.radians()),
             constants.kElbowMinAngle.radians(),
             constants.kElbowMaxAngle.radians(),
         )
 
         clampedWrist = clamp(
-            wrist.radians(),
+            optimizeAngle(currentWristRotation, wrist).radians(),
             constants.kWristMinAngle.radians(),
             constants.kWristMaxAngle.radians(),
         )
 
         if not Preferences.getBoolean(constants.kArmObeyEndstopsKey, True):
-            clampedShoulder = shoulder.radians()
-            clampedElbow = elbow.radians()
-            clampedWrist = wrist.radians()
-
-        if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
-            currentShoulder = self.getShoulderArmRotation()
-            currentElbow = self.getElbowArmRotation()
-            currentWrist = self.getWristArmRotation()
-
             clampedShoulder = (
-                self.shoulderPID.calculate(currentShoulder.radians(), clampedShoulder)
-                + currentShoulder.radians()
+                optimizeAngle(Rotation2d.fromDegrees(90), shoulder).radians(),
             )
-            clampedElbow = (
-                self.elbowPID.calculate(currentElbow.radians(), clampedElbow)
-                + currentElbow.radians()
-            )
-            clampedWrist = (
-                self.thetaProfiledPID.calculate(
-                    (currentWrist + currentElbow + currentShoulder).radians(),
-                    clampedShoulder + clampedElbow + clampedWrist,
-                )
-                + currentWrist.radians()
-            )
+            clampedElbow = angleModulus(elbow.radians())
+            clampedWrist = angleModulus(wrist.radians())
 
         trueShoulderPos = clampedShoulder
-        trueElbowPos = clampedElbow + trueShoulderPos
-        trueWristPos = clampedWrist + trueElbowPos
+        trueElbowPos = clampedElbow + currentShoulderRotation.radians()
+        trueWristPos = (
+            clampedWrist
+            + currentElbowRotation.radians()
+            + currentShoulderRotation.radians()
+        )
 
         shoulderArmEncoderPulses = (
             trueShoulderPos
