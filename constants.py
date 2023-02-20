@@ -712,6 +712,11 @@ kArmDoubleSubstationPosition = Pose2d(
     42.188 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 32.167),
 )
+kArmSingleSubstationPosition = Pose2d(
+    -9.679 * kMetersPerInch,
+    33.526 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 61.617),
+)
 kArmGroundIntakePosition = Pose2d(
     -27.899 * kMetersPerInch,
     4.806 * kMetersPerInch,

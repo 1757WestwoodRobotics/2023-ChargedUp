@@ -13,6 +13,13 @@
     },
     "replace me"
   ],
+  "armGroundIntake": [
+    2,
+    {
+      "Button": 5
+    },
+    "replace me"
+  ],
   "armMid": [
     2,
     {
@@ -27,16 +34,18 @@
     },
     "replace me"
   ],
+  "armSingleSubstation": [
+    2,
+    {
+      "Button": 6
+    },
+    "replace me"
+  ],
   "armTop": [
     2,
     {
       "Button": 2
     },
-    "replace me"
-  ],
-  "armGroundIntake":[
-    2,
-    {"Button": 5},
     "replace me"
   ],
   "autoBallIntake": [

@@ -24,7 +24,11 @@ class SetArmPositionTop(SetArmPositionMid):
 
 
 class SetArmPositionDoubleSubstation(SetArmPositionMid):
-    state = ArmSubsystem.ArmState.HumanStation
+    state = ArmSubsystem.ArmState.DoubleSubstation
+
+
+class SetArmPositionSingleSubstation(SetArmPositionMid):
+    state = ArmSubsystem.ArmState.SingleSubtation
 
 
 class SetArmPositionStored(SetArmPositionMid):

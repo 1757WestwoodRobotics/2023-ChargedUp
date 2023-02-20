@@ -38,7 +38,8 @@ class ArmSubsystem(SubsystemBase):
     class ArmState(Enum):
         Stored = auto()
         Mid = auto()
-        HumanStation = auto()
+        DoubleSubstation = auto()
+        SingleSubtation = auto()
         Top = auto()
         GroundLoading = auto()
         OverrideValue = auto()
@@ -48,8 +49,10 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmStoredPosition
             elif self == ArmSubsystem.ArmState.Mid:
                 return constants.kArmMidScorePosition
-            elif self == ArmSubsystem.ArmState.HumanStation:
+            elif self == ArmSubsystem.ArmState.DoubleSubstation:
                 return constants.kArmDoubleSubstationPosition
+            elif self == ArmSubsystem.ArmState.SingleSubtation:
+                return constants.kArmSingleSubstationPosition
             elif self == ArmSubsystem.ArmState.Top:
                 return constants.kArmTopScorePosition
             elif self == ArmSubsystem.ArmState.GroundLoading:
