@@ -679,9 +679,9 @@ class ArmSubsystem(SubsystemBase):
         )
 
         if not Preferences.getBoolean(constants.kArmObeyEndstopsKey, True):
-            clampedShoulder = (
-                optimizeAngle(Rotation2d.fromDegrees(90), shoulder).radians(),
-            )
+            clampedShoulder = optimizeAngle(
+                Rotation2d.fromDegrees(90), shoulder
+            ).radians()
             clampedElbow = angleModulus(elbow.radians())
             clampedWrist = angleModulus(wrist.radians())
 

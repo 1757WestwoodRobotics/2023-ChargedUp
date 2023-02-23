@@ -691,6 +691,8 @@ kArmRotationTolerence = 0.1
 """radians"""
 kArmAtTargetKey = "arm/atTarget"
 
+kArmDemoFilename = "demoFile.txt"
+
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
     -41.430 * kMetersPerInch,

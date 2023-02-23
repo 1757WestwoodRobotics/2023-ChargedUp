@@ -16,6 +16,7 @@ from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
+from commands.arm.demostate import DemoArm
 from commands.arm.statearmposition import (
     SetArmPositionDoubleSubstation,
     SetArmPositionGroundIntake,
@@ -131,6 +132,10 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.armGroundIntake
         ).whileHeld(SetArmPositionGroundIntake(self.arm))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.armDemo
+        ).toggleWhenPressed(DemoArm(self.arm))
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

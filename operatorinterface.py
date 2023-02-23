@@ -151,3 +151,5 @@ class OperatorInterface:
         self.armSingleSubstation = getButtonBindingOfName("armSingleSubstation")
         self.armOverride = getButtonBindingOfName("armOverride")
         self.armGroundIntake = getButtonBindingOfName("armGroundIntake")
+
+        self.armDemo = getButtonBindingOfName("armDemo")

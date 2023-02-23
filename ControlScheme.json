@@ -6,6 +6,13 @@
     },
     "replace me"
   ],
+  "armDemo": [
+    2,
+    {
+      "Button": 7
+    },
+    "replace me"
+  ],
   "armDoubleSubstation": [
     2,
     {
