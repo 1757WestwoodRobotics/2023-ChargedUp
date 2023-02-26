@@ -21,8 +21,8 @@ class LightSubsystem(SubsystemBase):
 
 
         self.disabledAnimation = RainbowAnimation(1, 0.5, 68)
-        self.cubeAnimation = ColorFlowAnimation(204, 0, 204, 255, 1, 68)  # purple
-        self.coneAnimation = ColorFlowAnimation(255, 255, 0,255,1,68)  # yellow
+        self.cubeAnimation = ColorFlowAnimation(204, 0, 204, 255, .4, 68)  # purple
+        self.coneAnimation = ColorFlowAnimation(255, 255, 0,255,.4,68)  # yellow
 
         self.state = LightSubsystem.State.No
 

@@ -3,6 +3,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.arm.resetarm import ResetArm
 
 
 import constants
@@ -139,6 +140,10 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.armDemo
         ).toggleWhenPressed(DemoArm(self.arm))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.resetArm
+        ).whenPressed(ResetArm(self.arm))
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

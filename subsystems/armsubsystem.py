@@ -243,22 +243,44 @@ class ArmSubsystem(SubsystemBase):
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
     def reset(self) -> None:
+        pose = constants.kArmStoredPosition
+        twoLinkPosition = Translation2d(
+            pose.X() - constants.kArmwristLength * pose.rotation().cos(),
+            pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
+        )
         shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
-            constants.kArmStoredPosition
+            Pose2d(twoLinkPosition, pose.rotation())
+        )
+
+        clampedShoulder = clamp(
+            optimizeAngle(Rotation2d.fromDegrees(90), Rotation2d(shoulderAngle)).radians(),
+            constants.kShoulderMinAngle.radians(),
+            constants.kShoulderMaxAngle.radians(),
+        )
+        clampedElbow = clamp(
+            angleModulus(elbowAngle),
+            constants.kElbowMinAngle.radians(),
+            constants.kElbowMaxAngle.radians(),
+        )
+
+        clampedWrist = clamp(
+            optimizeAngle(Rotation2d(), Rotation2d(wristAngle)).radians(),
+            constants.kWristMinAngle.radians(),
+            constants.kWristMaxAngle.radians(),
         )
 
         self.shoulderArm.setEncoderPosition(
-            shoulderAngle
+            clampedShoulder
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kShoulderArmGearRatio
         )
         self.elbowArm.setEncoderPosition(
-            (shoulderAngle + elbowAngle)
+            (clampedShoulder + clampedElbow)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         self.wristArm.setEncoderPosition(
-            (shoulderAngle + elbowAngle + wristAngle)
+            (clampedShoulder + clampedElbow + clampedWrist)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )

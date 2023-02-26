@@ -55,6 +55,11 @@
     },
     "replace me"
   ],
+    "resetArm": [
+        2,
+        {"Button": 8},
+        "replace me"
+    ],
     "lightsCone": [
         2,
         {"Button": 11},
