@@ -129,7 +129,13 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.alignClosestWaypoint
-        ).whileHeld(DriveWaypoint(self.drive))
+        ).whileHeld(
+            DriveWaypoint(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+            )
+        )
 
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
             ResetDrive(self.drive, Pose2d(0, 0, 0))

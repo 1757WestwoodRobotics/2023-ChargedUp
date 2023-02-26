@@ -11,6 +11,7 @@ from wpimath.controller import (
     ProfiledPIDControllerRadians,
 )
 from wpimath.kinematics import ChassisSpeeds
+from operatorinterface import AnalogInput
 from subsystems.drivesubsystem import DriveSubsystem
 
 import constants
@@ -18,8 +19,7 @@ import constants
 
 class DriveWaypoint(CommandBase):
     def __init__(
-        self,
-        drive: DriveSubsystem,
+        self, drive: DriveSubsystem, xOffset: AnalogInput, yOffset: AnalogInput
     ) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -67,6 +67,9 @@ class DriveWaypoint(CommandBase):
             constants.kTargetWaypointThetaControllerKey, self.thetaController
         )
 
+        self.xoff = xOffset
+        self.yoff = yOffset
+
         self.addRequirements([self.drive])
         self.setName(__class__.__name__)
 
@@ -92,11 +95,17 @@ class DriveWaypoint(CommandBase):
 
     def execute(self) -> None:
         currentPose = self.drive.getPose()
+        adjustedWaypointPose = Pose2d(
+            self.waypoint.X() + self.xoff() * constants.kWaypointJoystickVariation,
+            self.waypoint.Y() + self.yoff() * constants.kWaypointJoystickVariation,
+            self.waypoint.rotation(),
+        )
         absoluteOutput = ChassisSpeeds(
-            self.xController.calculate(currentPose.X(), self.waypoint.X()),
-            self.yController.calculate(currentPose.Y(), self.waypoint.Y()),
+            self.xController.calculate(currentPose.X(), adjustedWaypointPose.X()),
+            self.yController.calculate(currentPose.Y(), adjustedWaypointPose.Y()),
             self.thetaController.calculate(
-                currentPose.rotation().radians(), self.waypoint.rotation().radians()
+                currentPose.rotation().radians(),
+                adjustedWaypointPose.rotation().radians(),
             ),
         )
         self.drive.arcadeDriveWithSpeeds(

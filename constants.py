@@ -573,6 +573,8 @@ kPossibleWaypoints = [
     Pose2d(14.70, 1.09, 0),
     Pose2d(14.70, 0.51, 0),
 ]
+kWaypointJoystickVariation = 0.1
+"""meters"""
 
 kTargetWaypointPoseKey = "waypoint/target"
 kTargetWaypointXControllerKey = "waypoint/x"
