@@ -585,7 +585,7 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 kArmPIDSlot = 0
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.1
+kElbowArmPGain = 0.01
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
@@ -594,7 +594,7 @@ kElbowArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kElbowArmRotationKey = "arm/rotation/elbow"
 kElbowArmTargetRotationKey = "arm/target/elbow"
 kElbowFeedForwardLogKey = "arm/ff/elbow"
-kElbowArmFFFactor = 0.05
+kElbowArmFFFactor = 0.0
 
 kElbowArmCANCoderID = 35
 kElbowArmCANCoderOffset = 0
@@ -602,17 +602,17 @@ kElbowArmCANCoderOffset = 0
 kElbowMinAngle = Rotation2d.fromDegrees(0)
 kElbowMaxAngle = Rotation2d.fromDegrees(150)
 
-kShoulderArmCANId = 44
-kShoulderArmPGain = 0.1
+kShoulderArmCANId = 31
+kShoulderArmPGain = 0.01
 kShoulderArmIGain = 0.0
-kShoulderArmDGain = 20
-kShoulderArmInverted = False
+kShoulderArmDGain = 0
+kShoulderArmInverted = True
 
 kShoulderArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kShoulderArmRotationKey = "arm/rotation/shoulder"
 kShoulderTargetArmRotationKey = "arm/target/shoulder"
 kShoulderFeedForwardLogKey = "arm/ff/shoulder"
-kShoulderArmFFFactor = 0.05
+kShoulderArmFFFactor = 0.0
 
 kShoulderArmCANCoderID = 45
 kShoulderArmCANCoderOffset = -150.996
@@ -621,16 +621,16 @@ kShoulderMinAngle = Rotation2d.fromDegrees(54)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.2
+kWristArmPGain = 0.01
 kWristArmIGain = 0.0
 kWristArmDGain = 0
-kWristArmInverted = False
+kWristArmInverted = True
 
-kWristArmGearRatio = (58 / 10) * (58 / 18) * (60 / 12)
+kWristArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
 kWristFeedForwardLogKey = "arm/ff/wrist"
-kWristArmFFFactor = 0.05
+kWristArmFFFactor = 0.0
 
 kWristArmCANCoderID = 46
 kWristArmCANCoderOffset = -150.996
@@ -643,12 +643,12 @@ kArmelbowMass = 5  # kg
 kArmelbowCOM = 9 * kMetersPerInch
 
 kArmshoulderLength = 26.791161 * kMetersPerInch
-kArmshoulderMass = 5  # kg
+kArmshoulderMass = 2.54  # kg
 kArmshoulderCOM = 13 * kMetersPerInch
 
 kArmwristLength = 16.392506 * kMetersPerInch
-kArmwristMass = 5  # kg
-kArmWristCOM = 9 * kMetersPerInch
+kArmwristMass = 2.7  # kg
+kArmWristCOM = 7.35 * kMetersPerInch
 
 kArmStateKey = "arm/state"
 

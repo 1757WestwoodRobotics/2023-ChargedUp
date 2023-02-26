@@ -136,6 +136,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kElbowArmIGain,
             constants.kElbowArmDGain,
             constants.kElbowArmInverted,
+            canbus=constants.kCANivoreName,
             useDINSim=False,
         )
         self.elbowArm.setNeutralMode(Falcon.NeutralMode.Break)
@@ -147,6 +148,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kShoulderArmIGain,
             constants.kShoulderArmDGain,
             constants.kShoulderArmInverted,
+            canbus=constants.kCANivoreName,
             useDINSim=False,
         )
         self.shoulderArm.setNeutralMode(Falcon.NeutralMode.Break)
@@ -158,6 +160,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kWristArmIGain,
             constants.kWristArmDGain,
             constants.kWristArmInverted,
+            canbus=constants.kCANivoreName,
             useDINSim=False,
         )
         self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
