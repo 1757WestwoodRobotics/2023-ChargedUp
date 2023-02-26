@@ -55,6 +55,19 @@
     },
     "replace me"
   ],
+    "lightsCone": [
+        2,
+        {"Button": 11},
+        "replace me"
+        
+    ],
+
+    "lightsCube": [
+        2,
+        {"Button": 13},
+        "replace me"
+        
+    ],
   "autoBallIntake": [
     0,
     {

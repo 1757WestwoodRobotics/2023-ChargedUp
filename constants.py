@@ -725,6 +725,10 @@ kArmGroundIntakePosition = Pose2d(
     Rotation2d.fromDegrees(180 - 32.001),
 )
 
+# lights
+kCANdleID = 2
+
+
 # Logging
 kSwerveActualStatesKey = "swerve/actual"
 kSwerveExpectedStatesKey = "swerve/expected"

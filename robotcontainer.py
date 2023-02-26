@@ -27,11 +27,13 @@ from commands.arm.statearmposition import (
     SetArmPositionTop,
 )
 from commands.auto.autonomousaction import AutonomousRoutine
+from commands.light.cubeLights import ConeLights, CubeLights
 
 from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -53,6 +55,7 @@ class RobotContainer:
         self.vision = VisionSubsystem(self.drive)
         self.log = LoggingSubsystem(self.operatorInterface)
         self.arm = ArmSubsystem()
+        self.light = LightSubsystem()
 
         # Autonomous routines
 
@@ -192,6 +195,14 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        commands2.button.JoystickButton(*self.operatorInterface.lightCone).whileHeld(
+            ConeLights(self.light)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.lightCube).whileHeld(
+            CubeLights(self.light)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

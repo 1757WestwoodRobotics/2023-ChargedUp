@@ -153,3 +153,7 @@ class OperatorInterface:
         self.armGroundIntake = getButtonBindingOfName("armGroundIntake")
 
         self.armDemo = getButtonBindingOfName("armDemo")
+
+        # light controls
+        self.lightCone = getButtonBindingOfName("lightsCone")
+        self.lightCube = getButtonBindingOfName("lightsCube")
