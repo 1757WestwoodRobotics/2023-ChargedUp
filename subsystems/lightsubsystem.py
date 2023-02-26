@@ -6,8 +6,8 @@ from wpilib import RobotState
 
 import constants
 
-class LightSubsystem(SubsystemBase):
 
+class LightSubsystem(SubsystemBase):
     class State(Enum):
         Cone = auto()
         Cube = auto()
@@ -19,10 +19,9 @@ class LightSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         self.light = CANdle(constants.kCANdleID, constants.kCANivoreName)
 
-
         self.disabledAnimation = RainbowAnimation(1, 0.5, 68)
-        self.cubeAnimation = ColorFlowAnimation(204, 0, 204, 255, .4, 68)  # purple
-        self.coneAnimation = ColorFlowAnimation(255, 255, 0,255,.4,68)  # yellow
+        self.cubeAnimation = ColorFlowAnimation(204, 0, 204, 255, 0.4, 68)  # purple
+        self.coneAnimation = ColorFlowAnimation(255, 255, 0, 255, 0.4, 68)  # yellow
 
         self.state = LightSubsystem.State.No
 

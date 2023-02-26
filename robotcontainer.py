@@ -3,7 +3,6 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.arm.resetarm import ResetArm
 
 
 import constants
@@ -18,6 +17,7 @@ from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.arm.demostate import DemoArm
+from commands.arm.resetarm import ResetArm
 from commands.arm.statearmposition import (
     SetArmPositionDoubleSubstation,
     SetArmPositionGroundIntake,
@@ -141,9 +141,9 @@ class RobotContainer:
             *self.operatorInterface.armDemo
         ).toggleWhenPressed(DemoArm(self.arm))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.resetArm
-        ).whenPressed(ResetArm(self.arm))
+        commands2.button.JoystickButton(*self.operatorInterface.resetArm).whenPressed(
+            ResetArm(self.arm)
+        )
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

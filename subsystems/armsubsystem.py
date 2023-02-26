@@ -253,7 +253,9 @@ class ArmSubsystem(SubsystemBase):
         )
 
         clampedShoulder = clamp(
-            optimizeAngle(Rotation2d.fromDegrees(90), Rotation2d(shoulderAngle)).radians(),
+            optimizeAngle(
+                Rotation2d.fromDegrees(90), Rotation2d(shoulderAngle)
+            ).radians(),
             constants.kShoulderMinAngle.radians(),
             constants.kShoulderMaxAngle.radians(),
         )
