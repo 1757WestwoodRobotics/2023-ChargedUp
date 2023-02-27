@@ -521,16 +521,33 @@ class ArmSubsystem(SubsystemBase):
 
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kArmStateKey, str(self.state))
+
+        shoulderRotation = self.getShoulderArmRotation()
+        elbowRotation = self.getElbowArmRotation()
+        wristRotation = self.getWristArmRotation()
+
         SmartDashboard.putNumber(
-            constants.kElbowArmRotationKey, self.getElbowArmRotation().degrees()
+            constants.kElbowArmRotationKey, elbowRotation.degrees()
         )
         SmartDashboard.putNumber(
-            constants.kShoulderArmRotationKey, self.getShoulderArmRotation().degrees()
+            constants.kShoulderArmRotationKey, shoulderRotation.degrees()
         )
         SmartDashboard.putNumber(
-            constants.kWristArmRotationKey, self.getWristArmRotation().degrees()
+            constants.kWristArmRotationKey, wristRotation.degrees()
         )
         SmartDashboard.putBoolean(constants.kArmAtTargetKey, self.atTarget())
+
+        SmartDashboard.putNumber(
+            constants.kArmShoulderActualMotorKey, shoulderRotation.degrees()
+        )
+        SmartDashboard.putNumber(
+            constants.kArmElbowActualMotorKey,
+            (shoulderRotation + elbowRotation).degrees(),
+        )
+        SmartDashboard.putNumber(
+            constants.kArmWristActualMotorKey,
+            (wristRotation + shoulderRotation + elbowRotation).degrees(),
+        )
         if self.state == ArmSubsystem.ArmState.OverrideValue:
             elbow = SmartDashboard.getNumber(constants.kElbowArmOverrideKey, 0)
             shoulder = SmartDashboard.getNumber(constants.kShoulderArmOverrideKey, 0)
@@ -718,6 +735,19 @@ class ArmSubsystem(SubsystemBase):
             clampedWrist
             + currentElbowRotation.radians()
             + currentShoulderRotation.radians()
+        )
+
+        SmartDashboard.putNumber(
+            constants.kArmShoulderTargetMotorKey,
+            trueShoulderPos / constants.kRadiansPerDegree,
+        )
+        SmartDashboard.putNumber(
+            constants.kArmElbowTargetMotorKey,
+            trueElbowPos / constants.kRadiansPerDegree,
+        )
+        SmartDashboard.putNumber(
+            constants.kArmWristTargetMotorKey,
+            trueWristPos / constants.kRadiansPerDegree,
         )
 
         shoulderArmEncoderPulses = (

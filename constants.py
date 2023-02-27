@@ -693,6 +693,14 @@ kArmAtTargetKey = "arm/atTarget"
 
 kArmDemoFilename = "demoFile.txt"
 
+kArmShoulderTargetMotorKey = "arm/motors/target/shoulder"
+kArmElbowTargetMotorKey = "arm/motors/target/elbow"
+kArmWristTargetMotorKey = "arm/motors/target/wrist"
+
+kArmShoulderActualMotorKey = "arm/motors/actual/shoulder"
+kArmElbowActualMotorKey = "arm/motors/actual/elbow"
+kArmWristActualMotorKey = "arm/motors/actual/wrist"
+
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
     -41.430 * kMetersPerInch,
