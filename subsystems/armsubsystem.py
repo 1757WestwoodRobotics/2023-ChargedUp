@@ -252,37 +252,18 @@ class ArmSubsystem(SubsystemBase):
             Pose2d(twoLinkPosition, pose.rotation())
         )
 
-        clampedShoulder = clamp(
-            optimizeAngle(
-                Rotation2d.fromDegrees(90), Rotation2d(shoulderAngle)
-            ).radians(),
-            constants.kShoulderMinAngle.radians(),
-            constants.kShoulderMaxAngle.radians(),
-        )
-        clampedElbow = clamp(
-            angleModulus(elbowAngle),
-            constants.kElbowMinAngle.radians(),
-            constants.kElbowMaxAngle.radians(),
-        )
-
-        clampedWrist = clamp(
-            optimizeAngle(Rotation2d(), Rotation2d(wristAngle)).radians(),
-            constants.kWristMinAngle.radians(),
-            constants.kWristMaxAngle.radians(),
-        )
-
         self.shoulderArm.setEncoderPosition(
-            clampedShoulder
+            shoulderAngle
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kShoulderArmGearRatio
         )
         self.elbowArm.setEncoderPosition(
-            (clampedShoulder + clampedElbow)
+            (shoulderAngle + elbowAngle)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         self.wristArm.setEncoderPosition(
-            (clampedShoulder + clampedElbow + clampedWrist)
+            (shoulderAngle + elbowAngle + wristAngle)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
