@@ -652,16 +652,16 @@ kArmWristCOM = 7.35 * kMetersPerInch
 
 kArmStateKey = "arm/state"
 
-kArmTranslationalPGain = 0.8
+kArmTranslationalPGain = 0.9
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 5
+kArmTranslationalMaxVelocity = 3
 """m/s"""
-kArmTranslationalMaxAcceleration = 10
+kArmTranslationalMaxAcceleration = 9
 """m/s^2"""
 
-kArmRotationalPGain = 0.8
+kArmRotationalPGain = 0.9
 kArmRotationalIGain = 0
 kArmRotationalDGain = 0
 

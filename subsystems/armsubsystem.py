@@ -523,7 +523,9 @@ class ArmSubsystem(SubsystemBase):
         )
         SmartDashboard.putNumber(
             constants.kArmElbowActualMotorKey,
-            (shoulderRotation + elbowRotation).degrees(),
+            optimizeAngle(
+                Rotation2d.fromDegrees(200), (shoulderRotation + elbowRotation)
+            ).degrees(),
         )
         SmartDashboard.putNumber(
             constants.kArmWristActualMotorKey,
