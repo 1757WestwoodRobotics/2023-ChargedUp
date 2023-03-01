@@ -1,4 +1,5 @@
 import os
+from commands2._impl import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -23,6 +24,7 @@ from commands.arm.statearmposition import (
     SetArmPositionGroundIntake,
     SetArmPositionMid,
     SetArmPositionOverride,
+    SetArmPositionSafeGround,
     SetArmPositionSingleSubstation,
     SetArmPositionStored,
     SetArmPositionTop,
@@ -135,7 +137,9 @@ class RobotContainer:
         )
         commands2.button.JoystickButton(
             *self.operatorInterface.armGroundIntake
-        ).whileHeld(SetArmPositionGroundIntake(self.arm))
+        ).whileHeld(SetArmPositionGroundIntake(self.arm)).whenReleased(
+            ParallelCommandGroup(WaitCommand(.75), SetArmPositionSafeGround(self.arm))
+        )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.armDemo

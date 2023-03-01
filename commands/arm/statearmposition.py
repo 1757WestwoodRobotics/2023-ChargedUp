@@ -41,3 +41,9 @@ class SetArmPositionOverride(SetArmPositionMid):
 
 class SetArmPositionGroundIntake(SetArmPositionMid):
     state = ArmSubsystem.ArmState.GroundLoading
+
+class SetArmPositionSafeGround(SetArmPositionMid):
+    state = ArmSubsystem.ArmState.GroundSafe
+
+    def isFinished(self) -> bool:
+        return True

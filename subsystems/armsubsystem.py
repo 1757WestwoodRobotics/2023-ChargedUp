@@ -43,6 +43,7 @@ class ArmSubsystem(SubsystemBase):
         SingleSubtation = auto()
         Top = auto()
         GroundLoading = auto()
+        GroundSafe = auto()
         OverrideValue = auto()
 
         def position(self) -> Pose2d:
@@ -58,6 +59,8 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmTopScorePosition
             elif self == ArmSubsystem.ArmState.GroundLoading:
                 return constants.kArmGroundIntakePosition
+            elif self == ArmSubsystem.ArmState.GroundSafe:
+                return constants.kArmGroundSafePosition
             return constants.kArmStoredPosition
 
     class InterpolationMethod(Enum):

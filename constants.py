@@ -658,7 +658,7 @@ kArmTranslationalDGain = 0
 
 kArmTranslationalMaxVelocity = 3
 """m/s"""
-kArmTranslationalMaxAcceleration = 9
+kArmTranslationalMaxAcceleration = 5
 """m/s^2"""
 
 kArmRotationalPGain = 0.9
@@ -731,6 +731,11 @@ kArmGroundIntakePosition = Pose2d(
     -27.899 * kMetersPerInch,
     4.806 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 32.001),
+)
+kArmGroundSafePosition = Pose2d(
+    -30.679 * kMetersPerInch,
+    33.526 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 61.617),
 )
 
 # lights
