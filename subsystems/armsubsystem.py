@@ -195,6 +195,7 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
+        self.thetaProfiledPID.enableContinuousInput(-math.pi, math.pi)
 
         self.shoulderPID = ProfiledPIDControllerRadians(
             constants.kArmRotationalPGain,
@@ -205,6 +206,7 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
+        self.shoulderPID.enableContinuousInput(-math.pi, math.pi)
         self.elbowPID = ProfiledPIDControllerRadians(
             constants.kArmRotationalPGain,
             constants.kArmRotationalIGain,
@@ -214,6 +216,7 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
+        self.elbowPID.enableContinuousInput(-math.pi, math.pi)
 
         self.xProfiledPID.setTolerance(constants.kArmPositionTolerence)
         self.yProfiledPID.setTolerance(constants.kArmPositionTolerence)
@@ -222,10 +225,10 @@ class ArmSubsystem(SubsystemBase):
         self.shoulderPID.setTolerance(constants.kArmRotationTolerence)
 
         self.interpolationMethod = wpilib.SendableChooser()
-        self.interpolationMethod.addOption(
+        self.interpolationMethod.setDefaultOption(
             "Joint Space", ArmSubsystem.InterpolationMethod.JointSpace
         )
-        self.interpolationMethod.setDefaultOption(
+        self.interpolationMethod.addOption(
             "Cartesian Space", ArmSubsystem.InterpolationMethod.CartesianSpace
         )
         self.interpolationMethod.addOption(
@@ -271,36 +274,39 @@ class ArmSubsystem(SubsystemBase):
             * constants.kWristArmGearRatio
         )
 
+    def _getShoulderRawArmRotation(self) -> Rotation2d:
+        return Rotation2d(
+            self.shoulderArm.get(Falcon.ControlMode.Position)
+            / constants.kShoulderArmGearRatio
+            / constants.kTalonEncoderPulsesPerRadian
+        )
+
+    def getShoulderArmRotation(self) -> Rotation2d:
+        return optimizeAngle(Rotation2d(), self._getShoulderRawArmRotation())
+
+    def _getElbowRawArmRotation(self) -> Rotation2d:
+        return Rotation2d(
+            self.elbowArm.get(Falcon.ControlMode.Position)
+            / constants.kElbowArmGearRatio
+            / constants.kTalonEncoderPulsesPerRadian
+        )
+
     def getElbowArmRotation(self) -> Rotation2d:
         return (
-            Rotation2d(
-                angleModulus(
-                    self.elbowArm.get(Falcon.ControlMode.Position)
-                    / constants.kElbowArmGearRatio
-                    / constants.kTalonEncoderPulsesPerRadian
-                )
-            )
+            optimizeAngle(Rotation2d(), self._getElbowRawArmRotation())
             - self.getShoulderArmRotation()
         )  # 4 bar to relative
 
-    def getShoulderArmRotation(self) -> Rotation2d:
+    def _getWristRawArmRotation(self) -> Rotation2d:
         return Rotation2d(
-            angleModulus(
-                self.shoulderArm.get(Falcon.ControlMode.Position)
-                / constants.kShoulderArmGearRatio
-                / constants.kTalonEncoderPulsesPerRadian
-            )
+            self.wristArm.get(Falcon.ControlMode.Position)
+            / constants.kWristArmGearRatio
+            / constants.kTalonEncoderPulsesPerRadian
         )
 
     def getWristArmRotation(self) -> Rotation2d:
         return (
-            Rotation2d(
-                angleModulus(
-                    self.wristArm.get(Falcon.ControlMode.Position)
-                    / constants.kWristArmGearRatio
-                    / constants.kTalonEncoderPulsesPerRadian
-                )
-            )
+            optimizeAngle(Rotation2d(), self._getWristRawArmRotation())
             - self.getShoulderArmRotation()
             - self.getElbowArmRotation()
         )  # 4 bar to relative
@@ -648,30 +654,6 @@ class ArmSubsystem(SubsystemBase):
 
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
-        if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
-            currentWristRotation = self.getWristArmRotation()
-            currentElbowRotation = self.getElbowArmRotation()
-            currentShoulderRotation = self.getShoulderArmRotation()
-            startAngle = (
-                self.shoulderPID.calculate(
-                    currentShoulderRotation.radians(), startAngle
-                )
-                + currentShoulderRotation.radians()
-            )
-            endAngle = (
-                self.elbowPID.calculate(currentElbowRotation.radians(), endAngle)
-                + currentElbowRotation.radians()
-            )
-            wristAngle = (
-                self.thetaProfiledPID.calculate(
-                    currentWristRotation.radians(),
-                    optimizeAngle(
-                        currentWristRotation, Rotation2d(wristAngle)
-                    ).radians(),
-                )
-                + currentWristRotation.radians()
-            )
-
         self.setRelativeArmAngles(
             Rotation2d(startAngle),
             Rotation2d(endAngle),
@@ -697,13 +679,13 @@ class ArmSubsystem(SubsystemBase):
             constants.kShoulderMaxAngle.radians(),
         )
         clampedElbow = clamp(
-            angleModulus(elbow.radians()),
+            optimizeAngle(Rotation2d(), elbow).radians(),
             constants.kElbowMinAngle.radians(),
             constants.kElbowMaxAngle.radians(),
         )
 
         clampedWrist = clamp(
-            optimizeAngle(currentWristRotation, wrist).radians(),
+            optimizeAngle(Rotation2d(), wrist).radians(),
             constants.kWristMinAngle.radians(),
             constants.kWristMaxAngle.radians(),
         )
@@ -716,12 +698,32 @@ class ArmSubsystem(SubsystemBase):
             clampedWrist = angleModulus(wrist.radians())
 
         trueShoulderPos = clampedShoulder
-        trueElbowPos = clampedElbow + currentShoulderRotation.radians()
-        trueWristPos = (
-            clampedWrist
-            + currentElbowRotation.radians()
-            + currentShoulderRotation.radians()
+        trueElbowPos = clampedElbow + trueShoulderPos
+        trueWristPos = clampedWrist + trueElbowPos
+
+        desiredInterpolation: ArmSubsystem.InterpolationMethod = (
+            self.interpolationMethod.getSelected()
         )
+
+        if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
+            currentWristRaw = self._getWristRawArmRotation()
+            currentElbowRaw = self._getWristRawArmRotation()
+            currentShoulderRaw = self._getShoulderRawArmRotation()
+
+            trueShoulderPos = (
+                self.shoulderPID.calculate(
+                    currentShoulderRaw.radians(), trueShoulderPos
+                )
+                + currentShoulderRaw.radians()
+            )
+            trueElbowPos = (
+                self.elbowPID.calculate(currentElbowRaw.radians(), trueElbowPos)
+                + currentElbowRaw.radians()
+            )
+            trueWristPos = (
+                self.thetaProfiledPID.calculate(currentWristRaw.radians(), trueWristPos)
+                + currentWristRaw.radians()
+            )
 
         SmartDashboard.putNumber(
             constants.kArmShoulderTargetMotorKey,

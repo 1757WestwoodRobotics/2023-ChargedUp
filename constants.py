@@ -585,7 +585,7 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 kArmPIDSlot = 0
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.04
+kElbowArmPGain = 0.02
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
@@ -603,7 +603,7 @@ kElbowMinAngle = Rotation2d.fromDegrees(0)
 kElbowMaxAngle = Rotation2d.fromDegrees(145)
 
 kShoulderArmCANId = 31
-kShoulderArmPGain = 0.02
+kShoulderArmPGain = 0.04
 kShoulderArmIGain = 0.0
 kShoulderArmDGain = 0
 kShoulderArmInverted = True
@@ -621,7 +621,7 @@ kShoulderMinAngle = Rotation2d.fromDegrees(57)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.02
+kWristArmPGain = 0.2
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = True
