@@ -1,6 +1,7 @@
-from math import atan2
+from math import atan2, pi
 import typing
 from commands2 import CommandBase
+from wpilib import DriverStation
 from wpimath.controller import PIDController
 from wpimath.geometry import Rotation2d
 from subsystems.drivesubsystem import DriveSubsystem
@@ -39,17 +40,29 @@ class AbsoluteRelativeDrive(CommandBase):
         if self.rotationX() == 0 and self.rotationY() == 0:
             return 0
 
+        if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
+            targetRotation += pi
+
+        optimizedDirection = optimizeAngle(
+            self.drive.getRotation(), Rotation2d(targetRotation)
+        ).radians()
         return self.rotationPid.calculate(
-            self.drive.getRotation().radians(),
-            optimizeAngle(
-                self.drive.getRotation(), Rotation2d(targetRotation)
-            ).radians(),
+            self.drive.getRotation().radians(), optimizedDirection
         )
 
     def execute(self) -> None:
-        self.drive.arcadeDriveWithFactors(
-            self.forward(),
-            self.sideways(),
-            self.rotation(),
-            DriveSubsystem.CoordinateMode.FieldRelative,
-        )
+        if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
+            # if we're on the other side, switch the controls around
+            self.drive.arcadeDriveWithFactors(
+                -self.forward(),
+                -self.sideways(),
+                self.rotation(),
+                DriveSubsystem.CoordinateMode.FieldRelative,
+            )
+        else:
+            self.drive.arcadeDriveWithFactors(
+                self.forward(),
+                self.sideways(),
+                self.rotation(),
+                DriveSubsystem.CoordinateMode.FieldRelative,
+            )

@@ -1,3 +1,4 @@
+import os
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -14,6 +15,7 @@ from commands.drive.targetrelativedrive import TargetRelativeDrive
 from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.defensestate import DefenseState
+from commands.auto.autonomousaction import AutonomousRoutine
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
@@ -62,8 +64,13 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        self.chooser.addOption("Complex Auto", self.complexAuto)
-        self.chooser.addOption("Target Auto", self.driveToTarget)
+        pathsPath = os.path.join(wpilib.getDeployDirectory(), "pathplanner")
+        for file in os.listdir(pathsPath):
+            relevantName = file.split(".")[0]
+            self.chooser.addOption(
+                relevantName, AutonomousRoutine(self.drive, relevantName, [])
+            )
+
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
 
         # Put the chooser on the dashboard
