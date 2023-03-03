@@ -86,7 +86,7 @@ class RobotContainer:
         for file in os.listdir(pathsPath):
             relevantName = file.split(".")[0]
             self.chooser.addOption(
-                relevantName, AutonomousRoutine(self.drive, relevantName, [])
+                relevantName, AutonomousRoutine(self.drive, self.arm, relevantName, [])
             )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
