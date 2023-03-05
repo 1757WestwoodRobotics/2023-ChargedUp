@@ -732,10 +732,10 @@ kArmGroundIntakePosition = Pose2d(
     4.806 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 32.001),
 )
-kArmGroundSafePosition = Pose2d(
-    -30.679 * kMetersPerInch,
-    33.526 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 61.617),
+kArmTopSafePosition = Pose2d(
+    -15.430 * kMetersPerInch,
+    49.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(51),
 )
 
 # lights

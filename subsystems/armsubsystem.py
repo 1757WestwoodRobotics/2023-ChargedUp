@@ -43,7 +43,7 @@ class ArmSubsystem(SubsystemBase):
         SingleSubtation = auto()
         Top = auto()
         GroundLoading = auto()
-        GroundSafe = auto()
+        TopSafe = auto()
         OverrideValue = auto()
 
         def position(self) -> Pose2d:
@@ -59,8 +59,8 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmTopScorePosition
             elif self == ArmSubsystem.ArmState.GroundLoading:
                 return constants.kArmGroundIntakePosition
-            elif self == ArmSubsystem.ArmState.GroundSafe:
-                return constants.kArmGroundSafePosition
+            elif self == ArmSubsystem.ArmState.TopSafe:
+                return constants.kArmTopSafePosition
             return constants.kArmStoredPosition
 
     class InterpolationMethod(Enum):
@@ -156,7 +156,9 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.shoulderArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.shoulderArm.setCurrentLimit(constants.kDriveSupplyCurrentLimitConfiguration)
+        self.shoulderArm.setCurrentLimit(
+            constants.kDriveSupplyCurrentLimitConfiguration
+        )
 
         self.wristArm = Falcon(
             constants.kWristArmCANId,
@@ -666,10 +668,6 @@ class ArmSubsystem(SubsystemBase):
     def setRelativeArmAngles(
         self, shoulder: Rotation2d, elbow: Rotation2d, wrist: Rotation2d
     ) -> None:
-        currentWristRotation = self.getWristArmRotation()
-        currentElbowRotation = self.getElbowArmRotation()
-        currentShoulderRotation = self.getShoulderArmRotation()
-
         SmartDashboard.putNumber(constants.kElbowArmTargetRotationKey, elbow.degrees())
         SmartDashboard.putNumber(
             constants.kShoulderTargetArmRotationKey, shoulder.degrees()
