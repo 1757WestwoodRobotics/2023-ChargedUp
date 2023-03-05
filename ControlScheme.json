@@ -16,7 +16,7 @@
   "armDoubleSubstation": [
     2,
     {
-      "Button": 3
+      "Button": 4
     },
     "replace me"
   ],
@@ -30,14 +30,14 @@
   "armMid": [
     2,
     {
-      "Button": 1
+      "Button": 2
     },
     "replace me"
   ],
   "armOverride": [
     2,
     {
-      "Button": 4
+      "Button": 1
     },
     "replace me"
   ],
@@ -51,34 +51,9 @@
   "armTop": [
     2,
     {
-      "Button": 2
+      "Button": 3
     },
     "replace me"
-  ],
-    "resetArm": [
-        2,
-        {"Button": 8},
-        "replace me"
-    ],
-    "lightsCone": [
-        2,
-        {"Button": 11},
-        "replace me"
-        
-    ],
-
-    "lightsCube": [
-        2,
-        {"Button": 13},
-        "replace me"
-        
-    ],
-  "autoBallIntake": [
-    0,
-    {
-      "Button": 4
-    },
-    "right button on top of joystick (ThrustmasterT16000M)"
   ],
   "chassisForwardsBackwards": [
     0,
@@ -95,9 +70,9 @@
     "Joystick Horizontal (ThrustmasterTWCSThrottle)"
   ],
   "chassisXRotation": [
-    1,
+    2,
     {
-      "Axis": 0
+      "Axis": 5
     },
     "Joystick Horizontal (ThrustmasterTWCSThrottle)"
   ],
@@ -123,21 +98,42 @@
     "B (Xbox)"
   ],
   "fieldRelativeCoordinateModeControl": [
-    1,
+    0,
     {
       "Button": 6
     },
     "Middle Down (ThrustmasterTWCSThrottle)"
   ],
+  "lightsCone": [
+    2,
+    {
+      "Button": 11
+    },
+    "replace me"
+  ],
+  "lightsCube": [
+    2,
+    {
+      "Button": 13
+    },
+    "replace me"
+  ],
+  "resetArm": [
+    2,
+    {
+      "Button": 8
+    },
+    "replace me"
+  ],
   "resetGyro": [
-    1,
+    0,
     {
       "Button": 10
     },
     "Middle POV left (ThrustmasterTWCSThrottle)"
   ],
   "targetRelativeCoordinateModeControl": [
-    1,
+    0,
     {
       "Button": 7
     },
