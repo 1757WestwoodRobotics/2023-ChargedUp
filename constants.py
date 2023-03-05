@@ -738,6 +738,8 @@ kArmTopSafePosition = Pose2d(
     Rotation2d.fromDegrees(51),
 )
 
+kArmMotorBreakArmModeKey = "arm/motorMode"
+
 # lights
 kCANdleID = 2
 

@@ -35,6 +35,7 @@ from util.simfalcon import Falcon
 import constants
 
 
+# pylint: disable-next=too-many-instance-attributes
 class ArmSubsystem(SubsystemBase):
     class ArmState(Enum):
         Stored = auto()
@@ -242,6 +243,12 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putData(
             constants.kArmInterpolationMethod, self.interpolationMethod
         )
+
+        self.motorMode = wpilib.SendableChooser()
+        self.motorMode.setDefaultOption("Brake Mode", Falcon.NeutralMode.Break)
+        self.motorMode.addOption("Coast Mode", Falcon.NeutralMode.Coast)
+
+        SmartDashboard.putData(constants.kArmMotorBreakArmModeKey, self.motorMode)
 
         self.targetPose = Pose2d()
         self.targetElbow = Pose2d()
@@ -545,6 +552,12 @@ class ArmSubsystem(SubsystemBase):
             constants.kArmWristActualMotorKey,
             (wristRotation + shoulderRotation + elbowRotation).degrees(),
         )
+
+        motorNeutralState: Falcon.NeutralMode = self.motorMode.getSelected()
+        self.shoulderArm.setNeutralMode(motorNeutralState)
+        self.elbowArm.setNeutralMode(motorNeutralState)
+        self.wristArm.setNeutralMode(motorNeutralState)
+
         if self.state == ArmSubsystem.ArmState.OverrideValue:
             elbow = SmartDashboard.getNumber(constants.kElbowArmOverrideKey, 0)
             shoulder = SmartDashboard.getNumber(constants.kShoulderArmOverrideKey, 0)
