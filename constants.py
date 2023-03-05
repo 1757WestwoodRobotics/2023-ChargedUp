@@ -585,7 +585,7 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 kArmPIDSlot = 0
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.02
+kElbowArmPGain = 0.015
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
@@ -638,11 +638,11 @@ kWristArmCANCoderOffset = -150.996
 kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
 
-kArmelbowLength = 18.555271 * kMetersPerInch
+kArmelbowLength = 19 * kMetersPerInch
 kArmelbowMass = 5  # kg
 kArmelbowCOM = 9 * kMetersPerInch
 
-kArmshoulderLength = 26.791161 * kMetersPerInch
+kArmshoulderLength = 27 * kMetersPerInch
 kArmshoulderMass = 2.54  # kg
 kArmshoulderCOM = 13 * kMetersPerInch
 
@@ -656,9 +656,9 @@ kArmTranslationalPGain = 0.9
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 3
+kArmTranslationalMaxVelocity = 4
 """m/s"""
-kArmTranslationalMaxAcceleration = 5
+kArmTranslationalMaxAcceleration = 10
 """m/s^2"""
 
 kArmRotationalPGain = 0.9
@@ -704,12 +704,12 @@ kArmWristActualMotorKey = "arm/motors/actual/wrist"
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
     -41.430 * kMetersPerInch,
-    45.622 * kMetersPerInch,
+    47.622 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 42.001),
 )
 kArmMidScorePosition = Pose2d(
     -24.43 * kMetersPerInch,
-    33.622 * kMetersPerInch,
+    35.622 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 42.001),
 )
 kArmStoredPosition = Pose2d(
@@ -719,18 +719,18 @@ kArmStoredPosition = Pose2d(
 )
 kArmDoubleSubstationPosition = Pose2d(
     -16.868 * kMetersPerInch,
-    42.188 * kMetersPerInch,
+    44.188 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 32.167),
 )
 kArmSingleSubstationPosition = Pose2d(
     -9.679 * kMetersPerInch,
-    33.526 * kMetersPerInch,
+    35.526 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 61.617),
 )
 kArmGroundIntakePosition = Pose2d(
     -27.899 * kMetersPerInch,
-    4.806 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 32.001),
+    8.759 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 38.001),
 )
 kArmTopSafePosition = Pose2d(
     -15.430 * kMetersPerInch,
