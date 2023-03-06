@@ -699,7 +699,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         clampedWrist = clamp(
-            optimizeAngle(Rotation2d(), wrist).radians(),
+            wrist.radians(),
             constants.kWristMinAngle.radians(),
             constants.kWristMaxAngle.radians(),
         )
