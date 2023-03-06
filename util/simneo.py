@@ -1,5 +1,5 @@
-from rev import CANSparkMax, REVLibError, SparkMaxLimitSwitch
 from enum import Enum, auto
+from rev import CANSparkMax, REVLibError, SparkMaxLimitSwitch
 
 
 def revCheckError(name: str, errorCode: REVLibError) -> bool:
@@ -90,4 +90,4 @@ class NEOBrushless:
 
     def setSmartCurrentLimit(self, limit: int = 15) -> None:
         self.motor.setSmartCurrentLimit(limit)
-        """15 amps"""
+        # """15 amps"""

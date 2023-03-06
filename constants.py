@@ -614,3 +614,7 @@ kConeCubeIGain = 0
 kConeCubeDGain = 0
 kIntakeMotorSpeed = 7000
 """revolutions per minute (rpm)"""
+
+kCubeReadyToFire = "cubeInPos"
+kConeReadyToFire = "coneInPos"
+kPOSIntakeMotorSpeed = 1

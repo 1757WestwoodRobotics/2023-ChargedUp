@@ -1,6 +1,7 @@
 # each roller alternates meaning if you were to pick up a cube you would eject a cone
 from enum import Enum, auto
 from commands2 import SubsystemBase
+from wpilib import SmartDashboard
 from util.simneo import NEOBrushless
 
 import constants
@@ -28,8 +29,19 @@ class GripperSubsystem(SubsystemBase):
         self.motorCubeCone.setSmartCurrentLimit(limit=15)
 
         self.state = GripperSubsystem.GripperState.HoldingState
+        # self.cubeSensor = lambda: self.motorCubeCone.forwardSwitch """A past mistake I made, this was for falcons"""
+        self.cubeSensor = lambda: self.motorCubeCone.getLimitSwitch(
+            NEOBrushless.LimitSwitch.Forwards
+        )
+        # self.coneSensor = self.motorCubeCone.reverseSwitch """A past mistake I made, this was for falcons"""
+        self.coneSensor = lambda: self.motorCubeCone.getLimitSwitch(
+            NEOBrushless.LimitSwitch.Backwards
+        )
+        # self.motorCubeCone.getLimitSwitch(NEOBrushless.LimitSwitch.Forwards)
 
     def periodic(self) -> None:
+        SmartDashboard.putBoolean(constants.kCubeReadyToFire, self.cubeSensor() == 0)
+        SmartDashboard.putBoolean(constants.kConeReadyToFire, self.coneSensor() == 0)
         if self.state == self.GripperState.CubeGrabForward:
             self.motorCubeCone.set(
                 NEOBrushless.ControlMode.Velocity,
@@ -44,6 +56,15 @@ class GripperSubsystem(SubsystemBase):
             )
         elif self.state == self.GripperState.HoldingState:
             self.motorCubeCone.set(NEOBrushless.ControlMode.Velocity, 0)
+
+        elif self.cubeSensor() != 0:
+            self.motorCubeCone.set(
+                NEOBrushless.ControlMode.Percent, constants.kPOSIntakeMotorSpeed
+            )
+        elif self.coneSensor() != 0:
+            self.motorCubeCone.set(
+                NEOBrushless.ControlMode.Percent, -constants.kPOSIntakeMotorSpeed
+            )
 
     def setGripCube(self) -> None:
         self.state = GripperSubsystem.GripperState.CubeGrabForward
