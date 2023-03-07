@@ -704,17 +704,17 @@ kArmWristActualMotorKey = "arm/motors/actual/wrist"
 # scoring positions, derived from cad geometry
 kArmTopScorePosition = Pose2d(
     -41.430 * kMetersPerInch,
-    47.622 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 42.001),
+    46.44 * kMetersPerInch,
+    Rotation2d.fromDegrees(138),
 )
 kArmMidScorePosition = Pose2d(
-    -24.43 * kMetersPerInch,
+    -25.43 * kMetersPerInch,
     35.622 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 42.001),
+    Rotation2d.fromDegrees(138),
 )
 kArmStoredPosition = Pose2d(
-    5.452357 * kMetersPerInch,
-    28.865289 * kMetersPerInch,
+    4.5311 * kMetersPerInch,
+    30.1323 * kMetersPerInch,
     Rotation2d.fromDegrees(63),
 )
 kArmDoubleSubstationPosition = Pose2d(
@@ -728,9 +728,9 @@ kArmSingleSubstationPosition = Pose2d(
     Rotation2d.fromDegrees(180 - 61.617),
 )
 kArmGroundIntakePosition = Pose2d(
-    -27.899 * kMetersPerInch,
-    8.759 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 38.001),
+    -29.639 * kMetersPerInch,
+    7.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(148.10),
 )
 kArmTopSafePosition = Pose2d(
     -15.430 * kMetersPerInch,
@@ -739,6 +739,7 @@ kArmTopSafePosition = Pose2d(
 )
 
 kArmMotorBreakArmModeKey = "arm/motorMode"
+kArmEndEffectorPose = "arm/endeffectorPose"
 
 # lights
 kCANdleID = 2

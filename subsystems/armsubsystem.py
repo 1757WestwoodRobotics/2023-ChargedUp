@@ -521,6 +521,16 @@ class ArmSubsystem(SubsystemBase):
         self.armShoulder.setAngle(self.getShoulderArmRotation().degrees())
         self.armWrist.setAngle(self.getWristArmRotation().degrees())
 
+        endEffectorPose = self.getEndEffectorPosition()
+        SmartDashboard.putNumberArray(
+            constants.kArmEndEffectorPose,
+            [
+                endEffectorPose.X() / constants.kMetersPerInch,
+                endEffectorPose.Y() / constants.kMetersPerInch,
+                endEffectorPose.rotation().degrees(),
+            ], # publish how it is in constants
+        )
+
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kArmStateKey, str(self.state))
 
