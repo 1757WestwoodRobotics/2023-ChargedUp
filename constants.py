@@ -615,6 +615,6 @@ kConeCubeDGain = 0
 kIntakeMotorSpeed = 7000
 """revolutions per minute (rpm)"""
 
-kCubeReadyToFire = "cubeInPos"
-kConeReadyToFire = "coneInPos"
-kPOSIntakeMotorSpeed = 1
+kCubeLoaded = "cubeInPos"
+kConeLoaded = "coneInPos"
+kIntakeHoldingPercent = 1

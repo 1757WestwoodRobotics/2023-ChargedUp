@@ -37,8 +37,8 @@ class GripperSubsystem(SubsystemBase):
         )
 
     def periodic(self) -> None:
-        SmartDashboard.putBoolean(constants.kCubeReadyToFire, self.cubeSensor())
-        SmartDashboard.putBoolean(constants.kConeReadyToFire, self.coneSensor())
+        SmartDashboard.putBoolean(constants.kCubeLoaded, self.cubeSensor())
+        SmartDashboard.putBoolean(constants.kConeLoaded, self.coneSensor())
         if self.state == self.GripperState.CubeGrabForward:
             self.motorCubeCone.set(
                 NEOBrushless.ControlMode.Percent,
@@ -54,11 +54,11 @@ class GripperSubsystem(SubsystemBase):
         elif self.state == self.GripperState.HoldingState:
             if self.cubeSensor():
                 self.motorCubeCone.set(
-                    NEOBrushless.ControlMode.Percent, constants.kPOSIntakeMotorSpeed
+                    NEOBrushless.ControlMode.Percent, constants.kIntakeHoldingPercent
                 )
             elif self.coneSensor():
                 self.motorCubeCone.set(
-                    NEOBrushless.ControlMode.Percent, -constants.kPOSIntakeMotorSpeed
+                    NEOBrushless.ControlMode.Percent, -constants.kIntakeHoldingPercent
                 )
             else:
                 self.motorCubeCone.set(NEOBrushless.ControlMode.Percent, 0)
