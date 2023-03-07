@@ -29,42 +29,39 @@ class GripperSubsystem(SubsystemBase):
         self.motorCubeCone.setSmartCurrentLimit(limit=15)
 
         self.state = GripperSubsystem.GripperState.HoldingState
-        # self.cubeSensor = lambda: self.motorCubeCone.forwardSwitch """A past mistake I made, this was for falcons"""
         self.cubeSensor = lambda: self.motorCubeCone.getLimitSwitch(
             NEOBrushless.LimitSwitch.Forwards
         )
-        # self.coneSensor = self.motorCubeCone.reverseSwitch """A past mistake I made, this was for falcons"""
         self.coneSensor = lambda: self.motorCubeCone.getLimitSwitch(
             NEOBrushless.LimitSwitch.Backwards
         )
-        # self.motorCubeCone.getLimitSwitch(NEOBrushless.LimitSwitch.Forwards)
 
     def periodic(self) -> None:
-        SmartDashboard.putBoolean(constants.kCubeReadyToFire, self.cubeSensor() == 0)
-        SmartDashboard.putBoolean(constants.kConeReadyToFire, self.coneSensor() == 0)
+        SmartDashboard.putBoolean(constants.kCubeReadyToFire, self.cubeSensor())
+        SmartDashboard.putBoolean(constants.kConeReadyToFire, self.coneSensor())
         if self.state == self.GripperState.CubeGrabForward:
             self.motorCubeCone.set(
-                NEOBrushless.ControlMode.Velocity,
+                NEOBrushless.ControlMode.Percent,
                 constants.kIntakeMotorSpeed
                 # Motor will move forward (right)
             )
         elif self.state == self.GripperState.ConeGrabBackwards:
             self.motorCubeCone.set(
-                NEOBrushless.ControlMode.Velocity,
+                NEOBrushless.ControlMode.Percent,
                 -constants.kIntakeMotorSpeed
                 # Motor will move backward (left)
             )
         elif self.state == self.GripperState.HoldingState:
-            self.motorCubeCone.set(NEOBrushless.ControlMode.Velocity, 0)
-
-        elif self.cubeSensor() != 0:
-            self.motorCubeCone.set(
-                NEOBrushless.ControlMode.Percent, constants.kPOSIntakeMotorSpeed
-            )
-        elif self.coneSensor() != 0:
-            self.motorCubeCone.set(
-                NEOBrushless.ControlMode.Percent, -constants.kPOSIntakeMotorSpeed
-            )
+            if self.cubeSensor():
+                self.motorCubeCone.set(
+                    NEOBrushless.ControlMode.Percent, constants.kPOSIntakeMotorSpeed
+                )
+            elif self.coneSensor():
+                self.motorCubeCone.set(
+                    NEOBrushless.ControlMode.Percent, -constants.kPOSIntakeMotorSpeed
+                )
+            else:
+                self.motorCubeCone.set(NEOBrushless.ControlMode.Percent, 0)
 
     def setGripCube(self) -> None:
         self.state = GripperSubsystem.GripperState.CubeGrabForward
