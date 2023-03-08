@@ -1,8 +1,8 @@
 {
   "alignClosestWaypoint": [
-    1,
+    2,
     {
-      "Button": 1
+      "Button": 3
     },
     "replace me"
   ],
@@ -111,13 +111,6 @@
     },
     "left button on top of joystick (ThrustmasterT16000M)"
   ],
-  "driveToTargetControl": [
-    0,
-    {
-      "Button": 2
-    },
-    "B (Xbox)"
-  ],
   "fieldRelativeCoordinateModeControl": [
     0,
     {
@@ -153,15 +146,8 @@
     },
     "Middle POV left (ThrustmasterTWCSThrottle)"
   ],
-  "targetRelativeCoordinateModeControl": [
-    0,
-    {
-      "Button": 7
-    },
-    "Middle Up (ThrustmasterTWCSThrottle)"
-  ],
   "turboSpeed": [
-    0,
+    2,
     {
       "Button": 2
     },
