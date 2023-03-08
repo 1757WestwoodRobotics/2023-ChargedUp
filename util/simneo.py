@@ -4,7 +4,7 @@ from rev import CANSparkMax, REVLibError, SparkMaxLimitSwitch
 
 def revCheckError(name: str, errorCode: REVLibError) -> bool:
     if errorCode is not None and errorCode != REVLibError.kOk:
-        print("ERROR: {}: {}".format(name, errorCode))
+        print(f"ERROR: {name}: {errorCode}")
         return False
     return True
 
@@ -70,6 +70,7 @@ class NEOBrushless:
             return self.encoder.getPosition()
         elif controlMode == NEOBrushless.ControlMode.Percent:
             return self.motor.get()
+        return 0
 
     def setNeutralOutput(self, output: NeutralMode) -> None:
         self.motor.setIdleMode(

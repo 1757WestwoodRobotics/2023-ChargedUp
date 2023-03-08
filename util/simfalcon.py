@@ -29,6 +29,7 @@ def createMotor(
         return SimFalcon(canID)
 
 
+# pylint: disable-next=too-many-public-methods
 class SimFalcon:  # a simulated Falcon 500
     def __init__(
         self,
@@ -143,7 +144,11 @@ class SimFalcon:  # a simulated Falcon 500
         return self.motor.get()
 
     def set(
-        self, mode: ControlMode, demand: float, _demandType: DemandType, _demand1: float
+        self,
+        mode: ControlMode,
+        demand: float,
+        _demandType: DemandType = DemandType.ArbitraryFeedForward,
+        _demand1: float = 0,
     ) -> None:
         self.motor.set(mode, demand)
         currentPosition = self.motor.getSelectedSensorPosition()
