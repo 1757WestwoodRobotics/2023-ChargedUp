@@ -35,6 +35,7 @@ from wpimath.geometry import (
     Translation3d,
 )
 from wpimath.system.plant import DCMotor
+from commands.arm.demostate import constants
 
 from util.keyorganization import OptionalValueKeys
 
@@ -737,6 +738,10 @@ kArmTopSafePosition = Pose2d(
     49.622 * kMetersPerInch,
     Rotation2d.fromDegrees(51),
 )
+
+kArmFudgeFactorIncremetns = 0.5 * constants.kMetersPerInch
+"""meters"""
+kArmFudgeFactorKey = "arm/fudge"
 
 kArmMotorBreakArmModeKey = "arm/motorMode"
 kArmEndEffectorPose = "arm/endeffectorPose"

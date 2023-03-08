@@ -128,6 +128,7 @@ class ArmSubsystem(SubsystemBase):
 
         self.state = ArmSubsystem.ArmState.Stored
         self.armFF = ArmFeedforward(0, constants.kShoulderArmFFFactor, 0, 0)
+        self.fudgeFactor = 0  # amount by which to adjust the wrist angle
 
         SmartDashboard.putNumber(constants.kElbowArmOverrideKey, 0)
         SmartDashboard.putNumber(constants.kShoulderArmOverrideKey, 0)
@@ -528,7 +529,7 @@ class ArmSubsystem(SubsystemBase):
                 endEffectorPose.X() / constants.kMetersPerInch,
                 endEffectorPose.Y() / constants.kMetersPerInch,
                 endEffectorPose.rotation().degrees(),
-            ], # publish how it is in constants
+            ],  # publish how it is in constants
         )
 
     def periodic(self) -> None:
@@ -562,6 +563,7 @@ class ArmSubsystem(SubsystemBase):
             constants.kArmWristActualMotorKey,
             (wristRotation + shoulderRotation + elbowRotation).degrees(),
         )
+        SmartDashboard.putNumber(constants.kArmFudgeFactorKey, self.fudgeFactor)
 
         motorNeutralState: Falcon.NeutralMode = self.motorMode.getSelected()
         self.shoulderArm.setNeutralMode(motorNeutralState)
@@ -634,6 +636,9 @@ class ArmSubsystem(SubsystemBase):
 
         return startAngle, endAngle, wristAngle
 
+    def setFudgeFactor(self, factor: float) -> None:
+        self.fudgeFactor = factor
+
     def setEndEffectorPosition(self, pose: Pose2d):
         desiredInterpolation: ArmSubsystem.InterpolationMethod = (
             self.interpolationMethod.getSelected()
@@ -643,7 +648,9 @@ class ArmSubsystem(SubsystemBase):
 
         twoLinkPosition = Translation2d(
             pose.X() - constants.kArmwristLength * pose.rotation().cos(),
-            pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
+            pose.Y()
+            - constants.kArmwristLength * pose.rotation().sin()
+            + self.fudgeFactor,
         )
 
         targetTwoLink = twoLinkPosition

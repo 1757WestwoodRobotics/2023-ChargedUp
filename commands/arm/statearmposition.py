@@ -1,4 +1,5 @@
 from commands2 import CommandBase
+from commands.arm.demostate import constants
 from subsystems.armsubsystem import ArmSubsystem
 
 
@@ -48,3 +49,23 @@ class SetArmPositionSafeTop(SetArmPositionMid):
 
     def isFinished(self) -> bool:
         return True
+
+
+class IncreaseArmFudge(CommandBase):
+    def __init__(self, armSubsystem: ArmSubsystem) -> None:
+        CommandBase.__init__(self)
+        self.setName(__class__.__name__)
+
+        self.arm = armSubsystem
+        self.addRequirements([self.arm])
+
+    def execute(self) -> None:
+        self.arm.fudgeFactor += constants.kArmFudgeFactorIncremetns
+
+    def isFinished(self) -> bool:
+        return self.arm.atTarget()
+
+
+class DecreaseArmFudge(IncreaseArmFudge):
+    def execute(self) -> None:
+        self.arm.fudgeFactor -= constants.kArmFudgeFactorIncremetns

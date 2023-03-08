@@ -19,6 +19,8 @@ from commands.defensestate import DefenseState
 from commands.arm.demostate import DemoArm
 from commands.arm.resetarm import ResetArm
 from commands.arm.statearmposition import (
+    DecreaseArmFudge,
+    IncreaseArmFudge,
     SetArmPositionDoubleSubstation,
     SetArmPositionGroundIntake,
     SetArmPositionMid,
@@ -149,6 +151,13 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.resetArm).whenPressed(
             ResetArm(self.arm)
         )
+
+        commands2.button.POVButton(
+            *self.operatorInterface.armFudgeIncrease
+        ).whenPressed(IncreaseArmFudge(self.arm))
+        commands2.button.POVButton(
+            *self.operatorInterface.armFudgeDecrease
+        ).whenPressed(DecreaseArmFudge(self.arm))
 
         commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(

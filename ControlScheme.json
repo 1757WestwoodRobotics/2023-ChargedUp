@@ -20,6 +20,20 @@
     },
     "replace me"
   ],
+  "armFudgeFactorIncrease": [
+    1,
+    {
+      "POV": [0, 0]
+    },
+    "POV up"
+  ],
+  "armFudgeFactorDecrease": [
+    1,
+    {
+      "POV": [0, 180]
+    },
+    "POV down"
+  ],
   "armGroundIntake": [
     2,
     {
