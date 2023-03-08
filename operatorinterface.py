@@ -114,6 +114,7 @@ class OperatorInterface:
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
 
         self.turboSpeed = getButtonBindingOfName(constants.kTurboSpeedButtonName)
+        self.alignClosestWaypoint = getButtonBindingOfName("alignClosestWaypoint")
 
         self.chassisControls = HolonomicInput(
             Invert(

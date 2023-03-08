@@ -14,6 +14,7 @@ from commands.drivetotarget import DriveToTarget
 from commands.drive.targetrelativedrive import TargetRelativeDrive
 from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
+from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.auto.autonomousaction import AutonomousRoutine
 
@@ -130,6 +131,16 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
                 self.operatorInterface.chassisControls.rotationX,
+            )
+        )
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.alignClosestWaypoint
+        ).whileHeld(
+            DriveWaypoint(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
             )
         )
 
