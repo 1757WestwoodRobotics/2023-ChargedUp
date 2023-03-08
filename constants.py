@@ -618,3 +618,6 @@ kIntakeMotorSpeed = 7000
 kCubeLoaded = "cubeInPos"
 kConeLoaded = "coneInPos"
 kIntakeHoldingPercent = 1
+
+kIntakeState = "intake/state"
+kIntakeMotorRPM = "PLACE/HOLDER"
