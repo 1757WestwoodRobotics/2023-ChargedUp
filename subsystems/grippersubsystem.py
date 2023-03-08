@@ -2,7 +2,8 @@
 from enum import Enum, auto
 from commands2 import SubsystemBase
 from wpilib import SmartDashboard
-from rev import SparkMaxRelativeEncoder
+
+# from rev import SparkMaxRelativeEncoder
 from util.simneo import NEOBrushless
 
 import constants
@@ -39,7 +40,11 @@ class GripperSubsystem(SubsystemBase):
 
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kIntakeState, str(self.state))
-        # SmartDashboard.putString(constants.kIntakeMotorRPM, self.motorCubeCone.encoder.getVelocity) IGNORE THIS IS BEING WORKED ON :)
+        SmartDashboard.putNumber(
+            constants.kIntakeMotorRPMKey,
+            self.motorCubeCone.get(NEOBrushless.ControlMode.Velocity)
+            / constants.kIntakeGearRatio,
+        )
         SmartDashboard.putBoolean(constants.kCubeLoaded, self.cubeSensor())
         SmartDashboard.putBoolean(constants.kConeLoaded, self.coneSensor())
         if self.state == self.GripperState.CubeGrabForward:

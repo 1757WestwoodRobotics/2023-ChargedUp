@@ -620,4 +620,5 @@ kConeLoaded = "coneInPos"
 kIntakeHoldingPercent = 1
 
 kIntakeState = "intake/state"
-kIntakeMotorRPM = "PLACE/HOLDER"
+kIntakeMotorRPMKey = "intake/RPM"
+kIntakeGearRatio = 15
