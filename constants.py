@@ -605,3 +605,20 @@ kPhotonvisionCameraDiagonalFOV = 75.1
 kPhotonvisionCameraPixelDimensions = (960, 720)
 kApriltagWidth = 8.125 * kMetersPerInch
 kApriltagHeight = kApriltagWidth
+
+# CubeCone Motors
+kConeCubeCANID = 3
+kConeCubePIDSlot = 0
+kConeCubePGain = 0.0001
+kConeCubeIGain = 0
+kConeCubeDGain = 0
+kIntakeMotorSpeed = 7000
+"""revolutions per minute (rpm)"""
+
+kCubeLoaded = "cubeInPos"
+kConeLoaded = "coneInPos"
+kIntakeHoldingPercent = 1
+
+kIntakeState = "intake/state"
+kIntakeMotorRPMKey = "intake/RPM"
+kIntakeGearRatio = 15
