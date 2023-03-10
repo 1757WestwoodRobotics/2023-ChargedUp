@@ -1,8 +1,8 @@
 {
   "alignClosestWaypoint": [
-    1,
+    2,
     {
-      "Button": 1
+      "Button": 3
     },
     "replace me"
   ],
@@ -28,9 +28,9 @@
     "Joystick Horizontal (ThrustmasterTWCSThrottle)"
   ],
   "chassisXRotation": [
-    1,
+    2,
     {
-      "Axis": 0
+      "Axis": 5
     },
     "Joystick Horizontal (ThrustmasterTWCSThrottle)"
   ],
@@ -48,13 +48,6 @@
     },
     "left button on top of joystick (ThrustmasterT16000M)"
   ],
-  "driveToTargetControl": [
-    0,
-    {
-      "Button": 2
-    },
-    "B (Xbox)"
-  ],
   "fieldRelativeCoordinateModeControl": [
     1,
     {
@@ -69,18 +62,11 @@
     },
     "Middle POV left (ThrustmasterTWCSThrottle)"
   ],
-  "targetRelativeCoordinateModeControl": [
-    1,
-    {
-      "Button": 7
-    },
-    "Middle Up (ThrustmasterTWCSThrottle)"
-  ],
   "turboSpeed": [
-    0,
+    2,
     {
       "Button": 2
     },
-    "bottom button on top of joystick (ThrustmasterT16000M)"
+    "POV down"
   ]
 }

@@ -11,10 +11,9 @@ from commands.resetdrive import ResetDrive
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
-from commands.drive.targetrelativedrive import TargetRelativeDrive
 from commands.drive.robotrelativedrive import RobotRelativeDrive
-from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
+from commands.drive.fieldrelativedrive import FieldRelativeDrive
 from commands.defensestate import DefenseState
 from commands.auto.autonomousaction import AutonomousRoutine
 
@@ -80,14 +79,13 @@ class RobotContainer:
         self.configureButtonBindings()
 
         self.drive.setDefaultCommand(
-            AbsoluteRelativeDrive(
+            FieldRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
                 * constants.kNormalSpeedMultiplier,
                 lambda: self.operatorInterface.chassisControls.sideToSide()
                 * constants.kNormalSpeedMultiplier,
                 self.operatorInterface.chassisControls.rotationX,
-                self.operatorInterface.chassisControls.rotationY,
             )
         )
         wpilib.DataLogManager.start()
@@ -100,15 +98,14 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
-            AbsoluteRelativeDrive(
+        commands2.button.POVButton(*self.operatorInterface.turboSpeed).whileHeld(
+            FieldRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
                 * constants.kTurboSpeedMultiplier,
                 lambda: self.operatorInterface.chassisControls.sideToSide()
                 * constants.kTurboSpeedMultiplier,
                 self.operatorInterface.chassisControls.rotationX,
-                self.operatorInterface.chassisControls.rotationY,
             )
         )
 
@@ -116,17 +113,6 @@ class RobotContainer:
             *self.operatorInterface.fieldRelativeCoordinateModeControl
         ).toggleWhenPressed(
             RobotRelativeDrive(
-                self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotationX,
-            )
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.targetRelativeCoordinateModeControl
-        ).whileHeld(
-            TargetRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
@@ -151,10 +137,6 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.defenseStateControl
         ).whileHeld(DefenseState(self.drive))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.driveToTargetControl
-        ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

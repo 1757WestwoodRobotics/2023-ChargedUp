@@ -20,8 +20,8 @@ class DefenseState(CommandBase):
             module.setWheelLinearVelocityTarget(0)
             module.setSwerveAngleTarget(module.optimizedAngle(angle))
 
-        setModuleTo(self.drive.frontLeftModule, Rotation2d.fromDegrees(-45))
-        setModuleTo(self.drive.frontRightModule, Rotation2d.fromDegrees(45))
+        setModuleTo(self.drive.frontLeftModule, Rotation2d.fromDegrees(45))
+        setModuleTo(self.drive.frontRightModule, Rotation2d.fromDegrees(-45))
         setModuleTo(self.drive.backLeftModule, Rotation2d.fromDegrees(135))
         setModuleTo(self.drive.backRightModule, Rotation2d.fromDegrees(-135))
 
