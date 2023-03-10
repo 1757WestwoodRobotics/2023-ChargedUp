@@ -37,14 +37,14 @@
   "armGroundIntake": [
     2,
     {
-      "Button": 5
+      "POV": [0, 180]
     },
     "replace me"
   ],
   "armMid": [
     2,
     {
-      "Button": 2
+      "POV": [0, 270]
     },
     "replace me"
   ],
@@ -58,14 +58,14 @@
   "armSingleSubstation": [
     2,
     {
-      "Button": 6
+      "Button": 5
     },
     "replace me"
   ],
   "armTop": [
     2,
     {
-      "Button": 3
+      "POV": [0, 0]
     },
     "replace me"
   ],

@@ -120,10 +120,10 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(*self.operatorInterface.armMid).whileHeld(
+        commands2.button.POVButton(*self.operatorInterface.armMid).whileHeld(
             SetArmPositionMid(self.arm)
         )
-        commands2.button.JoystickButton(*self.operatorInterface.armTop).whileHeld(
+        commands2.button.POVButton(*self.operatorInterface.armTop).whileHeld(
             SetArmPositionTop(self.arm)
         ).whenReleased(
             commands2.ParallelCommandGroup(
@@ -140,9 +140,9 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.armOverride).whileHeld(
             SetArmPositionOverride(self.arm)
         )
-        commands2.button.JoystickButton(
-            *self.operatorInterface.armGroundIntake
-        ).whileHeld(SetArmPositionGroundIntake(self.arm))
+        commands2.button.POVButton(*self.operatorInterface.armGroundIntake).whileHeld(
+            SetArmPositionGroundIntake(self.arm)
+        )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.armDemo

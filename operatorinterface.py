@@ -153,12 +153,12 @@ class OperatorInterface:
 
         # arm controls
 
-        self.armMid = getButtonBindingOfName("armMid")
-        self.armTop = getButtonBindingOfName("armTop")
+        self.armMid = getPOVBindingOfName("armMid")
+        self.armTop = getPOVBindingOfName("armTop")
         self.armDoubleSubstation = getButtonBindingOfName("armDoubleSubstation")
         self.armSingleSubstation = getButtonBindingOfName("armSingleSubstation")
         self.armOverride = getButtonBindingOfName("armOverride")
-        self.armGroundIntake = getButtonBindingOfName("armGroundIntake")
+        self.armGroundIntake = getPOVBindingOfName("armGroundIntake")
 
         self.armFudgeIncrease = getPOVBindingOfName("armFudgeFactorIncrease")
         self.armFudgeDecrease = getPOVBindingOfName("armFudgeFactorDecrease")
