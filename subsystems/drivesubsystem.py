@@ -519,7 +519,7 @@ class DriveSubsystem(SubsystemBase):
 
     def getRotation(self) -> Rotation2d:
         return Rotation2d.fromDegrees(-self.gyro.getYaw())
-    
+
     def getPitch(self) -> Rotation2d:
         return Rotation2d.fromDegrees(-self.gyro.getPitch())
 

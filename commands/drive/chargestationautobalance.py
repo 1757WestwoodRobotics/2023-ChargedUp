@@ -1,32 +1,9 @@
-from enum import Enum, auto
-
-from typing import Tuple
 from commands2 import CommandBase
-from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
-from ctre import (
-    AbsoluteSensorRange,
-    CANCoder,
-    ControlMode,
-    SensorInitializationStrategy,
-    WPI_TalonFX,
-)
-from navx import AHRS
-from wpimath.geometry import Pose2d, Rotation2d, Translation2d
-from wpimath.filter import SlewRateLimiter
-from wpimath.kinematics import (
-    ChassisSpeeds,
-    SwerveModuleState,
-    SwerveDrive4Kinematics,
-    SwerveDrive4Odometry,
-)
-
-import constants
-from util import convenientmath
-from util.angleoptimize import optimizeAngle
-from util.ctrecheck import ctreCheckError
-
+from wpimath.controller import ProfiledPIDController
+from wpimath.trajectory import TrapezoidProfile
 from subsystems.drivesubsystem import DriveSubsystem
-from commands.drivedistance import DriveDistance
+from util import convenientmath
+import constants
 
 
 class AutoBalance(CommandBase):
@@ -37,25 +14,27 @@ class AutoBalance(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
 
+        self.pid = ProfiledPIDController(
+            0.025,
+            0,
+            0,
+            TrapezoidProfile.Constraints(
+                constants.kMaxForwardLinearVelocity,
+                constants.kMaxForwardLinearAcceleration,
+            ),
+        )
         self.drive = drive
+        self.pitch = self.drive.gyro.getPitch()
+        self.pid.setTolerance(0.001)
 
     def execute(self) -> None:
         self.pitch = self.drive.gyro.getPitch()
-
-        if self.pitch > (constants.kTiltThresholdAutoBalance):
-            DriveDistance(
-                constants.kDriveDistanceAutoBalance,
-                constants.kSpeedFactorAutoBalance,
-                DriveDistance.Axis.X,
-                self.drive,
-            )
-        elif self.pitch < (-constants.kTiltThresholdAutoBalance):
-            DriveDistance(
-                -constants.kDriveDistanceAutoBalance,
-                constants.kSpeedFactorAutoBalance,
-                DriveDistance.Axis.X,
-                self.drive,
-            )
+        pidOutput = convenientmath.clamp(
+            self.pid.calculate(self.drive.gyro.getPitch(), 0), -0.4, 0.4
+        )
+        self.drive.arcadeDriveWithFactors(
+            0, pidOutput, 0, DriveSubsystem.CoordinateMode.RobotRelative
+        )
 
     def end(self, _interupted: bool) -> None:
         print("IT WORKS")
