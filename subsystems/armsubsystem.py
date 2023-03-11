@@ -44,6 +44,7 @@ class ArmSubsystem(SubsystemBase):
         SingleSubtation = auto()
         Top = auto()
         GroundLoading = auto()
+        GroundCone = auto()
         TopSafe = auto()
         OverrideValue = auto()
 
@@ -62,6 +63,8 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmGroundIntakePosition
             elif self == ArmSubsystem.ArmState.TopSafe:
                 return constants.kArmTopSafePosition
+            elif self == ArmSubsystem.ArmState.GroundCone:
+                return constants.kArmGroundConeIntakePosition
             return constants.kArmStoredPosition
 
     class InterpolationMethod(Enum):

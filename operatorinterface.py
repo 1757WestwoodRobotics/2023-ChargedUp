@@ -159,6 +159,7 @@ class OperatorInterface:
         self.armSingleSubstation = getButtonBindingOfName("armSingleSubstation")
         self.armOverride = getButtonBindingOfName("armOverride")
         self.armGroundIntake = getPOVBindingOfName("armGroundIntake")
+        self.armGroundCone = getPOVBindingOfName("armGroundCone")
 
         self.armFudgeIncrease = getPOVBindingOfName("armFudgeFactorIncrease")
         self.armFudgeDecrease = getPOVBindingOfName("armFudgeFactorDecrease")

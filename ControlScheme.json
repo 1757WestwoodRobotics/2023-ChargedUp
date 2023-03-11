@@ -34,6 +34,13 @@
     },
     "POV down"
   ],
+  "armGroundCone": [
+    2,
+    {
+      "POV": [0, 90]
+    },
+    "replace me"
+  ],
   "armGroundIntake": [
     2,
     {

@@ -738,6 +738,11 @@ kArmTopSafePosition = Pose2d(
     49.622 * kMetersPerInch,
     Rotation2d.fromDegrees(51),
 )
+kArmGroundConeIntakePosition = Pose2d(
+    -30.357 * kMetersPerInch,
+    -4.844 * kMetersPerInch,
+    Rotation2d.fromDegrees(-115.685)
+)
 
 kArmFudgeFactorIncremetns = 0.5 * constants.kMetersPerInch
 """meters"""

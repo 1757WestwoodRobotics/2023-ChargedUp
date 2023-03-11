@@ -22,6 +22,7 @@ from commands.arm.statearmposition import (
     DecreaseArmFudge,
     IncreaseArmFudge,
     SetArmPositionDoubleSubstation,
+    SetArmPositionGroundCone,
     SetArmPositionGroundIntake,
     SetArmPositionMid,
     SetArmPositionOverride,
@@ -142,6 +143,13 @@ class RobotContainer:
         )
         commands2.button.POVButton(*self.operatorInterface.armGroundIntake).whileHeld(
             SetArmPositionGroundIntake(self.arm)
+        )
+        commands2.button.POVButton(*self.operatorInterface.armGroundCone).whileHeld(
+            SetArmPositionGroundCone(self.arm)
+        ).whenReleased(
+            commands2.ParallelCommandGroup(
+                SetArmPositionMid(self.arm), commands2.WaitCommand(0.2)
+            )
         )
 
         commands2.button.JoystickButton(
