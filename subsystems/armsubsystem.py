@@ -228,7 +228,6 @@ class ArmSubsystem(SubsystemBase):
                 constants.kArmRotationalMaxAcceleration,
             ),
         )
-        self.thetaProfiledPID.enableContinuousInput(-math.pi, math.pi)
 
         self.shoulderPID = ProfiledPIDControllerRadians(
             constants.kArmRotationalPGain,
