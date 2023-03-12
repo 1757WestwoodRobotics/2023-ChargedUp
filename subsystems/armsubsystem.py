@@ -288,7 +288,7 @@ class ArmSubsystem(SubsystemBase):
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
     def reset(self) -> None:
-        pose = constants.kArmStoredPosition
+        pose = constants.kArmStartupPosition
         twoLinkPosition = Translation2d(
             pose.X() - constants.kArmwristLength * pose.rotation().cos(),
             pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
