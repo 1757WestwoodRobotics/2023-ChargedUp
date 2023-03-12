@@ -26,6 +26,7 @@ from commands.arm.statearmposition import (
     SetArmPositionGroundIntake,
     SetArmPositionMid,
     SetArmPositionOverride,
+    SetArmPositionSafeGround,
     SetArmPositionSafeTop,
     SetArmPositionSingleSubstation,
     SetArmPositionStored,
@@ -143,6 +144,10 @@ class RobotContainer:
         )
         commands2.button.POVButton(*self.operatorInterface.armGroundIntake).whileHeld(
             SetArmPositionGroundIntake(self.arm)
+        ).whenReleased(
+            commands2.ParallelCommandGroup(
+                SetArmPositionSafeGround(self.arm), commands2.WaitCommand(0.7)
+            )
         )
         commands2.button.POVButton(*self.operatorInterface.armGroundCone).whileHeld(
             SetArmPositionGroundCone(self.arm)

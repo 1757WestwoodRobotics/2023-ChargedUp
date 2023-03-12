@@ -749,6 +749,11 @@ kArmGroundIntakePosition = Pose2d(
     7.087 * kMetersPerInch,
     Rotation2d.fromDegrees(148.10),
 )
+kArmGroundSafePosition = Pose2d(
+    -30.639 * kMetersPerInch,
+    37.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(180),
+)
 kArmTopSafePosition = Pose2d(
     -15.430 * kMetersPerInch,
     49.622 * kMetersPerInch,
