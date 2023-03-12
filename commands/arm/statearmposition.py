@@ -54,11 +54,13 @@ class SetArmPositionSafeTop(SetArmPositionMid):
     def isFinished(self) -> bool:
         return True
 
+
 class SetArmPositionSafeGround(SetArmPositionMid):
     state = ArmSubsystem.ArmState.GroundSafe
 
     def isFinished(self) -> bool:
         return True
+
 
 class IncreaseArmFudge(CommandBase):
     def __init__(self, armSubsystem: ArmSubsystem) -> None:

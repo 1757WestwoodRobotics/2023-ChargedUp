@@ -715,24 +715,6 @@ class ArmSubsystem(SubsystemBase):
             Pose2d(targetTwoLink, pose.rotation())
         )
 
-        if desiredInterpolation == ArmSubsystem.InterpolationMethod.CartesianSpace:
-            currentWristRotation = self.getWristArmRotation()
-            currentElbowRotation = self.getElbowArmRotation()
-            currentShoulderRotation = self.getShoulderArmRotation()
-            wristAngle = (
-                self.thetaProfiledPID.calculate(
-                    angleModulus(
-                        (
-                            currentWristRotation
-                            + currentElbowRotation
-                            + currentShoulderRotation
-                        ).radians()
-                    ),
-                    angleModulus(pose.rotation().radians()),
-                )
-                + currentWristRotation.radians()
-            )
-
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         self.setRelativeArmAngles(
@@ -762,7 +744,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         clampedWrist = clamp(
-            wrist.radians(),
+            optimizeAngle(Rotation2d.fromDegrees(-45), wrist).radians(),
             constants.kWristMinAngle.radians(),
             constants.kWristMaxAngle.radians(),
         )
@@ -782,8 +764,8 @@ class ArmSubsystem(SubsystemBase):
             self.interpolationMethod.getSelected()
         )
 
+        currentWristRaw = self._getWristRawArmRotation()
         if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
-            currentWristRaw = self._getWristRawArmRotation()
             currentElbowRaw = self._getWristRawArmRotation()
             currentShoulderRaw = self._getShoulderRawArmRotation()
 
@@ -797,10 +779,11 @@ class ArmSubsystem(SubsystemBase):
                 self.elbowPID.calculate(currentElbowRaw.radians(), trueElbowPos)
                 + currentElbowRaw.radians()
             )
-            trueWristPos = (
-                self.thetaProfiledPID.calculate(currentWristRaw.radians(), trueWristPos)
-                + currentWristRaw.radians()
-            )
+
+        trueWristPos = (
+            self.thetaProfiledPID.calculate(currentWristRaw.radians(), trueWristPos)
+            + currentWristRaw.radians()
+        )
 
         SmartDashboard.putNumber(
             constants.kArmShoulderTargetMotorKey,
