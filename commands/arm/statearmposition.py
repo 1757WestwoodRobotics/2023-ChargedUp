@@ -43,8 +43,10 @@ class SetArmPositionOverride(SetArmPositionMid):
 class SetArmPositionGroundIntake(SetArmPositionMid):
     state = ArmSubsystem.ArmState.GroundLoading
 
+
 class SetArmPositionGroundCone(SetArmPositionMid):
     state = ArmSubsystem.ArmState.GroundCone
+
 
 class SetArmPositionSafeTop(SetArmPositionMid):
     state = ArmSubsystem.ArmState.TopSafe

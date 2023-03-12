@@ -29,6 +29,7 @@ from wpimath.geometry import (
 from util.advantagescopeconvert import convertToSendablePoses
 from util.angleoptimize import optimizeAngle
 from util.convenientmath import clamp, pose3dFrom2d
+from util.simcoder import CTREEncoder
 
 from util.simfalcon import Falcon
 
@@ -122,6 +123,25 @@ class ArmSubsystem(SubsystemBase):
         )
 
         SmartDashboard.putData("Arm Sim", self.mech)
+
+    def initEncoders(self) -> None:
+        self.elbowEncoder = CTREEncoder(
+            constants.kElbowArmCANCoderID,
+            constants.kElbowArmCANCoderOffset,
+            constants.kCANivoreName,
+        )
+
+        self.shoulderEncoder = CTREEncoder(
+            constants.kShoulderArmCANCoderID,
+            constants.kShoulderArmCANCoderOffset,
+            constants.kCANivoreName,
+        )
+
+        self.wristEncoder = CTREEncoder(
+            constants.kWristArmCANCoderID,
+            constants.kWristArmCANCoderOffset,
+            constants.kCANivoreName,
+        )
 
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
@@ -261,6 +281,7 @@ class ArmSubsystem(SubsystemBase):
         self.elbowRelativeCOM = Translation2d()
         self.wristRelativeCOM = Translation2d()
 
+        self.initEncoders()
         self.reset()
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
 
@@ -273,19 +294,38 @@ class ArmSubsystem(SubsystemBase):
         shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
             Pose2d(twoLinkPosition, pose.rotation())
         )
+        shoulderOffset = (
+            self.shoulderEncoder.getPosition().radians()
+            / constants.kArmEncoderToSprocketGearRatio
+        )
+        elbowOffset = (
+            self.elbowEncoder.getPosition().radians()
+            / constants.kArmEncoderToSprocketGearRatio
+        )
+        wristOffset = (
+            self.wristEncoder.getPosition().radians()
+            / constants.kArmEncoderToSprocketGearRatio
+        )
 
         self.shoulderArm.setEncoderPosition(
-            shoulderAngle
+            (shoulderAngle + shoulderOffset)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kShoulderArmGearRatio
         )
         self.elbowArm.setEncoderPosition(
-            (shoulderAngle + elbowAngle)
+            (shoulderAngle + elbowAngle + shoulderOffset + elbowOffset)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kElbowArmGearRatio
         )
         self.wristArm.setEncoderPosition(
-            (shoulderAngle + elbowAngle + wristAngle)
+            (
+                shoulderAngle
+                + elbowAngle
+                + wristAngle
+                + shoulderOffset
+                + elbowOffset
+                + wristOffset
+            )
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )

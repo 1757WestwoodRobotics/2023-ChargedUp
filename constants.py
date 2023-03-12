@@ -585,6 +585,8 @@ kTargetWaypointThetaControllerKey = "waypoint/theta"
 # Arm
 kArmPIDSlot = 0
 
+kArmEncoderToSprocketGearRatio = 60 / 12
+
 kElbowArmCANId = 30
 kElbowArmPGain = 0.015
 kElbowArmIGain = 0.0
@@ -599,6 +601,20 @@ kElbowArmFFFactor = 0.0
 
 kElbowArmCANCoderID = 35
 kElbowArmCANCoderOffset = 0
+"""
+to get encoder offsets for the arm motors
+  1. bring the arm to the position you want to call zero
+    * the zero for the arm is with the elbow hitting its endstop 
+    * with the shoulder touching the chain barely
+    * with the intake buffer touching the CF tube
+  2. Run Phoenix Tuner
+  3. Select desired encoder
+  4. Go to "Config" tab
+  5. Click "Factory Default"
+  6. Go to "Self-Test Snapshot" tab
+  7. Click "Self-Test Snapshot"
+  8. Record value from line: "Absolute Position (unsigned):"
+"""
 
 kElbowMinAngle = Rotation2d.fromDegrees(0)
 kElbowMaxAngle = Rotation2d.fromDegrees(145)
@@ -739,9 +755,7 @@ kArmTopSafePosition = Pose2d(
     Rotation2d.fromDegrees(51),
 )
 kArmGroundConeIntakePosition = Pose2d(
-    -30.357 * kMetersPerInch,
-    -4.844 * kMetersPerInch,
-    Rotation2d.fromDegrees(-115.685)
+    -30.357 * kMetersPerInch, -4.844 * kMetersPerInch, Rotation2d.fromDegrees(-115.685)
 )
 
 kArmFudgeFactorIncremetns = 0.5 * constants.kMetersPerInch
