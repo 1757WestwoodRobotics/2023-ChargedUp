@@ -656,15 +656,15 @@ kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
 
 kArmelbowLength = 19 * kMetersPerInch
-kArmelbowMass = 5  # kg
-kArmelbowCOM = 9 * kMetersPerInch
+kArmelbowMass = 2.857  # kg
+kArmelbowCOM = 6 * kMetersPerInch
 
 kArmshoulderLength = 27 * kMetersPerInch
-kArmshoulderMass = 2.54  # kg
+kArmshoulderMass = 11.113  # kg
 kArmshoulderCOM = 13 * kMetersPerInch
 
 kArmwristLength = 16.392506 * kMetersPerInch
-kArmwristMass = 2.7  # kg
+kArmwristMass = 5.8  # kg
 kArmWristCOM = 7.35 * kMetersPerInch
 
 kArmStateKey = "arm/state"
