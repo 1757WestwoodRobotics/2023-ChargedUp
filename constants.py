@@ -588,7 +588,7 @@ kArmPIDSlot = 0
 kArmEncoderToSprocketGearRatio = 60 / 12
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.015
+kElbowArmPGain = 0.03
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
@@ -638,7 +638,7 @@ kShoulderMinAngle = Rotation2d.fromDegrees(57)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.2
+kWristArmPGain = 0.1
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = True
@@ -760,7 +760,7 @@ kArmGroundSafePosition = Pose2d(
     Rotation2d.fromDegrees(180),
 )
 kArmTopSafePosition = Pose2d(
-    -15.430 * kMetersPerInch,
+    -10.430 * kMetersPerInch,
     49.622 * kMetersPerInch,
     Rotation2d.fromDegrees(51),
 )
