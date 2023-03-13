@@ -3,7 +3,7 @@ from operator import add
 
 from commands2 import SubsystemBase
 from ntcore import NetworkTableInstance
-from wpilib import PowerDistribution, SmartDashboard
+from wpilib import PowerDistribution, SmartDashboard, DriverStation
 
 from operatorinterface import OperatorInterface
 
@@ -48,3 +48,8 @@ class LoggingSubsystem(SubsystemBase):
                 f"Joystick{controller.getPort()}/POVs",
                 [controller.getPOV(i) for i in range(controller.getPOVCount())],
             )
+
+            self.dsTable.putBoolean("enabled", DriverStation.isEnabled())
+            self.dsTable.putBoolean("auto", DriverStation.isAutonomous())
+            self.dsTable.putString("alliance", str(DriverStation.getAlliance()))
+            self.dsTable.putNumber("location", DriverStation.getLocation())
