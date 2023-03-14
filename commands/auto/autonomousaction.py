@@ -37,7 +37,7 @@ class AutonomousRoutine(SequentialCommandGroup):
         self.name = name
         self.markerMap = {  # later todo: actual implementation
             "store": SetArmPositionStored(arm),
-            "top": SetArmPositionTop(arm),
+            "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.8)),
             "mid": SetArmPositionMid(arm),
             "hybrid": SetArmPositionGroundIntake(arm),
             "engage": WaitCommand(5),
