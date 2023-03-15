@@ -105,21 +105,21 @@ class ArmSubsystem(SubsystemBase):
 
         self.armShoulder = armPivot.appendLigament(
             "Arm Shoulder",
-            constants.kArmshoulderLength / constants.kMetersPerInch,
+            constants.kArmShoulderLength / constants.kMetersPerInch,
             -90,
             10,
             Color8Bit(Color.kGold),
         )
         self.armElbow = self.armShoulder.appendLigament(
             "Arm Elbow",
-            constants.kArmelbowLength / constants.kMetersPerInch,
+            constants.kArmElbowLength / constants.kMetersPerInch,
             45,
             10,
             Color8Bit(Color.kPurple),
         )
         self.armWrist = self.armElbow.appendLigament(
             "Wrist",
-            constants.kArmwristLength / constants.kMetersPerInch,
+            constants.kArmWristLength / constants.kMetersPerInch,
             10,
             10,
             Color8Bit(Color.kWhite),
@@ -290,8 +290,8 @@ class ArmSubsystem(SubsystemBase):
     def reset(self) -> None:
         pose = constants.kArmStartupPosition
         twoLinkPosition = Translation2d(
-            pose.X() - constants.kArmwristLength * pose.rotation().cos(),
-            pose.Y() - constants.kArmwristLength * pose.rotation().sin(),
+            pose.X() - constants.kArmWristLength * pose.rotation().cos(),
+            pose.Y() - constants.kArmWristLength * pose.rotation().sin(),
         )
         shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
             Pose2d(twoLinkPosition, pose.rotation())
@@ -374,7 +374,7 @@ class ArmSubsystem(SubsystemBase):
         return (
             Pose2d()
             + Transform2d(Translation2d(), shoulderRot)
-            + Transform2d(Translation2d(constants.kArmshoulderLength, 0), Rotation2d())
+            + Transform2d(Translation2d(constants.kArmShoulderLength, 0), Rotation2d())
         )
 
     def getWristPosition(self) -> Pose2d:
@@ -383,7 +383,7 @@ class ArmSubsystem(SubsystemBase):
         return (
             elbowPosition
             + Transform2d(Translation2d(), elbowRot)
-            + Transform2d(Translation2d(constants.kArmelbowLength, 0), Rotation2d())
+            + Transform2d(Translation2d(constants.kArmElbowLength, 0), Rotation2d())
         )
 
     def getEndEffectorPosition(self) -> Pose2d:
@@ -392,7 +392,7 @@ class ArmSubsystem(SubsystemBase):
         return (
             wristPosition
             + Transform2d(Translation2d(), wristRot)
-            + Transform2d(Translation2d(constants.kArmwristLength, 0), Rotation2d())
+            + Transform2d(Translation2d(constants.kArmWristLength, 0), Rotation2d())
         )
 
     def _updateCOMs(self) -> None:
@@ -404,9 +404,9 @@ class ArmSubsystem(SubsystemBase):
         elbowPose = self.getElbowPosition()
         wristPose = self.getWristPosition()
 
-        armCOM = Translation2d(constants.kArmshoulderCOM, shoulderRotation)
+        armCOM = Translation2d(constants.kArmShoulderCOM, shoulderRotation)
         forearmCOM = elbowPose.translation() + Translation2d(
-            constants.kArmelbowCOM, elbowRotation
+            constants.kArmElbowCOM, elbowRotation
         )
         handCOM = wristPose.translation() + Translation2d(
             constants.kArmWristCOM, wristRotation
@@ -414,38 +414,38 @@ class ArmSubsystem(SubsystemBase):
 
         self.totalCOM = Translation2d(
             (
-                armCOM.X() * constants.kArmshoulderMass
-                + forearmCOM.X() * constants.kArmelbowMass
-                + handCOM.X() * constants.kArmwristMass
+                armCOM.X() * constants.kArmShoulderMass
+                + forearmCOM.X() * constants.kArmElbowMass
+                + handCOM.X() * constants.kArmWristMass
             )
             / (
-                constants.kArmshoulderMass
-                + constants.kArmelbowMass
-                + constants.kArmwristMass
+                constants.kArmShoulderMass
+                + constants.kArmElbowMass
+                + constants.kArmWristMass
             ),
             (
-                armCOM.Y() * constants.kArmshoulderMass
-                + forearmCOM.Y() * constants.kArmelbowMass
-                + handCOM.Y() * constants.kArmwristMass
+                armCOM.Y() * constants.kArmShoulderMass
+                + forearmCOM.Y() * constants.kArmElbowMass
+                + handCOM.Y() * constants.kArmWristMass
             )
             / (
-                constants.kArmshoulderMass
-                + constants.kArmelbowMass
-                + constants.kArmwristMass
+                constants.kArmShoulderMass
+                + constants.kArmElbowMass
+                + constants.kArmWristMass
             ),
         )
 
         self.elbowRelativeCOM = Translation2d(
             (
-                forearmCOM.X() * constants.kArmelbowMass
-                + handCOM.X() * constants.kArmwristMass
+                forearmCOM.X() * constants.kArmElbowMass
+                + handCOM.X() * constants.kArmWristMass
             )
-            / (constants.kArmelbowMass + constants.kArmwristMass),
+            / (constants.kArmElbowMass + constants.kArmWristMass),
             (
-                forearmCOM.Y() * constants.kArmelbowMass
-                + handCOM.Y() * constants.kArmwristMass
+                forearmCOM.Y() * constants.kArmElbowMass
+                + handCOM.Y() * constants.kArmWristMass
             )
-            / (constants.kArmelbowMass + constants.kArmwristMass),
+            / (constants.kArmElbowMass + constants.kArmWristMass),
         )
 
         self.wristRelativeCOM = handCOM
@@ -502,15 +502,15 @@ class ArmSubsystem(SubsystemBase):
             )
         )
         elbowPose = shoulderPose + Transform3d(
-            Translation3d(constants.kArmshoulderLength, 0, 0),
+            Translation3d(constants.kArmShoulderLength, 0, 0),
             Rotation3d(0, self.getElbowArmRotation().radians(), 0),
         )
         wristPose = elbowPose + Transform3d(
-            Translation3d(constants.kArmelbowLength, 0, 0),
+            Translation3d(constants.kArmElbowLength, 0, 0),
             Rotation3d(0, self.getWristArmRotation().radians(), 0),
         )
         endEffectorPose = wristPose + Transform3d(
-            Translation3d(constants.kArmwristLength, 0, 0), Rotation3d()
+            Translation3d(constants.kArmWristLength, 0, 0), Rotation3d()
         )
 
         targetPose = (
@@ -636,18 +636,18 @@ class ArmSubsystem(SubsystemBase):
     def _canElbowReachPosition(self, position: Translation2d):
         return (
             position.distance(Translation2d())
-            < constants.kArmshoulderLength + constants.kArmelbowLength
+            < constants.kArmShoulderLength + constants.kArmElbowLength
             and position.distance(Translation2d())
-            > constants.kArmshoulderLength - constants.kArmelbowLength
+            > constants.kArmShoulderLength - constants.kArmElbowLength
         )
 
     def _nearestPossibleElbowPosition(self, position: Translation2d) -> Translation2d:
         dist = position.distance(Translation2d())
-        if dist < constants.kArmshoulderLength - constants.kArmelbowLength:
+        if dist < constants.kArmShoulderLength - constants.kArmElbowLength:
             return Translation2d(
                 position.X(), position.Y() + constants.kArmPositionExtraEpsiolon
             )
-        elif dist > constants.kArmelbowLength + constants.kArmshoulderLength:
+        elif dist > constants.kArmElbowLength + constants.kArmShoulderLength:
             return Translation2d(
                 position.X(), position.Y() - constants.kArmPositionExtraEpsiolon
             )
@@ -665,16 +665,16 @@ class ArmSubsystem(SubsystemBase):
             (
                 pose.X() * pose.X()
                 + pose.Y() * pose.Y()
-                - constants.kArmelbowLength * constants.kArmelbowLength
-                - constants.kArmshoulderLength * constants.kArmshoulderLength
+                - constants.kArmElbowLength * constants.kArmElbowLength
+                - constants.kArmShoulderLength * constants.kArmShoulderLength
             )
-            / (2 * constants.kArmelbowLength * constants.kArmshoulderLength)
+            / (2 * constants.kArmElbowLength * constants.kArmShoulderLength)
         )
 
         startAngle = math.atan2(pose.Y(), pose.X()) - math.atan2(
-            math.sin(endAngle) * constants.kArmelbowLength,
-            constants.kArmshoulderLength
-            + math.cos(endAngle) * constants.kArmelbowLength,
+            math.sin(endAngle) * constants.kArmElbowLength,
+            constants.kArmShoulderLength
+            + math.cos(endAngle) * constants.kArmElbowLength,
         )
 
         wristAngle = pose.rotation().radians() - startAngle - endAngle
@@ -692,9 +692,9 @@ class ArmSubsystem(SubsystemBase):
         self.targetPose = pose
 
         twoLinkPosition = Translation2d(
-            pose.X() - constants.kArmwristLength * pose.rotation().cos(),
+            pose.X() - constants.kArmWristLength * pose.rotation().cos(),
             pose.Y()
-            - constants.kArmwristLength * pose.rotation().sin()
+            - constants.kArmWristLength * pose.rotation().sin()
             + self.fudgeFactor,
         )
 

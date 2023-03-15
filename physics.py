@@ -154,9 +154,9 @@ class ArmSimulation:
             self.elbowGearbox,
             constants.kElbowArmGearRatio,
             SingleJointedArmSim.estimateMOI(
-                constants.kArmelbowLength, constants.kArmelbowMass
+                constants.kArmElbowLength, constants.kArmElbowMass
             ),
-            constants.kArmelbowLength,
+            constants.kArmElbowLength,
             -180 * constants.kRadiansPerDegree,
             180 * constants.kRadiansPerDegree,
             False,
@@ -166,9 +166,9 @@ class ArmSimulation:
             self.shoulderGearbox,
             constants.kShoulderArmGearRatio,
             SingleJointedArmSim.estimateMOI(
-                constants.kArmshoulderLength, constants.kArmshoulderMass
+                constants.kArmShoulderLength, constants.kArmShoulderMass
             ),
-            constants.kArmshoulderLength,
+            constants.kArmShoulderLength,
             math.radians(-180),
             math.radians(180),
             False,
@@ -178,9 +178,9 @@ class ArmSimulation:
             self.wristGearbox,
             constants.kWristArmGearRatio,
             SingleJointedArmSim.estimateMOI(
-                constants.kArmwristLength, constants.kArmwristMass
+                constants.kArmWristLength, constants.kArmWristMass
             ),
-            constants.kArmwristLength,
+            constants.kArmWristLength,
             math.radians(-180),
             math.radians(180),
             False,

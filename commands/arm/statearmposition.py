@@ -3,8 +3,8 @@ from commands.arm.demostate import constants
 from subsystems.armsubsystem import ArmSubsystem
 
 
-class SetArmPositionMid(CommandBase):
-    state = ArmSubsystem.ArmState.Mid
+class SetArmPosition(CommandBase):
+    state = ArmSubsystem.ArmState.Stored
 
     def __init__(self, armSubsystem: ArmSubsystem) -> None:
         CommandBase.__init__(self)
@@ -20,42 +20,46 @@ class SetArmPositionMid(CommandBase):
         return self.arm.atTarget()
 
 
-class SetArmPositionTop(SetArmPositionMid):
+class SetArmPositionMid(SetArmPosition):
+    state = ArmSubsystem.ArmState.Mid
+
+
+class SetArmPositionTop(SetArmPosition):
     state = ArmSubsystem.ArmState.Top
 
 
-class SetArmPositionDoubleSubstation(SetArmPositionMid):
+class SetArmPositionDoubleSubstation(SetArmPosition):
     state = ArmSubsystem.ArmState.DoubleSubstation
 
 
-class SetArmPositionSingleSubstation(SetArmPositionMid):
+class SetArmPositionSingleSubstation(SetArmPosition):
     state = ArmSubsystem.ArmState.SingleSubtation
 
 
-class SetArmPositionStored(SetArmPositionMid):
+class SetArmPositionStored(SetArmPosition):
     state = ArmSubsystem.ArmState.Stored
 
 
-class SetArmPositionOverride(SetArmPositionMid):
+class SetArmPositionOverride(SetArmPosition):
     state = ArmSubsystem.ArmState.OverrideValue
 
 
-class SetArmPositionGroundIntake(SetArmPositionMid):
+class SetArmPositionGroundIntake(SetArmPosition):
     state = ArmSubsystem.ArmState.GroundLoading
 
 
-class SetArmPositionGroundCone(SetArmPositionMid):
+class SetArmPositionGroundCone(SetArmPosition):
     state = ArmSubsystem.ArmState.GroundCone
 
 
-class SetArmPositionSafeTop(SetArmPositionMid):
+class SetArmPositionSafeTop(SetArmPosition):
     state = ArmSubsystem.ArmState.TopSafe
 
     def isFinished(self) -> bool:
         return True
 
 
-class SetArmPositionSafeGround(SetArmPositionMid):
+class SetArmPositionSafeGround(SetArmPosition):
     state = ArmSubsystem.ArmState.GroundSafe
 
     def isFinished(self) -> bool:
@@ -71,7 +75,7 @@ class IncreaseArmFudge(CommandBase):
         self.addRequirements([self.arm])
 
     def execute(self) -> None:
-        self.arm.fudgeFactor += constants.kArmFudgeFactorIncremetns
+        self.arm.fudgeFactor += constants.kArmFudgeFactorIncrements
 
     def isFinished(self) -> bool:
         return self.arm.atTarget()
@@ -79,4 +83,4 @@ class IncreaseArmFudge(CommandBase):
 
 class DecreaseArmFudge(IncreaseArmFudge):
     def execute(self) -> None:
-        self.arm.fudgeFactor -= constants.kArmFudgeFactorIncremetns
+        self.arm.fudgeFactor -= constants.kArmFudgeFactorIncrements

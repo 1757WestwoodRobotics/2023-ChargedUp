@@ -655,16 +655,16 @@ kWristArmCANCoderOffset = -150.996
 kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
 
-kArmelbowLength = 19 * kMetersPerInch
-kArmelbowMass = 2.857  # kg
-kArmelbowCOM = 6 * kMetersPerInch
+kArmElbowLength = 19 * kMetersPerInch
+kArmElbowMass = 2.857  # kg
+kArmElbowCOM = 6 * kMetersPerInch
 
-kArmshoulderLength = 27 * kMetersPerInch
-kArmshoulderMass = 11.113  # kg
-kArmshoulderCOM = 13 * kMetersPerInch
+kArmShoulderLength = 27 * kMetersPerInch
+kArmShoulderMass = 11.113  # kg
+kArmShoulderCOM = 13 * kMetersPerInch
 
-kArmwristLength = 16.392506 * kMetersPerInch
-kArmwristMass = 5.8  # kg
+kArmWristLength = 16.392506 * kMetersPerInch
+kArmWristMass = 5.8  # kg
 kArmWristCOM = 7.35 * kMetersPerInch
 
 kArmStateKey = "arm/state"
@@ -768,7 +768,7 @@ kArmGroundConeIntakePosition = Pose2d(
     -30.357 * kMetersPerInch, -4.844 * kMetersPerInch, Rotation2d.fromDegrees(-115.685)
 )
 
-kArmFudgeFactorIncremetns = 0.5 * constants.kMetersPerInch
+kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch
 """meters"""
 kArmFudgeFactorKey = "arm/fudge"
 
