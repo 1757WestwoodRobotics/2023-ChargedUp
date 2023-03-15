@@ -521,7 +521,7 @@ class DriveSubsystem(SubsystemBase):
         return Rotation2d.fromDegrees(-self.gyro.getYaw())
 
     def getPitch(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(-self.gyro.getPitch())
+        return Rotation2d.fromDegrees(-self.gyro.getPitch() + 180)
 
     def resetOdometryAtPosition(self, pose: Pose2d):
         self.odometry.resetPosition(

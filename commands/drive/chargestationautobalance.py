@@ -1,9 +1,13 @@
 from commands2 import CommandBase
+from wpilib._wpilib import SmartDashboard
+from wpimath.geometry import Rotation2d
+from wpimath._controls._controls.controller import PIDController
 from wpimath.controller import ProfiledPIDController
 from wpimath.trajectory import TrapezoidProfile
 from subsystems.drivesubsystem import DriveSubsystem
 from util import convenientmath
 import constants
+from util.angleoptimize import optimizeAngle
 
 
 class AutoBalance(CommandBase):
@@ -14,31 +18,33 @@ class AutoBalance(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.pid = ProfiledPIDController(
-            0.025,
+        self.pid = PIDController(
+            0.35,
             0,
             0,
-            TrapezoidProfile.Constraints(
-                constants.kMaxForwardLinearVelocity,
-                constants.kMaxForwardLinearAcceleration,
-            ),
         )
         self.drive = drive
         self.pitch = self.drive.gyro.getPitch()
-        self.pid.setTolerance(0.001)
+        # self.pid.setTolerance(0.001)
+
+        self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        self.pitch = self.drive.gyro.getPitch()
+        self.pitch = optimizeAngle(Rotation2d(), self.drive.getPitch()).radians()
+        SmartDashboard.putNumber("GYROPITCH", self.pitch)
+
+        if self.isFinished():
+            return
+
         pidOutput = convenientmath.clamp(
-            self.pid.calculate(self.drive.gyro.getPitch(), 0), -0.4, 0.4
+            self.pid.calculate(self.pitch, 0), -0.4, 0.4
         )
         self.drive.arcadeDriveWithFactors(
-            0, pidOutput, 0, DriveSubsystem.CoordinateMode.RobotRelative
+            pidOutput, 0 , 0, DriveSubsystem.CoordinateMode.RobotRelative
         )
 
     def end(self, _interupted: bool) -> None:
-        for i in range(100):
-            print(self.pitch)
+        print("IT WORKS")
 
     def isFinished(self) -> bool:
-        return abs(self.pitch) < 2
+        return abs(self.pitch) < 3 * constants.kRadiansPerDegree
