@@ -41,4 +41,4 @@ class AutoBalance(CommandBase):
             print(self.pitch)
 
     def isFinished(self) -> bool:
-        return self.pitch > -15 and self.pitch < 15
+        return abs(self.pitch) < 2
