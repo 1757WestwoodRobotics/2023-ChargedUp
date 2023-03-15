@@ -256,7 +256,6 @@ class PhysicsEngine:
         x = float(SmartDashboard.getNumber("therealgyro", -30))
         self.gyroPitch.set(SmartDashboard.getNumber("thegyronumbies", x))
 
-
         # Simulate the drivetrain
         voltage = RobotController.getInputVoltage()
 

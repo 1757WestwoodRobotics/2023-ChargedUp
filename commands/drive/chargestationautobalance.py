@@ -1,13 +1,13 @@
 from commands2 import CommandBase
-from wpilib._wpilib import SmartDashboard
+from wpilib import SmartDashboard
+
 from wpimath.geometry import Rotation2d
-from wpimath._controls._controls.controller import PIDController
-from wpimath.controller import ProfiledPIDController
-from wpimath.trajectory import TrapezoidProfile
+from wpimath.controller import PIDController
 from subsystems.drivesubsystem import DriveSubsystem
 from util import convenientmath
-import constants
 from util.angleoptimize import optimizeAngle
+
+import constants
 
 
 class AutoBalance(CommandBase):
@@ -36,11 +36,9 @@ class AutoBalance(CommandBase):
         if self.isFinished():
             return
 
-        pidOutput = convenientmath.clamp(
-            self.pid.calculate(self.pitch, 0), -0.4, 0.4
-        )
+        pidOutput = convenientmath.clamp(self.pid.calculate(self.pitch, 0), -0.4, 0.4)
         self.drive.arcadeDriveWithFactors(
-            pidOutput, 0 , 0, DriveSubsystem.CoordinateMode.RobotRelative
+            pidOutput, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
         )
 
     def end(self, _interupted: bool) -> None:
