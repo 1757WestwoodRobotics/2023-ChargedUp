@@ -1,6 +1,7 @@
 # each roller alternates meaning if you were to pick up a cube you would eject a cone
 from enum import Enum, auto
 from commands2 import SubsystemBase
+from rev import SparkMaxLimitSwitch
 from wpilib import SmartDashboard
 
 from util.simneo import NEOBrushless
@@ -26,6 +27,8 @@ class GripperSubsystem(SubsystemBase):
             constants.kConeCubePGain,
             constants.kConeCubeIGain,
             constants.kConeCubeDGain,
+            enableLimitSwitches=False,
+            limitSwitchPolarity=SparkMaxLimitSwitch.Type.kNormallyClosed,
         )
         self.motorCubeCone.setSmartCurrentLimit(limit=25)
 
