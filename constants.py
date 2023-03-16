@@ -612,13 +612,14 @@ kConeCubePIDSlot = 0
 kConeCubePGain = 0.0001
 kConeCubeIGain = 0
 kConeCubeDGain = 0
-kIntakeMotorSpeed = 7000
+kIntakeMotorPercent = 7000
 """revolutions per minute (rpm)"""
 
 kCubeLoaded = "cubeInPos"
 kConeLoaded = "coneInPos"
-kIntakeHoldingPercent = 1
+kIntakeHoldingPercent = 1400
 
 kIntakeState = "intake/state"
 kIntakeMotorRPMKey = "intake/RPM"
 kIntakeGearRatio = 15
+kCubeMode = "intake/motordirection"

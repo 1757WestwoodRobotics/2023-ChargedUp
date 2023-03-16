@@ -89,6 +89,6 @@ class NEOBrushless:
             return self.reverseSwitch.get()
         return False
 
-    def setSmartCurrentLimit(self, limit: int = 15) -> None:
+    def setSmartCurrentLimit(self, limit: int = 25) -> None:
         self.motor.setSmartCurrentLimit(limit)
-        # """15 amps"""
+        # """25 amps"""
