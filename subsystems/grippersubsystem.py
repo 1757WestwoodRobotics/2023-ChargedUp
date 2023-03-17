@@ -11,8 +11,8 @@ import constants
 
 class GripperSubsystem(SubsystemBase):
     class GripperState(Enum):
-        CubeGrabForward = auto()  # Cube gripper wheels, motor will move right
-        ConeGrabBackwards = auto()  # Cone gripper wheels, motor will move left
+        CubeIntake = auto()  # Cube gripper wheels, motor will move right
+        ConeIntake = auto()  # Cone gripper wheels, motor will move left
         HoldingState = (
             auto()
         )  # holds the cargo in the gripper, no movement in the motor
@@ -30,7 +30,7 @@ class GripperSubsystem(SubsystemBase):
             enableLimitSwitches=False,
             limitSwitchPolarity=SparkMaxLimitSwitch.Type.kNormallyClosed,
         )
-        self.motorCubeCone.setSmartCurrentLimit(limit=constants.kIntakeMotorVoltage)
+        self.motorCubeCone.setSmartCurrentLimit(limit=constants.kIntakeMotorAMPS)
 
         self.state = GripperSubsystem.GripperState.HoldingState
         self.cubeSensor = lambda: self.motorCubeCone.getLimitSwitch(
@@ -39,19 +39,19 @@ class GripperSubsystem(SubsystemBase):
         self.coneSensor = lambda: self.motorCubeCone.getLimitSwitch(
             NEOBrushless.LimitSwitch.Backwards
         )
-        SmartDashboard.putBoolean(constants.kCubeMode, False)
+        SmartDashboard.putBoolean(constants.kCubeModeKey, False)
 
     def periodic(self) -> None:
-        SmartDashboard.putString(constants.kIntakeState, str(self.state))
+        SmartDashboard.putString(constants.kIntakeStateKey, str(self.state))
         SmartDashboard.putNumber(
             constants.kIntakeMotorRPMKey,
             self.motorCubeCone.get(NEOBrushless.ControlMode.Velocity)
             / constants.kIntakeGearRatio,
         )
-        SmartDashboard.putBoolean(constants.kCubeLoaded, self.cubeSensor())
-        SmartDashboard.putBoolean(constants.kConeLoaded, self.coneSensor())
-        if self.state == self.GripperState.CubeGrabForward:
-            if not SmartDashboard.getBoolean(constants.kCubeMode, False):  # Intake
+        SmartDashboard.putBoolean(constants.kCubeLoadedKey, self.cubeSensor())
+        SmartDashboard.putBoolean(constants.kConeLoadedKey, self.coneSensor())
+        if self.state == self.GripperState.CubeIntake:
+            if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
                 self.motorCubeCone.set(
                     NEOBrushless.ControlMode.Percent,
                     -constants.kIntakeMotorPercent
@@ -61,8 +61,8 @@ class GripperSubsystem(SubsystemBase):
                 self.motorCubeCone.set(
                     NEOBrushless.ControlMode.Percent, constants.kIntakeMotorPercent
                 )
-        elif self.state == self.GripperState.ConeGrabBackwards:
-            if not SmartDashboard.getBoolean(constants.kCubeMode, False):  # Intake
+        elif self.state == self.GripperState.ConeIntake:
+            if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
                 self.motorCubeCone.set(
                     NEOBrushless.ControlMode.Percent,
                     -constants.kIntakeMotorPercent
@@ -85,10 +85,10 @@ class GripperSubsystem(SubsystemBase):
                 self.motorCubeCone.set(NEOBrushless.ControlMode.Percent, 0)
 
     def setGripCube(self) -> None:
-        self.state = GripperSubsystem.GripperState.CubeGrabForward
+        self.state = GripperSubsystem.GripperState.CubeIntake
 
     def setGripCone(self) -> None:
-        self.state = GripperSubsystem.GripperState.ConeGrabBackwards
+        self.state = GripperSubsystem.GripperState.ConeIntake
 
     def setGripHold(self) -> None:
         self.state = GripperSubsystem.GripperState.HoldingState
