@@ -144,5 +144,5 @@ class OperatorInterface:
         )
 
         # Gripper commands
-        self.gripCube = getButtonBindingOfName("intakeCube")
-        self.gripCone = getButtonBindingOfName("intakeCone")
+        self.gripIntake = getButtonBindingOfName("intakeGamepiece")
+        self.gripOuttake = getButtonBindingOfName("outtakeGamepiece")

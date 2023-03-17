@@ -606,12 +606,12 @@ kPhotonvisionCameraPixelDimensions = (960, 720)
 kApriltagWidth = 8.125 * kMetersPerInch
 kApriltagHeight = kApriltagWidth
 
-# CubeCone Motors
-kConeCubeCANID = 3
-kConeCubePIDSlot = 0
-kConeCubePGain = 0.0001
-kConeCubeIGain = 0
-kConeCubeDGain = 0
+# IntakeMotor Motors
+kIntakeCANID = 3
+kIntakePIDSlot = 0
+kIntakePGain = 0.0001
+kIntakeIGain = 0
+kIntakeDGain = 0
 kIntakeMotorPercent = 0.7
 """70%"""
 
@@ -623,5 +623,5 @@ kIntakeHoldingPercent = 0.05
 kIntakeStateKey = "intake/state"
 kIntakeMotorRPMKey = "intake/RPM"
 kIntakeGearRatio = 15
-kCubeModeKey = "intake/motordirection"
+kCubeModeKey = "intake/CubeMode"
 kIntakeMotorAMPS = 25

@@ -17,9 +17,9 @@ from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.auto.autonomousaction import AutonomousRoutine
-from commands.grippercubecone import (
-    GripperCubeGrab,
-    GripperConeGrab,
+from commands.gripper import (
+    GripperIntake,
+    GripperOuttake,
     GripperHoldingState,
 )
 
@@ -166,11 +166,11 @@ class RobotContainer:
 
         # gripper subsystem related calls
 
-        commands2.button.JoystickButton(*self.operatorInterface.gripCube).whileHeld(
-            GripperCubeGrab(self.grip)
+        commands2.button.JoystickButton(*self.operatorInterface.gripIntake).whileHeld(
+            GripperIntake(self.grip)
         )
-        commands2.button.JoystickButton(*self.operatorInterface.gripCone).whileHeld(
-            GripperConeGrab(self.grip)
+        commands2.button.JoystickButton(*self.operatorInterface.gripOuttake).whileHeld(
+            GripperOuttake(self.grip)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:

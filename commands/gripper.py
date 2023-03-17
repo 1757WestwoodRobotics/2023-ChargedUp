@@ -16,20 +16,20 @@ class SetGripperState(CommandBase):
         return True
 
 
-class GripperCubeGrab(SetGripperState):
+class GripperIntake(SetGripperState):
     def __init__(self, gripperSubsystem: GripperSubsystem) -> None:
         SetGripperState.__init__(self, gripperSubsystem)
 
     def execute(self) -> None:
-        self.grip.setGripCube()
+        self.grip.setGripIntake()
 
 
-class GripperConeGrab(SetGripperState):
+class GripperOuttake(SetGripperState):
     def __init__(self, gripperSubsystem: GripperSubsystem) -> None:
         SetGripperState.__init__(self, gripperSubsystem)
 
     def execute(self) -> None:
-        self.grip.setGripCone()
+        self.grip.setGripOuttake()
 
 
 class GripperHoldingState(SetGripperState):
