@@ -11,8 +11,8 @@ import constants
 
 class GripperSubsystem(SubsystemBase):
     class GripperState(Enum):
-        Intake = auto()  # Intake (wheels move right)
-        Outtake = auto()  # Outtake (wheels move left)
+        Intake = auto()
+        Outtake = auto()
         HoldingState = (
             auto()
         )  # holds the gamepiece in the gripper, no movement in the motor
@@ -65,12 +65,12 @@ class GripperSubsystem(SubsystemBase):
             if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
                 self.motorIntake.set(
                     NEOBrushless.ControlMode.Percent,
-                    -constants.kIntakeMotorPercent
+                    constants.kIntakeMotorPercent
                     # Motor will move backward (left)
                 )
             else:
                 self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent, constants.kIntakeMotorPercent
+                    NEOBrushless.ControlMode.Percent, -constants.kIntakeMotorPercent
                 )
         elif self.state == self.GripperState.HoldingState:
             if self.cubeSensor():

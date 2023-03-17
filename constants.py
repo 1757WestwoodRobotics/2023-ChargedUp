@@ -615,8 +615,8 @@ kIntakeDGain = 0
 kIntakeMotorPercent = 0.7
 """70%"""
 
-kCubeLoadedKey = "cubeInPos"
-kConeLoadedKey = "coneInPos"
+kCubeLoadedKey = "intake/cubeInPos"
+kConeLoadedKey = "intake/coneInPos"
 kIntakeHoldingPercent = 0.05
 """5%"""
 
