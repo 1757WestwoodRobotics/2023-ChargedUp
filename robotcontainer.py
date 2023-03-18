@@ -10,7 +10,6 @@ import constants
 from commands.resetdrive import ResetDrive
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
-from commands.drivetotarget import DriveToTarget
 from commands.drive.robotrelativedrive import RobotRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.drive.fieldrelativedrive import FieldRelativeDrive
@@ -86,7 +85,6 @@ class RobotContainer:
         self.complexAuto = ComplexAuto(self.drive)
 
         # A routine that drives to the target with a given offset
-        self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -217,10 +215,6 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.defenseStateControl
         ).whileHeld(DefenseState(self.drive))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.driveToTargetControl
-        ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
         # gripper subsystem related calls
 
