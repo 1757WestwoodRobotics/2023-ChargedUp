@@ -243,11 +243,12 @@ class RobotContainer:
         )
         commands2.button.JoystickButton(*self.operatorInterface.gripOuttake).whileHeld(
             GripperOuttake(self.grip)
-        commands2.button.JoystickButton(*self.operatorInterface.lightCone).whileHeld(
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.lightCone).whenPressed(
             ConeLights(self.light)
         )
 
-        commands2.button.JoystickButton(*self.operatorInterface.lightCube).whileHeld(
+        commands2.button.JoystickButton(*self.operatorInterface.lightCube).whenPressed(
             CubeLights(self.light)
         )
 

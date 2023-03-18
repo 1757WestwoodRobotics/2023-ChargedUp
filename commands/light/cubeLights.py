@@ -1,6 +1,9 @@
 from commands2 import CommandBase
+from wpilib import SmartDashboard
 
 from subsystems.lightsubsystem import LightSubsystem
+
+import constants
 
 
 class CubeLights(CommandBase):
@@ -13,6 +16,7 @@ class CubeLights(CommandBase):
 
     def execute(self) -> None:
         self.lights.cubeLights()
+        SmartDashboard.putBoolean(constants.kCubeModeKey, True)
 
     def isFinished(self) -> bool:
         return False
@@ -31,6 +35,7 @@ class ConeLights(CommandBase):
 
     def execute(self) -> None:
         self.lights.coneLights()
+        SmartDashboard.putBoolean(constants.kCubeModeKey, False)
 
     def isFinished(self) -> bool:
         return False

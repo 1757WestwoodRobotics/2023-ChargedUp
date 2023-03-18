@@ -128,14 +128,14 @@
   "lightsCone": [
     2,
     {
-      "Button": 11
+      "Button": 12
     },
     "replace me"
   ],
   "lightsCube": [
     2,
     {
-      "Button": 13
+      "Button": 14
     },
     "replace me"
   ],
@@ -168,14 +168,14 @@
     "bottom button on top of joystick (ThrustmasterT16000M)"
   ],
   "intakeGamepiece": [
-    2,
+    0,
     {
-      "Button": 3
+      "Button": 2
     },
     "PLACEHOLDER"
   ],
   "outtakeGamepiece": [
-    2,
+    0,
     {
       "Button": 1
     },
