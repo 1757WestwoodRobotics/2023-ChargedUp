@@ -26,14 +26,16 @@ Swerve Module Layout:
 import math
 from ctre import SupplyCurrentLimitConfiguration
 from wpimath.geometry import (
+    Pose3d,
     Pose2d,
     Rotation2d,
-    Translation2d,
-    Pose3d,
     Rotation3d,
     Transform3d,
+    Translation2d,
+    Translation3d,
 )
 from wpimath.system.plant import DCMotor
+from commands.arm.demostate import constants
 
 from util.keyorganization import OptionalValueKeys
 
@@ -580,6 +582,202 @@ kTargetWaypointPoseKey = "waypoint/target"
 kTargetWaypointXControllerKey = "waypoint/x"
 kTargetWaypointYControllerKey = "waypoint/y"
 kTargetWaypointThetaControllerKey = "waypoint/theta"
+# Arm
+kArmPIDSlot = 0
+
+kArmEncoderToSprocketGearRatio = 60 / 12
+
+kElbowArmCANId = 30
+kElbowArmPGain = 0.03
+kElbowArmIGain = 0.0
+kElbowArmDGain = 0
+kElbowArmInverted = False
+
+kElbowArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kElbowArmRotationKey = "arm/rotation/elbow"
+kElbowArmTargetRotationKey = "arm/target/elbow"
+kElbowFeedForwardLogKey = "arm/ff/elbow"
+kElbowArmFFFactor = 0.0
+
+kElbowArmCANCoderID = 35
+kElbowArmCANCoderOffset = 226.758
+"""
+to get encoder offsets for the arm motors
+  1. bring the arm to the position you want to call zero
+    * the zero for the arm is with the elbow hitting its endstop 
+    * with the shoulder touching the chain barely
+    * with the intake buffer touching the CF tube
+  2. Run Phoenix Tuner
+  3. Select desired encoder
+  4. Go to "Config" tab
+  5. Click "Factory Default"
+  6. Go to "Self-Test Snapshot" tab
+  7. Click "Self-Test Snapshot"
+  8. Record value from line: "Absolute Position (unsigned):"
+"""
+
+kElbowMinAngle = Rotation2d.fromDegrees(0)
+kElbowMaxAngle = Rotation2d.fromDegrees(145)
+
+kShoulderArmCANId = 31
+kShoulderArmPGain = 0.04
+kShoulderArmIGain = 0.0
+kShoulderArmDGain = 0
+kShoulderArmInverted = True
+
+kShoulderArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kShoulderArmRotationKey = "arm/rotation/shoulder"
+kShoulderTargetArmRotationKey = "arm/target/shoulder"
+kShoulderFeedForwardLogKey = "arm/ff/shoulder"
+kShoulderArmFFFactor = 0.0
+
+kShoulderArmCANCoderID = 45
+kShoulderArmCANCoderOffset = 295.4
+
+kShoulderMinAngle = Rotation2d.fromDegrees(57)
+kShoulderMaxAngle = Rotation2d.fromDegrees(157)
+
+kWristArmCANId = 32
+kWristArmPGain = 0.1
+kWristArmIGain = 0.0
+kWristArmDGain = 0
+kWristArmInverted = True
+
+kWristArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kWristArmRotationKey = "arm/rotation/wrist"
+kWristTargetArmRotationKey = "arm/target/wrist"
+kWristFeedForwardLogKey = "arm/ff/wrist"
+kWristArmFFFactor = 0.0
+
+kWristArmCANCoderID = 46
+kWristArmCANCoderOffset = 346.64
+
+kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
+kWristMaxAngle = Rotation2d.fromDegrees(180)
+
+kArmElbowLength = 19 * kMetersPerInch
+kArmElbowMass = 2.857  # kg
+kArmElbowCOM = 6 * kMetersPerInch
+
+kArmShoulderLength = 27 * kMetersPerInch
+kArmShoulderMass = 11.113  # kg
+kArmShoulderCOM = 13 * kMetersPerInch
+
+kArmWristLength = 16.392506 * kMetersPerInch
+kArmWristMass = 5.8  # kg
+kArmWristCOM = 7.35 * kMetersPerInch
+
+kArmStateKey = "arm/state"
+
+kArmTranslationalPGain = 0.9
+kArmTranslationalIGain = 0
+kArmTranslationalDGain = 0
+
+kArmTranslationalMaxVelocity = 4
+"""m/s"""
+kArmTranslationalMaxAcceleration = 10
+"""m/s^2"""
+
+kArmRotationalPGain = 0.9
+kArmRotationalIGain = 0
+kArmRotationalDGain = 0
+
+kArmRotationalMaxVelocity = 10
+"""rad/s"""
+kArmRotationalMaxAcceleration = 20
+"""rad/s^2"""
+kElbowArmOverrideKey = "arm/override/elbow"
+kShoulderArmOverrideKey = "arm/override/shoulder"
+kWristArmOverrideKey = "arm/override/wrist"
+
+kShoulderRobotOffset = Transform3d(
+    Translation3d(8 * kMetersPerInch, 0, 9.75 * kMetersPerInch),
+    Rotation3d(0, math.pi, 0),
+)
+kArmPosesKey = "arm/poses/actual"
+kArmTargetPosesKey = "arm/poses/target"
+kArmCOMs = "arm/coms"
+kArmObeyEndstopsKey = "arm/useEndstops"
+kArmInterpolationMethod = "arm/interpolationMethod"
+
+kArmPositionExtraEpsiolon = 0.001
+
+kArmPositionTolerence = 0.05
+"""meters"""
+kArmRotationTolerence = 0.1
+"""radians"""
+kArmAtTargetKey = "arm/atTarget"
+
+kArmDemoFilename = "demoFile.txt"
+
+kArmShoulderTargetMotorKey = "arm/motors/target/shoulder"
+kArmElbowTargetMotorKey = "arm/motors/target/elbow"
+kArmWristTargetMotorKey = "arm/motors/target/wrist"
+
+kArmShoulderActualMotorKey = "arm/motors/actual/shoulder"
+kArmElbowActualMotorKey = "arm/motors/actual/elbow"
+kArmWristActualMotorKey = "arm/motors/actual/wrist"
+
+# scoring positions, derived from cad geometry
+kArmTopScorePosition = Pose2d(
+    -41.430 * kMetersPerInch,
+    46.44 * kMetersPerInch,
+    Rotation2d.fromDegrees(138),
+)
+kArmMidScorePosition = Pose2d(
+    -25.43 * kMetersPerInch,
+    35.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(138),
+)
+kArmStoredPosition = Pose2d(
+    4.5311 * kMetersPerInch,
+    30.1323 * kMetersPerInch,
+    Rotation2d.fromDegrees(63),
+)
+kArmStartupPosition = Pose2d(
+    8.452357 * kMetersPerInch,
+    26.865289 * kMetersPerInch,
+    Rotation2d.fromDegrees(51.338),
+)
+kArmDoubleSubstationPosition = Pose2d(
+    -16.868 * kMetersPerInch,
+    44.188 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 32.167),
+)
+kArmSingleSubstationPosition = Pose2d(
+    -9.679 * kMetersPerInch,
+    35.526 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 61.617),
+)
+kArmGroundIntakePosition = Pose2d(
+    -29.639 * kMetersPerInch,
+    7.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(148.10),
+)
+kArmGroundSafePosition = Pose2d(
+    -30.639 * kMetersPerInch,
+    37.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(180),
+)
+kArmTopSafePosition = Pose2d(
+    -10.430 * kMetersPerInch,
+    49.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(51),
+)
+kArmGroundConeIntakePosition = Pose2d(
+    -30.357 * kMetersPerInch, -4.844 * kMetersPerInch, Rotation2d.fromDegrees(-115.685)
+)
+
+kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch
+"""meters"""
+kArmFudgeFactorKey = "arm/fudge"
+
+kArmMotorBreakArmModeKey = "arm/motorMode"
+kArmEndEffectorPose = "arm/endeffectorPose"
+
+# lights
+kCANdleID = 2
+
 
 # Logging
 kSwerveActualStatesKey = "swerve/actual"
