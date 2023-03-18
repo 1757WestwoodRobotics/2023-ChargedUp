@@ -621,8 +621,8 @@ class ArmSubsystem(SubsystemBase):
             wrist = SmartDashboard.getNumber(constants.kWristArmOverrideKey, 0)
 
             self.setRelativeArmAngles(
-                Rotation2d.fromDegrees(elbow),
                 Rotation2d.fromDegrees(shoulder),
+                Rotation2d.fromDegrees(elbow),
                 Rotation2d.fromDegrees(wrist),
             )
         else:
