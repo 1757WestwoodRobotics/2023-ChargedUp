@@ -11,8 +11,8 @@ from commands.resetdrive import ResetDrive
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.drive.robotrelativedrive import RobotRelativeDrive
-from commands.drive.drivewaypoint import DriveWaypoint
 from commands.drive.fieldrelativedrive import FieldRelativeDrive
+from commands.drive.anglealign import AngleAlignDrive
 from commands.defensestate import DefenseState
 from commands.arm.demostate import DemoArm
 from commands.arm.resetarm import ResetArm
@@ -201,7 +201,7 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.alignClosestWaypoint
         ).whileHeld(
-            DriveWaypoint(
+            AngleAlignDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
