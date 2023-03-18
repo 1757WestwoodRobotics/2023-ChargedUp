@@ -640,7 +640,7 @@ kShoulderMinAngle = Rotation2d.fromDegrees(57)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
 
 kWristArmCANId = 32
-kWristArmPGain = 0.1
+kWristArmPGain = 0.03
 kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = True
@@ -675,9 +675,9 @@ kArmTranslationalPGain = 0.7
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 1
+kArmTranslationalMaxVelocity = 4
 """m/s"""
-kArmTranslationalMaxAcceleration = 1
+kArmTranslationalMaxAcceleration = 10
 """m/s^2"""
 
 kArmRotationalPGain = 0.9
