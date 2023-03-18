@@ -297,7 +297,7 @@ class ArmSubsystem(SubsystemBase):
             Pose2d(twoLinkPosition, pose.rotation())
         )
         shoulderOffset = (
-            self.shoulderEncoder.getPosition().radians()
+            -self.shoulderEncoder.getPosition().radians()
             / constants.kArmEncoderToSprocketGearRatio
         )
         elbowOffset = (
@@ -305,7 +305,7 @@ class ArmSubsystem(SubsystemBase):
             / constants.kArmEncoderToSprocketGearRatio
         )
         wristOffset = (
-            self.wristEncoder.getPosition().radians()
+            -self.wristEncoder.getPosition().radians()
             / constants.kArmEncoderToSprocketGearRatio
         )
 

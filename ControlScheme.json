@@ -21,14 +21,14 @@
     "replace me"
   ],
   "armFudgeFactorIncrease": [
-    1,
+    0,
     {
       "POV": [0, 0]
     },
     "POV up"
   ],
   "armFudgeFactorDecrease": [
-    1,
+    0,
     {
       "POV": [0, 180]
     },
