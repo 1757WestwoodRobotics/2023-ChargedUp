@@ -600,7 +600,7 @@ kElbowFeedForwardLogKey = "arm/ff/elbow"
 kElbowArmFFFactor = 0.0
 
 kElbowArmCANCoderID = 35
-kElbowArmCANCoderOffset = 0
+kElbowArmCANCoderOffset = 226.758
 """
 to get encoder offsets for the arm motors
   1. bring the arm to the position you want to call zero
@@ -632,7 +632,7 @@ kShoulderFeedForwardLogKey = "arm/ff/shoulder"
 kShoulderArmFFFactor = 0.0
 
 kShoulderArmCANCoderID = 45
-kShoulderArmCANCoderOffset = -150.996
+kShoulderArmCANCoderOffset = 295.4
 
 kShoulderMinAngle = Rotation2d.fromDegrees(57)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
@@ -650,7 +650,7 @@ kWristFeedForwardLogKey = "arm/ff/wrist"
 kWristArmFFFactor = 0.0
 
 kWristArmCANCoderID = 46
-kWristArmCANCoderOffset = -150.996
+kWristArmCANCoderOffset = 346.64
 
 kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
