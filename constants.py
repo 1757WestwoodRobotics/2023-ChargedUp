@@ -742,7 +742,7 @@ kArmStartupPosition = Pose2d(
     Rotation2d.fromDegrees(51.338),
 )
 kArmDoubleSubstationPosition = Pose2d(
-    -16.868 * kMetersPerInch,
+    -21.868 * kMetersPerInch,
     45.188 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 30.167),
 )
