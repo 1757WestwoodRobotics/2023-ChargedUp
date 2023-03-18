@@ -142,3 +142,7 @@ class OperatorInterface:
                 )
             ),
         )
+
+        # Gripper commands
+        self.gripIntake = getButtonBindingOfName("intakeGamepiece")
+        self.gripOuttake = getButtonBindingOfName("outtakeGamepiece")

@@ -82,5 +82,19 @@
       "Button": 2
     },
     "bottom button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "intakeGamepiece": [
+    2,
+    {
+      "Button": 3
+    },
+    "PLACEHOLDER"
+  ],
+  "outtakeGamepiece": [
+    2,
+    {
+      "Button": 1
+    },
+    "PLACEHOLDER"
   ]
 }

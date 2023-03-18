@@ -17,10 +17,16 @@ from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.drive.drivewaypoint import DriveWaypoint
 from commands.defensestate import DefenseState
 from commands.auto.autonomousaction import AutonomousRoutine
+from commands.gripper import (
+    GripperIntake,
+    GripperOuttake,
+    GripperHoldingState,
+)
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.grippersubsystem import GripperSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -41,6 +47,7 @@ class RobotContainer:
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem(self.drive)
         self.log = LoggingSubsystem(self.operatorInterface)
+        self.grip = GripperSubsystem()
 
         # Autonomous routines
 
@@ -54,6 +61,7 @@ class RobotContainer:
                 self.drive,
             ),
         )
+        self.grip.setDefaultCommand(GripperHoldingState(self.grip))
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back
         self.complexAuto = ComplexAuto(self.drive)
@@ -155,6 +163,15 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        # gripper subsystem related calls
+
+        commands2.button.JoystickButton(*self.operatorInterface.gripIntake).whileHeld(
+            GripperIntake(self.grip)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.gripOuttake).whileHeld(
+            GripperOuttake(self.grip)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

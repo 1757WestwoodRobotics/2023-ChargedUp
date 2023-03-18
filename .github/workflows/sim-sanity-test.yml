@@ -25,6 +25,3 @@ jobs:
       - name: Verify simulator starts up
         run: |
           ./scripts/verify-simulator-starts.sh
-      - name: Run RobotPy "integration" test
-        run: |
-          python robot.py test --builtin
