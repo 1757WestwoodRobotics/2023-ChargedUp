@@ -337,6 +337,10 @@ class ArmSubsystem(SubsystemBase):
         self.expectedTwoLink = twoLinkPosition
         self.expectedWrist = pose.rotation().radians()
 
+        self.xProfiledPID.reset(twoLinkPosition.X())
+        self.yProfiledPID.reset(twoLinkPosition.Y())
+        self.thetaProfiledPID.reset(pose.rotation().radians())
+
     def _getShoulderRawArmRotation(self) -> Rotation2d:
         return Rotation2d(
             self.shoulderArm.get(Falcon.ControlMode.Position)
