@@ -194,6 +194,8 @@ kFrontRightModuleName = "front_right"
 kBackLeftModuleName = "back_left"
 kBackRightModuleName = "back_right"
 
+kKilogramToLbs = 0.454
+
 # Limelight
 kLimelightTargetInvalidValue = 0.0
 kLimelightTargetValidValue = 1.0
@@ -656,26 +658,26 @@ kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
 
 kArmElbowLength = 19 * kMetersPerInch
-kArmElbowMass = 2.857  # kg
+kArmElbowMass = 24.5 * kKilogramToLbs
 kArmElbowCOM = 6 * kMetersPerInch
 
 kArmShoulderLength = 27 * kMetersPerInch
-kArmShoulderMass = 11.113  # kg
+kArmShoulderMass = 6.3 * kKilogramToLbs
 kArmShoulderCOM = 13 * kMetersPerInch
 
 kArmWristLength = 16.392506 * kMetersPerInch
-kArmWristMass = 5.8  # kg
+kArmWristMass = 12.8 * kKilogramToLbs
 kArmWristCOM = 7.35 * kMetersPerInch
 
 kArmStateKey = "arm/state"
 
-kArmTranslationalPGain = 0.9
+kArmTranslationalPGain = 0.7
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 4
+kArmTranslationalMaxVelocity = 1
 """m/s"""
-kArmTranslationalMaxAcceleration = 10
+kArmTranslationalMaxAcceleration = 1
 """m/s^2"""
 
 kArmRotationalPGain = 0.9
@@ -741,8 +743,8 @@ kArmStartupPosition = Pose2d(
 )
 kArmDoubleSubstationPosition = Pose2d(
     -16.868 * kMetersPerInch,
-    44.188 * kMetersPerInch,
-    Rotation2d.fromDegrees(180 - 32.167),
+    45.188 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 30.167),
 )
 kArmSingleSubstationPosition = Pose2d(
     -9.679 * kMetersPerInch,
@@ -815,7 +817,7 @@ kIntakeMotorPercent = 0.7
 
 kCubeLoadedKey = "intake/cubeInPos"
 kConeLoadedKey = "intake/coneInPos"
-kIntakeHoldingPercent = 0.05
+kIntakeHoldingPercent = 0.0
 """5%"""
 
 kIntakeStateKey = "intake/state"

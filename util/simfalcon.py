@@ -153,10 +153,10 @@ class SimFalcon:  # a simulated Falcon 500
         self,
         mode: ControlMode,
         demand: float,
-        _demandType: DemandType = DemandType.ArbitraryFeedForward,
-        _demand1: float = 0,
+        demandType: DemandType = DemandType.ArbitraryFeedForward,
+        demand1: float = 0,
     ) -> None:
-        self.motor.set(mode, demand)
+        self.motor.set(mode, demand,demandType,demand1)
         currentPosition = self.motor.getSelectedSensorPosition()
         rawPercentOutput = 0
         if mode == ControlMode.Velocity:
@@ -168,6 +168,7 @@ class SimFalcon:  # a simulated Falcon 500
                 positionError / constants.kTalonEncoderPulsesPerRevolution
             )  # convert the change in encoder ticks into change into motor %
 
+        rawPercentOutput += demand1
         clampedPercentOutput = clamp(rawPercentOutput, -1, 1)
         self.motor.setSelectedSensorPosition(
             currentPosition

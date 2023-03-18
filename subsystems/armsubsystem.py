@@ -283,6 +283,8 @@ class ArmSubsystem(SubsystemBase):
         self.elbowRelativeCOM = Translation2d()
         self.wristRelativeCOM = Translation2d()
 
+        self.expectedWrist = 0.0  # radians
+        self.expectedTwoLink = Translation2d()
         self.initEncoders()
         self.reset()
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
@@ -331,6 +333,9 @@ class ArmSubsystem(SubsystemBase):
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
+
+        self.expectedTwoLink = twoLinkPosition
+        self.expectedWrist = pose.rotation().radians()
 
     def _getShoulderRawArmRotation(self) -> Rotation2d:
         return Rotation2d(
@@ -529,6 +534,15 @@ class ArmSubsystem(SubsystemBase):
                 Rotation3d(0, self.targetElbow.rotation().radians(), 0),
             )
         )
+
+        targetTarget = (
+            robotPose3d
+            + constants.kShoulderRobotOffset
+            + Transform3d(
+                Translation3d(self.expectedTwoLink.X(), 0, -self.expectedTwoLink.Y()),
+                Rotation3d(0, self.expectedWrist, 0),
+            )
+        )
         armPosesSerialized = convertToSendablePoses(
             [
                 shoulderPose,
@@ -539,10 +553,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         targetPosesSerialized = convertToSendablePoses(
-            [
-                targetPose,
-                targetElbow,
-            ]
+            [targetTarget]
         )
 
         comsSerialized = convertToSendablePoses(
@@ -610,6 +621,10 @@ class ArmSubsystem(SubsystemBase):
         )
         SmartDashboard.putNumber(constants.kArmFudgeFactorKey, self.fudgeFactor)
 
+        SmartDashboard.putNumber("arm/targetThought/x", self.expectedTwoLink.X())
+        SmartDashboard.putNumber("arm/targetThought/y", self.expectedTwoLink.Y())
+        SmartDashboard.putNumber("arm/targetThought/theta", self.expectedWrist)
+
         motorNeutralState: Falcon.NeutralMode = self.motorMode.getSelected()
         self.shoulderArm.setNeutralMode(motorNeutralState)
         self.elbowArm.setNeutralMode(motorNeutralState)
@@ -621,8 +636,8 @@ class ArmSubsystem(SubsystemBase):
             wrist = SmartDashboard.getNumber(constants.kWristArmOverrideKey, 0)
 
             self.setRelativeArmAngles(
-                Rotation2d.fromDegrees(elbow),
                 Rotation2d.fromDegrees(shoulder),
+                Rotation2d.fromDegrees(elbow),
                 Rotation2d.fromDegrees(wrist),
             )
         else:
@@ -700,13 +715,16 @@ class ArmSubsystem(SubsystemBase):
 
         targetTwoLink = twoLinkPosition
         if desiredInterpolation == ArmSubsystem.InterpolationMethod.CartesianSpace:
-            currentWristPose = self.getWristPosition()
-            targetTwoLink = Translation2d(
-                self.xProfiledPID.calculate(currentWristPose.X(), twoLinkPosition.X())
-                + currentWristPose.X(),
-                self.yProfiledPID.calculate(currentWristPose.Y(), twoLinkPosition.Y())
-                + currentWristPose.Y(),
+            xDelta = self.xProfiledPID.calculate(
+                self.expectedTwoLink.X(), twoLinkPosition.X()
             )
+            yDelta = self.yProfiledPID.calculate(
+                self.expectedTwoLink.Y(), twoLinkPosition.Y()
+            )
+            self.expectedTwoLink += Translation2d(xDelta, yDelta)
+
+            targetTwoLink = self.expectedTwoLink
+
         while not self._canElbowReachPosition(targetTwoLink):
             targetTwoLink = self._nearestPossibleElbowPosition(targetTwoLink)
 
@@ -763,7 +781,6 @@ class ArmSubsystem(SubsystemBase):
             self.interpolationMethod.getSelected()
         )
 
-        currentWristRaw = self._getWristRawArmRotation()
         if desiredInterpolation == ArmSubsystem.InterpolationMethod.JointSpace:
             currentElbowRaw = self._getWristRawArmRotation()
             currentShoulderRaw = self._getShoulderRawArmRotation()
@@ -779,10 +796,10 @@ class ArmSubsystem(SubsystemBase):
                 + currentElbowRaw.radians()
             )
 
-        trueWristPos = (
-            self.thetaProfiledPID.calculate(currentWristRaw.radians(), trueWristPos)
-            + currentWristRaw.radians()
-        )
+        thetaDelta = self.thetaProfiledPID.calculate(self.expectedWrist, trueWristPos)
+        trueWristPos = thetaDelta + self.expectedWrist
+
+        self.expectedWrist = trueWristPos
 
         SmartDashboard.putNumber(
             constants.kArmShoulderTargetMotorKey,
