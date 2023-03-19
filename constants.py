@@ -826,4 +826,4 @@ kIntakeStateKey = "intake/state"
 kIntakeMotorRPMKey = "intake/RPM"
 kIntakeGearRatio = 15
 kCubeModeKey = "intake/CubeMode"
-kIntakeMotorAMPS = 25
+kIntakeMotorAMPS = 30
