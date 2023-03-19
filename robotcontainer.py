@@ -203,8 +203,8 @@ class RobotContainer:
         ).whileHeld(
             AngleAlignDrive(
                 self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
+                lambda: self.operatorInterface.chassisControls.forwardsBackwards() * constants.kNormalSpeedMultiplier,
+                lambda: self.operatorInterface.chassisControls.sideToSide() * constants.kNormalSpeedMultiplier,
             )
         )
 

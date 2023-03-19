@@ -557,7 +557,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         targetPosesSerialized = convertToSendablePoses(
-            [targetTarget]
+            [targetPose, targetElbow, targetTarget]
         )
 
         comsSerialized = convertToSendablePoses(

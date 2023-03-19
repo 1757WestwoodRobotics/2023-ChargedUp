@@ -211,8 +211,10 @@ kLimelightLEDModeKey = "ledMode"
 kLimelightTrackerModuleName = "limelight"
 kLimelightRelativeToRobotTransform = Transform3d(
     Pose3d(),
-    Pose3d(0.258, 0, 1.01, Rotation3d()),
+    Pose3d(0.236, 0.206, 0.197, Rotation3d()),
 )
+
+kLimelightPoseKey = "vision/limelight"
 
 # CANivore
 kCANivoreName = "canivore"

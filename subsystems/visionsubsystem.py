@@ -11,6 +11,7 @@ from photonvision import PhotonCamera
 
 import constants
 from subsystems.drivesubsystem import DriveSubsystem
+from util import advantagescopeconvert
 from util.convenientmath import pose3dFrom2d
 
 
@@ -37,6 +38,9 @@ class VisionSubsystem(SubsystemBase):
             return []
 
     def periodic(self) -> None:
+        self.estimatedPosition = self.drive.getPose()
+        self.updateAdvantagescopePose()
+
         points = self.getCameraToTargetTransforms()
 
         if len(points) == 0:
@@ -57,10 +61,9 @@ class VisionSubsystem(SubsystemBase):
                 pose.toPose2d(), Timer.getFPGATimestamp()
             )
 
-        estimatedPosition = self.drive.getPose()
 
         simApriltagPoses = [
-            pose3dFrom2d(estimatedPosition)
+            pose3dFrom2d(self.estimatedPosition)
             + constants.kLimelightRelativeToRobotTransform
             + point
             for _, point in points
@@ -88,3 +91,12 @@ class VisionSubsystem(SubsystemBase):
                 operator.add, sendablePoints, []
             ),  # adds all the values found within targets (converts [[]] to [])
         )
+
+    def updateAdvantagescopePose(self) -> None:
+        limelightPose3d = (
+            pose3dFrom2d(self.estimatedPosition)
+            + constants.kLimelightRelativeToRobotTransform
+        )
+        limelightPose = advantagescopeconvert.convertToSendablePoses([limelightPose3d])
+
+        SmartDashboard.putNumberArray(constants.kLimelightPoseKey, limelightPose)
