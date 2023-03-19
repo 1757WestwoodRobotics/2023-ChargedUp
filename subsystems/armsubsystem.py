@@ -675,9 +675,20 @@ class ArmSubsystem(SubsystemBase):
 
     def atTarget(self) -> bool:
         return (
-            (self.xProfiledPID.atGoal() and self.yProfiledPID.atGoal())
+            (
+                abs(
+                    (
+                        self.expectedTwoLink
+                        - self.getWristPosition().translation()
+                    ).norm()
+                )
+                < constants.kArmPositionTolerence
+            )
             or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
-        ) and self.thetaProfiledPID.atGoal()
+        ) and (
+            abs(self.expectedWrist - self.getEndEffectorPosition().rotation().radians())
+            < constants.kArmRotationTolerence
+        )
 
     def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:
         endAngle = math.acos(
