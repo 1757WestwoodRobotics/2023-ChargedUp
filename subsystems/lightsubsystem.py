@@ -20,8 +20,10 @@ class LightSubsystem(SubsystemBase):
         self.light = CANdle(constants.kCANdleID, constants.kCANivoreName)
 
         self.disabledAnimation = RainbowAnimation(1, 0.5, 68)
-        self.cubeAnimation = ColorFlowAnimation(204, 0, 204, 255, 0.4, 68)  # purple
-        self.coneAnimation = ColorFlowAnimation(255, 255, 0, 255, 0.4, 68)  # yellow
+        self.cubeAnimation1 = ColorFlowAnimation(204, 0, 204, 255, 0.7, 21, ledOffset=8)  # purple
+        self.cubeAnimation2 = ColorFlowAnimation(204, 0, 204, 255, 0.7, 21, ledOffset=8+21)  # purple
+        self.coneAnimation1 = ColorFlowAnimation(255, 255, 0, 255, 0.7, 21, ledOffset=8)  # yellow
+        self.coneAnimation2 = ColorFlowAnimation(255, 255, 0, 255, 0.7, 21, ledOffset=8+ 21)  # yellow
 
         self.state = LightSubsystem.State.No
 
@@ -31,10 +33,13 @@ class LightSubsystem(SubsystemBase):
         else:
             if self.state == LightSubsystem.State.No:
                 self.light.animate(self.disabledAnimation)
+                self.light.animate(self.disabledAnimation,1)
             elif self.state == LightSubsystem.State.Cone:
-                self.light.animate(self.coneAnimation)
+                self.light.animate(self.coneAnimation1)
+                self.light.animate(self.coneAnimation2, 1)
             elif self.state == LightSubsystem.State.Cube:
-                self.light.animate(self.cubeAnimation)
+                self.light.animate(self.cubeAnimation1)
+                self.light.animate(self.cubeAnimation2, 1)
 
     def offLights(self) -> None:
         self.state = LightSubsystem.State.No
