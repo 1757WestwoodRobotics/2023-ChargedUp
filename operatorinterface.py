@@ -184,5 +184,5 @@ class OperatorInterface:
         self.resetArm = getButtonBindingOfName("resetArm")
 
         # light controls
-        self.lightCone = getButtonBindingOfName("lightsCone")
-        self.lightCube = getButtonBindingOfName("lightsCube")
+        self.lightCone = getPOVBindingOfName("lightsCone")
+        self.lightCube = getPOVBindingOfName("lightsCube")

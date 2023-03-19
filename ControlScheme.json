@@ -119,16 +119,16 @@
     "Middle Down (ThrustmasterTWCSThrottle)"
   ],
   "lightsCone": [
-    2,
+    0,
     {
-      "Button": 12
+      "POV": [0,90]
     },
     "replace me"
   ],
   "lightsCube": [
-    2,
+    0,
     {
-      "Button": 14
+      "POV": [0,270]
     },
     "replace me"
   ],
