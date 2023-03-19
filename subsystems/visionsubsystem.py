@@ -47,12 +47,15 @@ class VisionSubsystem(SubsystemBase):
             SmartDashboard.putNumberArray(constants.kFieldRelativeTargets, [])
             return
 
-        derivedRobotPoses = [
-            constants.kApriltagPositionDict[tag_id]
-            + point.inverse()
-            + constants.kLimelightRelativeToRobotTransform.inverse()
-            for tag_id, point in points
-        ]
+        try:
+            derivedRobotPoses = [
+                constants.kApriltagPositionDict[tag_id]
+                + point.inverse()
+                + constants.kLimelightRelativeToRobotTransform.inverse()
+                for tag_id, point in points
+            ]
+        except:
+            return
         # construct a set of poses from each tag's relative position about where the robot would be
 
         for pose in derivedRobotPoses:

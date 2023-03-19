@@ -351,7 +351,7 @@ kBackRightAbsoluteEncoderOffset = 331.260
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
-kRobotVisionPoseWeight = 0.05  # 5% vision data
+kRobotVisionPoseWeight = 0.00  # 5% vision data
 
 kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
@@ -476,11 +476,11 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Trajectory Following
-kTrajectoryPositionPGain = 4
+kTrajectoryPositionPGain = 0.9
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 15
+kTrajectoryAnglePGain = 8
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -654,7 +654,7 @@ kWristFeedForwardLogKey = "arm/ff/wrist"
 kWristArmFFFactor = 0.0
 
 kWristArmCANCoderID = 46
-kWristArmCANCoderOffset = 346.64
+kWristArmCANCoderOffset = 245.654
 
 kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)

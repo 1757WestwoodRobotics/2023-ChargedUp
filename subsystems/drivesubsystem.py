@@ -355,6 +355,8 @@ class DriveSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, False)
 
+        self.rotationOffset = 0
+
         if RobotBase.isReal():
             self.frontLeftModule = CTRESwerveModule(
                 constants.kFrontLeftModuleName,
@@ -472,16 +474,17 @@ class DriveSubsystem(SubsystemBase):
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
-        self.gyro.reset()
-        self.resetOdometryAtPosition(Pose2d())
+        self.resetGyro(Pose2d())
 
     def setOdometryPosition(self, pose: Pose2d):
-        self.gyro.setAngleAdjustment(-pose.rotation().degrees())
+        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.rotationOffset = pose.rotation().degrees()
         self.resetOdometryAtPosition(pose)
 
     def resetGyro(self, pose: Pose2d):
         self.gyro.reset()
-        self.gyro.setAngleAdjustment(-pose.rotation().degrees())
+        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.rotationOffset = pose.rotation().degrees()
         self.resetOdometryAtPosition(pose)
 
     def getPose(self) -> Pose2d:
@@ -518,7 +521,7 @@ class DriveSubsystem(SubsystemBase):
         self.backRightModule.applyState(backRightState)
 
     def getRotation(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(-self.gyro.getYaw())
+        return Rotation2d.fromDegrees(-self.gyro.getYaw() + self.rotationOffset)
 
     def resetOdometryAtPosition(self, pose: Pose2d):
         self.odometry.resetPosition(

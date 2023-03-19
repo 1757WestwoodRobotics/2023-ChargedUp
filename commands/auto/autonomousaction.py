@@ -19,9 +19,11 @@ from commands.arm.statearmposition import (
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
+from commands.gripper import GripperHoldingState, GripperIntake, GripperOuttake
 from commands.resetdrive import ResetDrive
 from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.grippersubsystem import GripperSubsystem
 
 
 class AutonomousRoutine(SequentialCommandGroup):
@@ -31,20 +33,23 @@ class AutonomousRoutine(SequentialCommandGroup):
         self,
         drive: DriveSubsystem,
         arm: ArmSubsystem,
+        grip: GripperSubsystem,
         name: str,
         simultaneousCommands: List[Command],
     ):
         self.name = name
         self.markerMap = {  # later todo: actual implementation
-            "store": SetArmPositionStored(arm),
+            "store": ParallelCommandGroup(
+                SetArmPositionStored(arm), GripperHoldingState(grip)
+            ),
             "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.8)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.4)),
             "hybrid": SetArmPositionGroundIntake(arm),
             "engage": WaitCommand(5),
             "intake": ParallelCommandGroup(
-                SetArmPositionGroundIntake(arm), WaitCommand(0.25)
+                SetArmPositionGroundIntake(arm), WaitCommand(0.25), GripperIntake(grip)
             ),
-            "outtake": WaitCommand(0.25),
+            "outtake": ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.5)),
         }
         self.paths = trajectoryFromFile(name)
         followCommands = [

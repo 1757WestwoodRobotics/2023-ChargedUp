@@ -22,7 +22,7 @@
           "store"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "none",
+        "waitBehavior": "after",
         "waitTime": 2.0
       }
     },

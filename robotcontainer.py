@@ -1,8 +1,10 @@
+from math import pi
 import os
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.auto.rotateauto import RotateAuto
 
 
 import constants
@@ -72,10 +74,9 @@ class RobotContainer:
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = commands2.SequentialCommandGroup(
             ResetDrive(self.drive),
-            DriveDistance(
-                4 * constants.kWheelCircumference,
-                constants.kAutoDriveSpeedFactor,
-                DriveDistance.Axis.X,
+            RotateAuto(
+                pi,
+                0.2,
                 self.drive,
             ),
         )
@@ -94,7 +95,7 @@ class RobotContainer:
         for file in os.listdir(pathsPath):
             relevantName = file.split(".")[0]
             self.chooser.addOption(
-                relevantName, AutonomousRoutine(self.drive, self.arm, relevantName, [])
+                relevantName, AutonomousRoutine(self.drive, self.arm, self.grip, relevantName, [])
             )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)

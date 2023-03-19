@@ -37,7 +37,8 @@ class NEOBrushless:
         self.motor = CANSparkMax(canID, CANSparkMax.MotorType.kBrushless)
         self.controller = self.motor.getPIDController()
         self.encoder = self.motor.getEncoder()
-
+        self.forwardSwitch = self.motor.getForwardLimitSwitch(limitSwitchPolarity)
+        self.reverseSwitch = self.motor.getReverseLimitSwitch(limitSwitchPolarity)
 
         if not revCheckError("factoryConfig", self.motor.restoreFactoryDefaults()):
             return
@@ -48,10 +49,8 @@ class NEOBrushless:
         if not revCheckError("setD", self.controller.setD(dGain, pidSlot)):
             return
 
-        self.forwardSwitch = self.motor.getForwardLimitSwitch(limitSwitchPolarity)
         self.forwardSwitch.enableLimitSwitch(enableLimitSwitches)
 
-        self.reverseSwitch = self.motor.getReverseLimitSwitch(limitSwitchPolarity)
         self.reverseSwitch.enableLimitSwitch(enableLimitSwitches)
 
         self.motor.setInverted(isInverted)

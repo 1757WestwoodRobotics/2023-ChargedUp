@@ -1,4 +1,5 @@
 from commands2 import CommandBase
+from wpilib._wpilib import SmartDashboard
 from commands.arm.demostate import constants
 from subsystems.armsubsystem import ArmSubsystem
 
@@ -12,6 +13,9 @@ class SetArmPosition(CommandBase):
 
         self.arm = armSubsystem
         self.addRequirements([self.arm])
+
+    def initialize(self) -> None:
+        SmartDashboard.putBoolean(constants.kArmAtTargetKey, False)
 
     def execute(self) -> None:
         self.arm.state = self.state
