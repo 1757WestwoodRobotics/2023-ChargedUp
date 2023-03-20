@@ -592,7 +592,7 @@ kArmPIDSlot = 0
 kArmEncoderToSprocketGearRatio = 60 / 12
 
 kElbowArmCANId = 30
-kElbowArmPGain = 0.03
+kElbowArmPGain = 0.02
 kElbowArmIGain = 0.0
 kElbowArmDGain = 0
 kElbowArmInverted = False
@@ -624,7 +624,7 @@ kElbowMinAngle = Rotation2d.fromDegrees(0)
 kElbowMaxAngle = Rotation2d.fromDegrees(145)
 
 kShoulderArmCANId = 31
-kShoulderArmPGain = 0.04
+kShoulderArmPGain = 0.03
 kShoulderArmIGain = 0.0
 kShoulderArmDGain = 0
 kShoulderArmInverted = True
@@ -673,11 +673,11 @@ kArmWristCOM = 7.35 * kMetersPerInch
 
 kArmStateKey = "arm/state"
 
-kArmTranslationalPGain = 0.7
+kArmTranslationalPGain = 1.1
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 4
+kArmTranslationalMaxVelocity = 8
 """m/s"""
 kArmTranslationalMaxAcceleration = 10
 """m/s^2"""
@@ -686,9 +686,9 @@ kArmRotationalPGain = 0.9
 kArmRotationalIGain = 0
 kArmRotationalDGain = 0
 
-kArmRotationalMaxVelocity = 10
+kArmRotationalMaxVelocity = 20
 """rad/s"""
-kArmRotationalMaxAcceleration = 20
+kArmRotationalMaxAcceleration = 40
 """rad/s^2"""
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"

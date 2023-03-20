@@ -171,7 +171,6 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.elbowArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.elbowArm.setCurrentLimit(constants.kDriveSupplyCurrentLimitConfiguration)
 
         self.shoulderArm = Falcon(
             constants.kShoulderArmCANId,
@@ -184,9 +183,6 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.shoulderArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.shoulderArm.setCurrentLimit(
-            constants.kDriveSupplyCurrentLimitConfiguration
-        )
 
         self.wristArm = Falcon(
             constants.kWristArmCANId,
@@ -199,7 +195,6 @@ class ArmSubsystem(SubsystemBase):
             useDINSim=False,
         )
         self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
-        self.wristArm.setCurrentLimit(constants.kDriveSupplyCurrentLimitConfiguration)
 
         self.xProfiledPID = ProfiledPIDController(
             constants.kArmTranslationalPGain,
@@ -557,7 +552,7 @@ class ArmSubsystem(SubsystemBase):
         )
 
         targetPosesSerialized = convertToSendablePoses(
-            [targetPose, targetElbow, targetTarget]
+            [targetTarget]
         )
 
         comsSerialized = convertToSendablePoses(
