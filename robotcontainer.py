@@ -177,7 +177,7 @@ class RobotContainer:
             *self.operatorInterface.armFudgeDecrease
         ).whenPressed(DecreaseArmFudge(self.arm))
 
-        commands2.button.POVButton(*self.operatorInterface.turboSpeed).whileHeld(
+        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             FieldRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
