@@ -42,7 +42,7 @@ class AutonomousRoutine(SequentialCommandGroup):
             "store": ParallelCommandGroup(
                 SetArmPositionStored(arm), GripperHoldingState(grip)
             ),
-            "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.8)),
+            "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(1.4)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.4)),
             "hybrid": SetArmPositionGroundIntake(arm),
             "engage": WaitCommand(5),

@@ -323,7 +323,7 @@ class CTRESwerveModule(SwerveModule):
         driveEncoderPulses = self.driveMotor.getSelectedSensorPosition()
         driveDistance = (
             driveEncoderPulses
-            / constants.kSwerveEncoderPulsesPerRadian
+            / constants.kWheelEncoderPulsesPerRadian
             * constants.kWheelRadius
         )
         return driveDistance
