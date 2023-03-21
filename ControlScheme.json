@@ -166,5 +166,12 @@
       "Button": 1
     },
     "PLACEHOLDER"
+    ],
+  "AutoBalance": [
+    0,
+    {
+      "Button": 5
+    },
+    "left bumper(xbox)"
   ]
 }

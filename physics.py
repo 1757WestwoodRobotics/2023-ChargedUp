@@ -21,7 +21,6 @@ from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 from wpimath.system.plant import DCMotor
 import wpimath.kinematics
 from pyfrc.physics.core import PhysicsInterface
-
 import constants
 
 
@@ -301,6 +300,7 @@ class PhysicsEngine:
 
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
+        self.gyroPitch = self.gyroSim.getDouble("Pitch")
 
         self.sim_initialized = False
 
@@ -352,6 +352,8 @@ class PhysicsEngine:
             simBallObject.setPose(constants.kSimDefaultBallLocation)
 
         self.gyroYaw.set(-self.driveSim.getHeading().degrees())
+        x = float(SmartDashboard.getNumber("therealgyro", -30))
+        self.gyroPitch.set(SmartDashboard.getNumber("thegyronumbies", x))
 
         # Simulate the drivetrain
         voltage = RobotController.getInputVoltage()

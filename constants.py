@@ -827,3 +827,10 @@ kIntakeMotorRPMKey = "intake/RPM"
 kIntakeGearRatio = 15
 kCubeModeKey = "intake/CubeMode"
 kIntakeMotorAMPS = 30
+kPitchMultiplicationValue = 0.2
+
+kDriveDistanceAutoBalance = 5
+
+kSpeedFactorAutoBalance = 0.1
+
+kTiltThresholdAutoBalance = 10

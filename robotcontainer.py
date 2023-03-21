@@ -35,6 +35,7 @@ from commands.gripper import (
     GripperHoldingState,
 )
 from commands.light.cubeLights import ConeLights, CubeLights
+from commands.drive.chargestationautobalance import AutoBalance
 
 from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
@@ -229,6 +230,10 @@ class RobotContainer:
 
         commands2.button.POVButton(*self.operatorInterface.lightCube).whenPressed(
             CubeLights(self.light)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.AutoBalance).whileHeld(
+            AutoBalance(self.drive)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:
