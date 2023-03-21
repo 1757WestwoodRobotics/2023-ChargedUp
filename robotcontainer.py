@@ -1,11 +1,8 @@
-from math import pi
 import os
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.auto.rotateauto import RotateAuto
-
 
 import constants
 
@@ -110,9 +107,9 @@ class RobotContainer:
             FieldRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * constants.kNormalSpeedMultiplier,
+                * constants.kTurboSpeedMultiplier,
                 lambda: self.operatorInterface.chassisControls.sideToSide()
-                * constants.kNormalSpeedMultiplier,
+                * constants.kTurboSpeedMultiplier,
                 self.operatorInterface.chassisControls.rotationX,
             )
         )
@@ -182,9 +179,9 @@ class RobotContainer:
             FieldRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * constants.kTurboSpeedMultiplier,
+                * constants.kNormalSpeedMultiplier,
                 lambda: self.operatorInterface.chassisControls.sideToSide()
-                * constants.kTurboSpeedMultiplier,
+                * constants.kNormalSpeedMultiplier,
                 self.operatorInterface.chassisControls.rotationX,
             )
         )

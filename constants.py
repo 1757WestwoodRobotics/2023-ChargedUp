@@ -506,7 +506,7 @@ kXboxTriggerActivationThreshold = 0.5
 
 kTurboSpeedButtonName = "turboSpeed"
 kNormalSpeedMultiplier = 0.45  # half full on normal
-kTurboSpeedMultiplier = 0.90  # full speed!!!
+kTurboSpeedMultiplier = 0.95  # full speed!!!
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
