@@ -45,4 +45,4 @@ class AutoBalance(CommandBase):
         print("IT WORKS")
 
     def isFinished(self) -> bool:
-        return abs(self.pitch) < 3 * constants.kRadiansPerDegree
+        return abs(self.pitch) < 5 * constants.kRadiansPerDegree

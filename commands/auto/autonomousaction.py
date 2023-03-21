@@ -19,6 +19,7 @@ from commands.arm.statearmposition import (
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
+from commands.drive.chargestationautobalance import AutoBalance
 from commands.gripper import GripperHoldingState, GripperIntake, GripperOuttake
 from commands.resetdrive import ResetDrive
 from subsystems.armsubsystem import ArmSubsystem
@@ -45,7 +46,7 @@ class AutonomousRoutine(SequentialCommandGroup):
             "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(1.4)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.4)),
             "hybrid": SetArmPositionGroundIntake(arm),
-            "engage": WaitCommand(5),
+            "engage": AutoBalance(drive),
             "intake": ParallelCommandGroup(
                 SetArmPositionGroundIntake(arm), WaitCommand(0.25), GripperIntake(grip)
             ),
