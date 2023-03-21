@@ -9,6 +9,7 @@ from wpimath.geometry import Rotation2d
 import constants
 from util.angleoptimize import optimizeAngle
 
+
 class AngleAlignDrive(CommandBase):
     def __init__(
         self,
@@ -30,15 +31,7 @@ class AngleAlignDrive(CommandBase):
 
     def initialize(self) -> None:
         currentRotation = self.drive.getRotation()
-        currentRotation += Rotation2d(pi)
-        currentRotation = optimizeAngle(Rotation2d.fromDegrees(180), currentRotation)
-        if currentRotation.degrees() < 270 and currentRotation.degrees() > 90:
-            self.targetRotation = Rotation2d.fromDegrees(0)
-
-        else:
-            self.targetRotation = Rotation2d.fromDegrees(180)
-
-        print(self.targetRotation.degrees(), currentRotation)
+        self.targetRotation = Rotation2d.fromDegrees(round(currentRotation.degrees() / 90) * 90)
 
     def rotation(self) -> float:
         optimizedDirection = optimizeAngle(
