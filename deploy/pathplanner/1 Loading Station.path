@@ -17,9 +17,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "safe",
           "top",
           "outtake",
-          "store"
+          "safestore"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",

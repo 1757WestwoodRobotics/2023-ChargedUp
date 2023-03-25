@@ -19,7 +19,7 @@ class LightSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         self.light = CANdle(constants.kCANdleID, constants.kCANivoreName)
 
-        self.disabledAnimation = RainbowAnimation(1, 0.5, 8)
+        self.disabledAnimation = RainbowAnimation(1, 0.5, 68)
         self.cubeAnimation1 = ColorFlowAnimation(204, 0, 204, 255, 0.7, 17, ledOffset=8)  # purple
         self.cubeAnimation2 = ColorFlowAnimation(204, 0, 204, 255, 0.7, 17, ledOffset=8+17)  # purple
         self.coneAnimation1 = ColorFlowAnimation(255, 255, 0, 255, 0.7, 17, ledOffset=8)  # yellow

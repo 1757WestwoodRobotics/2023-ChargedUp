@@ -10,6 +10,7 @@ from wpilib import (
     SmartDashboard,
 )
 import wpilib
+from wpilib._wpilib import Timer
 from wpimath import angleModulus
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
 from wpimath.controller import (
@@ -153,9 +154,13 @@ class ArmSubsystem(SubsystemBase):
         self.initMechanism()
 
         self.state = ArmSubsystem.ArmState.Stored
+        self.oldState = ArmSubsystem.ArmState.Stored
         self.armFF = ArmFeedforward(0, constants.kShoulderArmFFFactor, 0, 0)
         self.fudgeFactor = 0  # amount by which to adjust the wrist angle
 
+        self.targetTimer = Timer()
+
+        SmartDashboard.putNumber("arm/wristAdjust", 0)
         SmartDashboard.putNumber(constants.kElbowArmOverrideKey, 0)
         SmartDashboard.putNumber(constants.kShoulderArmOverrideKey, 0)
         SmartDashboard.putNumber(constants.kWristArmOverrideKey, 0)
@@ -294,16 +299,13 @@ class ArmSubsystem(SubsystemBase):
             Pose2d(twoLinkPosition, pose.rotation())
         )
         shoulderOffset = (
-            -self.shoulderEncoder.getPosition().radians()
-            / constants.kArmEncoderToSprocketGearRatio
+            0
         )
         elbowOffset = (
-            self.elbowEncoder.getPosition().radians()
-            / constants.kArmEncoderToSprocketGearRatio
+            0
         )
         wristOffset = (
-            -self.wristEncoder.getPosition().radians()
-            / constants.kArmEncoderToSprocketGearRatio
+            0
         )
 
         self.shoulderArm.setEncoderPosition(
@@ -364,7 +366,7 @@ class ArmSubsystem(SubsystemBase):
             self.wristArm.get(Falcon.ControlMode.Position)
             / constants.kWristArmGearRatio
             / constants.kTalonEncoderPulsesPerRadian
-        )
+        ) + Rotation2d.fromDegrees(SmartDashboard.getNumber("arm/wristAdjust", 0))
 
     def getWristArmRotation(self) -> Rotation2d:
         return (
@@ -551,9 +553,7 @@ class ArmSubsystem(SubsystemBase):
             ]
         )
 
-        targetPosesSerialized = convertToSendablePoses(
-            [targetTarget]
-        )
+        targetPosesSerialized = convertToSendablePoses([targetTarget])
 
         comsSerialized = convertToSendablePoses(
             list(
@@ -643,6 +643,11 @@ class ArmSubsystem(SubsystemBase):
             targetState = self.state.position()
             self.setEndEffectorPosition(targetState)
 
+        if self.state != self.oldState:
+            self.oldState = self.state
+            self.targetTimer.reset()
+            self.targetTimer.start()
+
         self._updateMechanism()
         self._updateCOMs()
         self._updateArmPositionsLogging()
@@ -671,18 +676,24 @@ class ArmSubsystem(SubsystemBase):
     def atTarget(self) -> bool:
         return (
             (
-                abs(
-                    (
-                        self.expectedTwoLink
-                        - self.getWristPosition().translation()
-                    ).norm()
+                (
+                    abs(
+                        (
+                            self.expectedTwoLink - self.getWristPosition().translation()
+                        ).norm()
+                    )
+                    < constants.kArmPositionTolerence
                 )
-                < constants.kArmPositionTolerence
+                or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
             )
-            or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
-        ) and (
-            abs(self.expectedWrist - self.getEndEffectorPosition().rotation().radians())
-            < constants.kArmRotationTolerence
+            and (
+                abs(
+                    self.expectedWrist
+                    - self.getEndEffectorPosition().rotation().radians()
+                )
+                < constants.kArmRotationTolerence
+            )
+            and (self.targetTimer.get() > 1)
         )
 
     def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:
@@ -807,7 +818,7 @@ class ArmSubsystem(SubsystemBase):
             )
 
         thetaDelta = self.thetaProfiledPID.calculate(self.expectedWrist, trueWristPos)
-        trueWristPos = thetaDelta + self.expectedWrist
+        trueWristPos = thetaDelta + self.expectedWrist - SmartDashboard.getNumber("arm/wristAdjust",0) * constants.kRadiansPerDegree
 
         self.expectedWrist = trueWristPos
 

@@ -13,6 +13,7 @@ from wpilib import DataLogManager
 from commands.arm.statearmposition import (
     SetArmPositionGroundIntake,
     SetArmPositionMid,
+    SetArmPositionSafeTop,
     SetArmPositionStored,
     SetArmPositionTop,
 )
@@ -45,12 +46,14 @@ class AutonomousRoutine(SequentialCommandGroup):
             ),
             "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(1.4)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.4)),
+            "safe": ParallelCommandGroup(SetArmPositionSafeTop(arm), WaitCommand(0.5)),
+            "safestore": SequentialCommandGroup(ParallelCommandGroup(SetArmPositionSafeTop(arm), WaitCommand(0.5)), ParallelCommandGroup(SetArmPositionStored(arm), WaitCommand(0.5))),
             "hybrid": SetArmPositionGroundIntake(arm),
             "engage": AutoBalance(drive),
             "intake": ParallelCommandGroup(
-                SetArmPositionGroundIntake(arm), WaitCommand(0.25), GripperIntake(grip)
+                 WaitCommand(0.25), GripperIntake(grip)
             ),
-            "outtake": ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.5)),
+            "outtake": SequentialCommandGroup(ParallelCommandGroup( GripperOuttake(grip), WaitCommand(1)), WaitCommand(1)),
         }
         self.paths = trajectoryFromFile(name)
         followCommands = [

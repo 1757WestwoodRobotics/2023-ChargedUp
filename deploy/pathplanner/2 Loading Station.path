@@ -19,6 +19,7 @@
         "names": [
           "top",
           "outtake",
+          "safe",
           "store"
         ],
         "executionBehavior": "sequential",
@@ -122,7 +123,7 @@
         "names": [
           "outtake"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }

@@ -19,6 +19,7 @@
         "names": [
           "top",
           "outtake",
+          "safe",
           "store"
         ],
         "executionBehavior": "sequential",
@@ -78,26 +79,27 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8602250123934378,
-        "y": 1.0811180623780534
+        "x": 1.79938924641893,
+        "y": 1.5940037710958455
       },
       "prevControl": {
-        "x": 3.322000950082423,
-        "y": 0.4857894303681378
+        "x": 3.2611651841079157,
+        "y": 0.9986751390859299
       },
       "nextControl": {
-        "x": 3.322000950082423,
-        "y": 0.4857894303681378
+        "x": 3.2611651841079157,
+        "y": 0.9986751390859299
       },
       "holonomicAngle": -179.85840042833925,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [
           "top",
           "outtake",
+          "safe",
           "store"
         ],
         "executionBehavior": "sequential",
@@ -132,6 +134,7 @@
     {
       "position": 1.7340820312500003,
       "names": [
+        "hybrid",
         "intake"
       ]
     }

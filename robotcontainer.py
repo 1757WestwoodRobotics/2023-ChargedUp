@@ -73,7 +73,7 @@ class RobotContainer:
         self.simpleAuto = commands2.SequentialCommandGroup(
             ResetDrive(self.drive),
             DriveDistance(
-                4 * constants.kWheelCircumference,
+                -4 * constants.kWheelCircumference,
                 0.2,
                 DriveDistance.Axis.X,
                 self.drive,
