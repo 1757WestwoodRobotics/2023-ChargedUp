@@ -505,7 +505,7 @@ kDriveToTargetControlButtonName = "driveToTargetControl"
 kXboxTriggerActivationThreshold = 0.5
 
 kTurboSpeedButtonName = "turboSpeed"
-kNormalSpeedMultiplier = 0.45  # half full on normal
+kNormalSpeedMultiplier = 0.80  # half full on normal
 kTurboSpeedMultiplier = 0.95  # full speed!!!
 
 # Simulation Parameters
@@ -755,7 +755,7 @@ kArmSingleSubstationPosition = Pose2d(
 )
 kArmGroundIntakePosition = Pose2d(
     -31.639 * kMetersPerInch,
-    7.087 * kMetersPerInch,
+    6.087 * kMetersPerInch,
     Rotation2d.fromDegrees(138.10),
 )
 kArmGroundSafePosition = Pose2d(
