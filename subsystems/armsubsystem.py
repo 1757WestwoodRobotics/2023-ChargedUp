@@ -72,6 +72,14 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmGroundSafePosition
             return constants.kArmStoredPosition
 
+        def oscilate(self) -> bool:
+            if (
+                self == ArmSubsystem.ArmState.DoubleSubstation
+                or self == ArmSubsystem.ArmState.GroundLoading
+            ):
+                return True
+            return False
+
     class InterpolationMethod(Enum):
         JointSpace = auto()
         CartesianSpace = auto()
@@ -298,15 +306,9 @@ class ArmSubsystem(SubsystemBase):
         shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
             Pose2d(twoLinkPosition, pose.rotation())
         )
-        shoulderOffset = (
-            0
-        )
-        elbowOffset = (
-            0
-        )
-        wristOffset = (
-            0
-        )
+        shoulderOffset = 0
+        elbowOffset = 0
+        wristOffset = 0
 
         self.shoulderArm.setEncoderPosition(
             (shoulderAngle + shoulderOffset)
@@ -755,6 +757,9 @@ class ArmSubsystem(SubsystemBase):
 
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
+        if self.state.oscilate():
+            wristAngle += math.sin(Timer.getFPGATimestamp()* 10) * constants.kArmMaxOscillationAmount.radians() + constants.kArmMaxOscillationAmount.radians() / 2
+
         self.setRelativeArmAngles(
             Rotation2d(startAngle),
             Rotation2d(endAngle),
@@ -818,7 +823,12 @@ class ArmSubsystem(SubsystemBase):
             )
 
         thetaDelta = self.thetaProfiledPID.calculate(self.expectedWrist, trueWristPos)
-        trueWristPos = thetaDelta + self.expectedWrist - SmartDashboard.getNumber("arm/wristAdjust",0) * constants.kRadiansPerDegree
+        trueWristPos = (
+            thetaDelta
+            + self.expectedWrist
+            - SmartDashboard.getNumber("arm/wristAdjust", 0)
+            * constants.kRadiansPerDegree
+        )
 
         self.expectedWrist = trueWristPos
 

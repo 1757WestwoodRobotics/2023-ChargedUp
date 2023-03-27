@@ -677,18 +677,18 @@ kArmTranslationalPGain = 1.1
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 8
+kArmTranslationalMaxVelocity = 10
 """m/s"""
-kArmTranslationalMaxAcceleration = 10
+kArmTranslationalMaxAcceleration = 15
 """m/s^2"""
 
 kArmRotationalPGain = 0.9
 kArmRotationalIGain = 0
 kArmRotationalDGain = 0
 
-kArmRotationalMaxVelocity = 20
+kArmRotationalMaxVelocity = 40
 """rad/s"""
-kArmRotationalMaxAcceleration = 40
+kArmRotationalMaxAcceleration = 80
 """rad/s^2"""
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"
@@ -778,6 +778,8 @@ kArmFudgeFactorKey = "arm/fudge"
 
 kArmMotorBreakArmModeKey = "arm/motorMode"
 kArmEndEffectorPose = "arm/endeffectorPose"
+
+kArmMaxOscillationAmount = Rotation2d.fromDegrees(10)
 
 # lights
 kCANdleID = 2
