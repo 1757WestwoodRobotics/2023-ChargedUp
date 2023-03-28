@@ -22,7 +22,7 @@ class FieldRelativeDrive(CommandBase):
 
         self.addRequirements([self.drive])
         self.setName(__class__.__name__)
-        Preferences.initFloat("Robot Relative Sensitivity", 0.2)
+        Preferences.initFloat("Robot Relative Sensitivity", 0.4)
 
     def execute(self) -> None:
         if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
