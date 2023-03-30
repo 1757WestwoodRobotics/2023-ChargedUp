@@ -351,7 +351,7 @@ kBackRightAbsoluteEncoderOffset = 331.260
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
-kRobotVisionPoseWeight = 0.00  # 5% vision data
+kRobotVisionPoseWeight = 0.05  # 5% vision data
 
 kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
@@ -539,7 +539,7 @@ kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
 
 
-kSimFrontLeftDriveEncoderPorts = (0, 1)
+kSimFrontLeftDriveEncoderPorts = (16, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)
 kSimFrontRightDriveEncoderPorts = (4, 5)
 kSimFrontRightSteerEncoderPorts = (6, 7)
