@@ -10,7 +10,7 @@ from wpilib import (
     SmartDashboard,
 )
 import wpilib
-from wpilib._wpilib import Timer
+from wpilib import DigitalInput, RobotState, Timer
 from wpimath import angleModulus
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
 from wpimath.controller import (
@@ -296,6 +296,8 @@ class ArmSubsystem(SubsystemBase):
         self.initEncoders()
         self.reset()
         Preferences.initBoolean(constants.kArmObeyEndstopsKey, True)
+
+        self.inputButton = DigitalInput(0)
 
     def reset(self) -> None:
         pose = constants.kArmStartupPosition
@@ -627,6 +629,13 @@ class ArmSubsystem(SubsystemBase):
         SmartDashboard.putNumber("arm/targetThought/theta", self.expectedWrist)
 
         motorNeutralState: Falcon.NeutralMode = self.motorMode.getSelected()
+
+        if RobotState.isDisabled():
+            motorNeutralState = (
+                Falcon.NeutralMode.Break
+                if self.inputButton.get()
+                else Falcon.NeutralMode.Coast
+            )
         self.shoulderArm.setNeutralMode(motorNeutralState)
         self.elbowArm.setNeutralMode(motorNeutralState)
         self.wristArm.setNeutralMode(motorNeutralState)
@@ -758,7 +767,11 @@ class ArmSubsystem(SubsystemBase):
         self.targetElbow = Pose2d(targetTwoLink, pose.rotation())
 
         if self.state.oscilate():
-            wristAngle += math.sin(Timer.getFPGATimestamp()* 10) * constants.kArmMaxOscillationAmount.radians() + constants.kArmMaxOscillationAmount.radians() / 2
+            wristAngle += (
+                math.sin(Timer.getFPGATimestamp() * 10)
+                * constants.kArmMaxOscillationAmount.radians()
+                + constants.kArmMaxOscillationAmount.radians() / 2
+            )
 
         self.setRelativeArmAngles(
             Rotation2d(startAngle),
