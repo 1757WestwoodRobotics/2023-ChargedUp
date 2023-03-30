@@ -57,7 +57,9 @@ class AutonomousRoutine(SequentialCommandGroup):
             ),
             "hybrid": SetArmPositionGroundIntake(arm),
             "engage": AutoBalance(drive),
-            "intake": ParallelCommandGroup(WaitCommand(0.25), GripperIntake(grip), SetArmPositionGroundIntake(arm)),
+            "intake": ParallelCommandGroup(
+                WaitCommand(0.25), GripperIntake(grip), SetArmPositionGroundIntake(arm)
+            ),
             "outtake": SequentialCommandGroup(
                 ParallelCommandGroup(GripperOuttake(grip), WaitCommand(1)),
                 WaitCommand(1),

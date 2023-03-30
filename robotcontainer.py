@@ -94,7 +94,8 @@ class RobotContainer:
         for file in os.listdir(pathsPath):
             relevantName = file.split(".")[0]
             self.chooser.addOption(
-                relevantName, AutonomousRoutine(self.drive, self.arm, self.grip, relevantName, [])
+                relevantName,
+                AutonomousRoutine(self.drive, self.arm, self.grip, relevantName, []),
             )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
@@ -203,8 +204,10 @@ class RobotContainer:
         ).whileHeld(
             AngleAlignDrive(
                 self.drive,
-                lambda: self.operatorInterface.chassisControls.forwardsBackwards() * constants.kNormalSpeedMultiplier,
-                lambda: self.operatorInterface.chassisControls.sideToSide() * constants.kNormalSpeedMultiplier,
+                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
+                * constants.kNormalSpeedMultiplier,
+                lambda: self.operatorInterface.chassisControls.sideToSide()
+                * constants.kNormalSpeedMultiplier,
             )
         )
 

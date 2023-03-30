@@ -1,9 +1,10 @@
-import functools
-import operator
 from typing import List, Tuple
 from commands2 import SubsystemBase
 from ntcore import NetworkTableInstance
-from wpilib import SmartDashboard, Timer
+from photonvision import PoseStrategy, RobotPoseEstimator
+from robotpy_apriltag import AprilTagField
+import robotpy_apriltag
+from wpilib import SmartDashboard
 from wpimath.geometry import (
     Transform3d,
 )
@@ -24,75 +25,49 @@ class VisionSubsystem(SubsystemBase):
         self.camera = PhotonCamera(
             NetworkTableInstance.getDefault(), constants.kPhotonvisionCameraName
         )
+        field = robotpy_apriltag.loadAprilTagLayoutField(AprilTagField.k2023ChargedUp)
+        self.estimator = RobotPoseEstimator(
+            field,
+            PoseStrategy.LOWEST_AMBIGUITY,
+            [(self.camera, constants.kLimelightRelativeToRobotTransform)],
+        )
 
-    def getCameraToTargetTransforms(self) -> List[Tuple[int, Transform3d]]:
+    def getCameraToTargetTransforms(
+        self,
+    ) -> Tuple[List[Tuple[int, Transform3d]], float]:
         """this function returns a list of the type (target_id, transformCameraToTarget) for every target"""
         photonResult = self.camera.getLatestResult()
         if photonResult.hasTargets():
-            return [
-                (target.getFiducialId(), target.getBestCameraToTarget())
-                for target in photonResult.getTargets()
-                if target.getPoseAmbiguity() < constants.kPhotonvisionAmbiguityCutoff
-            ]
+            return (
+                [
+                    (target.getFiducialId(), target.getBestCameraToTarget())
+                    for target in photonResult.getTargets()
+                    if target.getPoseAmbiguity()
+                    < constants.kPhotonvisionAmbiguityCutoff
+                ],
+                photonResult.getTimestamp(),
+            )
         else:
-            return []
+            return ([], 0)
 
     def periodic(self) -> None:
         self.estimatedPosition = self.drive.getPose()
         self.updateAdvantagescopePose()
 
-        points = self.getCameraToTargetTransforms()
+        botPose, _ = self.estimator.update()
 
-        if len(points) == 0:
-            SmartDashboard.putNumberArray(constants.kFieldRelativeTargets, [])
-            return
+        self.drive.visionEstimate = botPose.toPose2d()
 
-        try:
-            derivedRobotPoses = [
-                constants.kApriltagPositionDict[tag_id]
-                + point.inverse()
-                + constants.kLimelightRelativeToRobotTransform.inverse()
-                for tag_id, point in points
-            ]
-        except:
-            return
-        # construct a set of poses from each tag's relative position about where the robot would be
-
-        for pose in derivedRobotPoses:
-            # feed each value as a vision measurement into the kalman filter
-            self.drive.estimator.addVisionMeasurement(
-                pose.toPose2d(), Timer.getFPGATimestamp()
-            )
-
-
-        simApriltagPoses = [
-            pose3dFrom2d(self.estimatedPosition)
-            + constants.kLimelightRelativeToRobotTransform
-            + point
-            for _, point in points
-        ]  # what the robot thinks the poses of every apriltag is
-
-        sendablePoints = []
-
-        for point in simApriltagPoses:
-            x = point.X()
-            y = point.Y()
-            z = point.Z()
-            rotationQuaternion = point.rotation().getQuaternion()
-            w_rot = rotationQuaternion.W()
-            x_rot = rotationQuaternion.X()
-            y_rot = rotationQuaternion.Y()
-            z_rot = rotationQuaternion.Z()
-
-            sendablePoints.append(
-                [x, y, z, w_rot, x_rot, y_rot, z_rot]
-            )  # https://github.com/Mechanical-Advantage/AdvantageScope/blob/main/docs/tabs/3D-FIELD.md#cones
-
+        SmartDashboard.putBoolean(
+            constants.kRobotVisionPoseArrayKeys.validKey, self.camera.hasTargets()
+        )
         SmartDashboard.putNumberArray(
-            constants.kFieldRelativeTargets,
-            functools.reduce(
-                operator.add, sendablePoints, []
-            ),  # adds all the values found within targets (converts [[]] to [])
+            constants.kRobotVisionPoseArrayKeys.valueKey,
+            [
+                self.drive.visionEstimate.X(),
+                self.drive.visionEstimate.Y(),
+                self.drive.visionEstimate.rotation().radians(),
+            ],
         )
 
     def updateAdvantagescopePose(self) -> None:

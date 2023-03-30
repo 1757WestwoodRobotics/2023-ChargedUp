@@ -156,7 +156,7 @@ class SimFalcon:  # a simulated Falcon 500
         demandType: DemandType = DemandType.ArbitraryFeedForward,
         demand1: float = 0,
     ) -> None:
-        self.motor.set(mode, demand,demandType,demand1)
+        self.motor.set(mode, demand, demandType, demand1)
         currentPosition = self.motor.getSelectedSensorPosition()
         rawPercentOutput = 0
         if mode == ControlMode.Velocity:

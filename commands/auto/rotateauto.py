@@ -1,6 +1,9 @@
 import math
 from commands2._impl import CommandBase
-from wpimath._controls._controls.controller import ProfiledPIDController, ProfiledPIDControllerRadians
+from wpimath._controls._controls.controller import (
+    ProfiledPIDController,
+    ProfiledPIDControllerRadians,
+)
 from wpimath._controls._controls.trajectory import TrapezoidProfileRadians
 from wpimath.geometry._geometry import Transform2d
 
@@ -35,7 +38,7 @@ class RotateAuto(CommandBase):
     def initialize(self) -> None:
         currentPose = self.drive.odometry.getPose()
         self.targetPose = currentPose + Transform2d(0, 0, self.distance)
-        self.thetaController.reset(currentPose.rotation().radians(),0)
+        self.thetaController.reset(currentPose.rotation().radians(), 0)
         self.updateDistanceToTarget()
 
     def execute(self) -> None:
