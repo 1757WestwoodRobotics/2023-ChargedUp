@@ -21,7 +21,7 @@ class AutoBalance(CommandBase):
         self.pid = PIDController(
             0.35,
             0,
-            0,
+            0.1,
         )
         self.drive = drive
         self.pitch = self.drive.gyro.getPitch()
