@@ -73,10 +73,7 @@ class ArmSubsystem(SubsystemBase):
             return constants.kArmStoredPosition
 
         def oscilate(self) -> bool:
-            if (
-                self == ArmSubsystem.ArmState.DoubleSubstation
-                or self == ArmSubsystem.ArmState.GroundLoading
-            ):
+            if self == ArmSubsystem.ArmState.GroundLoading:
                 return True
             return False
 

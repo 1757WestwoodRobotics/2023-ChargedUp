@@ -6,7 +6,7 @@ from robotpy_apriltag import AprilTagField
 import robotpy_apriltag
 from wpilib import SmartDashboard
 from wpimath.geometry import (
-    Transform3d,
+    Transform3d, Pose3d
 )
 from photonvision import PhotonCamera
 
@@ -26,6 +26,7 @@ class VisionSubsystem(SubsystemBase):
             NetworkTableInstance.getDefault(), constants.kPhotonvisionCameraName
         )
         field = robotpy_apriltag.loadAprilTagLayoutField(AprilTagField.k2023ChargedUp)
+        field.setOrigin(Pose3d())
         self.estimator = RobotPoseEstimator(
             field,
             PoseStrategy.LOWEST_AMBIGUITY,

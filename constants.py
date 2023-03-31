@@ -351,7 +351,7 @@ kBackRightAbsoluteEncoderOffset = 331.260
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
-kRobotVisionPoseWeight = 0.15  # 5% vision data
+kRobotVisionPoseWeight = 0.00  # 5% vision data
 
 kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
@@ -755,7 +755,7 @@ kArmSingleSubstationPosition = Pose2d(
 )
 kArmGroundIntakePosition = Pose2d(
     -31.639 * kMetersPerInch,
-    6.087 * kMetersPerInch,
+    7.587 * kMetersPerInch,
     Rotation2d.fromDegrees(138.10),
 )
 kArmGroundSafePosition = Pose2d(

@@ -9,6 +9,6 @@ def trajectoryFromFile(name: str) -> List[PathPlannerTrajectory]:
     DataLogManager.log(f"Loading path {name}")
     return PathPlanner.loadPathGroup(
         name,
-        constants.kMaxForwardLinearVelocity,
-        constants.kMaxForwardLinearAcceleration,
+        constants.kMaxForwardLinearVelocity/4,
+        constants.kMaxForwardLinearAcceleration/4
     )

@@ -90,7 +90,7 @@ class FollowTrajectory(CommandBase):
         allianceRespectiveStartingPoint = self.getAllianceRespectivePoint(
             initialState.pose, initialState.holonomicRotation
         )
-        self.drive.setOdometryPosition(
+        self.drive.resetOdometryAtPosition(
             Pose2d(
                 allianceRespectiveStartingPoint[0].translation(),
                 allianceRespectiveStartingPoint[1],
