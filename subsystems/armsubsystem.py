@@ -690,7 +690,11 @@ class ArmSubsystem(SubsystemBase):
                             self.expectedTwoLink - self.getWristPosition().translation()
                         ).norm()
                     )
-                    < constants.kArmPositionTolerence
+                    < (
+                        constants.kArmPositionStoredTolerence
+                        if self.state == ArmSubsystem.ArmState.Stored
+                        else constants.kArmPositionTolerence
+                    )
                 )
                 or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
             )
@@ -701,7 +705,7 @@ class ArmSubsystem(SubsystemBase):
                 )
                 < constants.kArmRotationTolerence
             )
-            and (self.targetTimer.get() > 1)
+            and (self.targetTimer.get() > 0.6)
         )
 
     def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:

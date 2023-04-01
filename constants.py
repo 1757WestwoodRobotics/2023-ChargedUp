@@ -708,7 +708,9 @@ kArmPositionExtraEpsiolon = 0.001
 
 kArmPositionTolerence = 0.1
 """meters"""
-kArmRotationTolerence = 0.1
+kArmPositionStoredTolerence = 0.5
+"""meters"""
+kArmRotationTolerence = 0.15
 """radians"""
 kArmAtTargetKey = "arm/atTarget"
 
@@ -755,8 +757,8 @@ kArmSingleSubstationPosition = Pose2d(
 )
 kArmGroundIntakePosition = Pose2d(
     -31.639 * kMetersPerInch,
-    7.587 * kMetersPerInch,
-    Rotation2d.fromDegrees(138.10),
+    8.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(128.10),
 )
 kArmGroundSafePosition = Pose2d(
     -30.639 * kMetersPerInch,

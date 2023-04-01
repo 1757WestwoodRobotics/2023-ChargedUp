@@ -1,4 +1,5 @@
 import os
+from commands2._impl import ParallelDeadlineGroup, SequentialCommandGroup, WaitCommand
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -95,7 +96,7 @@ class RobotContainer:
             relevantName = file.split(".")[0]
             self.chooser.addOption(
                 relevantName,
-                AutonomousRoutine(self.drive, self.arm, self.grip, relevantName, []),
+                SequentialCommandGroup(ParallelDeadlineGroup(WaitCommand(14.8),[AutonomousRoutine(self.drive, self.arm, self.grip, relevantName, [])]), DefenseState(self.drive))
             )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
