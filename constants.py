@@ -706,7 +706,7 @@ kArmInterpolationMethod = "arm/interpolationMethod"
 
 kArmPositionExtraEpsiolon = 0.001
 
-kArmPositionTolerence = 0.05
+kArmPositionTolerence = 0.1
 """meters"""
 kArmRotationTolerence = 0.1
 """radians"""

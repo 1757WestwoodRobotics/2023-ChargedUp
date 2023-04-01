@@ -62,7 +62,6 @@ class AutonomousRoutine(SequentialCommandGroup):
             ),
             "outtake": SequentialCommandGroup(
                 ParallelCommandGroup(GripperOuttake(grip), WaitCommand(1)),
-                WaitCommand(1),
             ),
         }
         self.paths = trajectoryFromFile(name)
