@@ -1,13 +1,11 @@
 from commands2 import CommandBase
 from wpilib import SmartDashboard
 
-from wpimath.geometry import Rotation2d
-from wpimath.controller import PIDController
+from wpimath.kinematics import ChassisSpeeds
 from subsystems.drivesubsystem import DriveSubsystem
-from util import convenientmath
-from util.angleoptimize import optimizeAngle
 
 import constants
+import math
 
 
 class AutoBalance(CommandBase):
@@ -18,31 +16,50 @@ class AutoBalance(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.pid = PIDController(
-            0.35,
-            0,
-            0.02,
-        )
         self.drive = drive
-        self.pitch = self.drive.gyro.getPitch()
-        # self.pid.setTolerance(0.001)
+        self.stationAngle = math.inf
 
         self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        self.pitch = optimizeAngle(Rotation2d(), self.drive.getPitch()).radians()
-        SmartDashboard.putNumber("GYROPITCH", self.pitch)
-
-        if self.isFinished():
-            return
-
-        pidOutput = convenientmath.clamp(self.pid.calculate(self.pitch, 0), -0.4, 0.4)
-        self.drive.arcadeDriveWithFactors(
-            pidOutput, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
+        self.stationAngle = (
+            self.drive.getRotation().cos() * self.drive.getPitch().radians()
+            + self.drive.getRotation().sin() * self.drive.getRoll().radians()
         )
+
+        stationAngularVelocity = (
+            self.drive.getRotation().cos() * self.drive.getPitchVelocity()
+            + self.drive.getRotation().sin() * self.drive.getRollVelocity()
+        )
+
+        SmartDashboard.putNumber("STATIONANGLE", self.stationAngle)
+        SmartDashboard.putNumber("STATIONVELOCITY", stationAngularVelocity)
+
+        shouldStop = (
+            (self.stationAngle < 0.0)
+            and (stationAngularVelocity > constants.kAngularVelocityThreshold)
+        ) or (
+            (self.stationAngle > 0.0)
+            and (stationAngularVelocity < -constants.kAngularVelocityThreshold)
+        )
+
+        if shouldStop:
+            self.drive.arcadeDriveWithSpeeds(
+                ChassisSpeeds(), DriveSubsystem.CoordinateMode.RobotRelative
+            )
+        else:
+            self.drive.arcadeDriveWithSpeeds(
+                ChassisSpeeds(
+                    constants.kAutoBalanceSpeed
+                    * (-1.0 if self.stationAngle > 0.0 else 1.0),
+                    0.0,
+                    0.0,
+                ),
+                DriveSubsystem.CoordinateMode.FieldRelative,
+            )
 
     def end(self, _interupted: bool) -> None:
         print("IT WORKS")
 
     def isFinished(self) -> bool:
-        return False
+        return abs(self.stationAngle) < constants.kAngleThreshold
