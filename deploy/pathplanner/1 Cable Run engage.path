@@ -2,25 +2,25 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.838030226795609,
-        "y": 4.977925657941868
+        "x": 1.778559970952544,
+        "y": 0.5430749117136793
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4371193506384405,
-        "y": 4.92901490047271
+        "x": 2.669363667121557,
+        "y": 0.5784733665895448
       },
-      "holonomicAngle": 179.54846311069912,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "safe",
           "top",
           "outtake",
-          "safestore"
+          "safe",
+          "store"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -29,16 +29,16 @@
     },
     {
       "anchorPoint": {
-        "x": 4.639494490747258,
-        "y": 4.8534077608899615
+        "x": 5.650453725419491,
+        "y": 0.5405723531843609
       },
       "prevControl": {
-        "x": 3.8738697085837317,
-        "y": 4.914962007145489
+        "x": 3.4809427653949387,
+        "y": 0.5971704763156022
       },
       "nextControl": {
-        "x": 5.405119272910785,
-        "y": 4.791853514634434
+        "x": 7.819964685444043,
+        "y": 0.4839742300531197
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -54,26 +54,31 @@
     },
     {
       "anchorPoint": {
-        "x": 7.35246167280934,
-        "y": 5.835221051654156
+        "x": 3.8827752549112313,
+        "y": 2.7543049949981455
       },
       "prevControl": {
-        "x": 6.642115864346448,
-        "y": 5.491210818740577
+        "x": 5.733604971107616,
+        "y": 2.9554963456648413
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "engage"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
+  "maxVelocity": 1.25,
+  "maxAcceleration": 1.25,
+  "isReversed": null,
   "markers": []
 }

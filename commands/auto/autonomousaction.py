@@ -46,14 +46,23 @@ class AutonomousRoutine(SequentialCommandGroup):
             ),
             "top": SequentialCommandGroup(SetArmPositionTop(arm)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm)),
-            "safe": ParallelCommandGroup(SetArmPositionSafeTop(arm), WaitCommand(0.5)),
-            "safestore": SequentialCommandGroup(
-                ParallelCommandGroup(SetArmPositionSafeTop(arm), WaitCommand(0.2)),
-                ParallelCommandGroup(
-                    SetArmPositionStored(arm),
-                    WaitCommand(0.2),
-                    GripperHoldingState(grip),
-                ),
+            "safe": ParallelDeadlineGroup(
+                WaitCommand(0.4), [SetArmPositionSafeTop(arm)]
+            ),
+            "safestore": ParallelDeadlineGroup(
+                WaitCommand(0.4),
+                [
+                    SequentialCommandGroup(
+                        ParallelCommandGroup(
+                            SetArmPositionSafeTop(arm), WaitCommand(0.2)
+                        ),
+                        ParallelCommandGroup(
+                            SetArmPositionStored(arm),
+                            WaitCommand(0.2),
+                            GripperHoldingState(grip),
+                        ),
+                    )
+                ],
             ),
             "hybrid": SetArmPositionGroundIntake(arm),
             "engage": AutoBalance(drive),
@@ -61,7 +70,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 WaitCommand(0.25), GripperIntake(grip), SetArmPositionGroundIntake(arm)
             ),
             "outtake": SequentialCommandGroup(
-                ParallelCommandGroup(GripperOuttake(grip), WaitCommand(1)),
+                ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.8)),
             ),
         }
         self.paths = trajectoryFromFile(name)

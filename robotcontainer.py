@@ -96,7 +96,17 @@ class RobotContainer:
             relevantName = file.split(".")[0]
             self.chooser.addOption(
                 relevantName,
-                SequentialCommandGroup(ParallelDeadlineGroup(WaitCommand(14.8),[AutonomousRoutine(self.drive, self.arm, self.grip, relevantName, [])]), DefenseState(self.drive))
+                SequentialCommandGroup(
+                    ParallelDeadlineGroup(
+                        WaitCommand(14.9),
+                        [
+                            AutonomousRoutine(
+                                self.drive, self.arm, self.grip, relevantName, []
+                            )
+                        ],
+                    ),
+                    DefenseState(self.drive),
+                ),
             )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)

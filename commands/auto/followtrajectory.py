@@ -99,22 +99,22 @@ class FollowTrajectory(CommandBase):
 
         self.setControllers()
 
-        transformedStates = [
-            self.getAllianceRespectivePoint(state.pose, state.pose.rotation())
-            for state in self.originTrajectory.getStates()
-        ]
+        # transformedStates = [
+        #     self.getAllianceRespectivePoint(state.pose, state.pose.rotation())
+        #     for state in self.originTrajectory.getStates()
+        # ]
 
-        SmartDashboard.putNumberArray(
-            constants.kAutonomousPathKey,
-            functools.reduce(
-                operator.add,
-                [
-                    [state[0].X(), state[0].Y(), state[1].radians()]
-                    for state in transformedStates
-                ],
-                [],
-            ),
-        )
+        # SmartDashboard.putNumberArray(
+        #     constants.kAutonomousPathKey,
+        #     functools.reduce(
+        #         operator.add,
+        #         [
+        #             [state[0].X(), state[0].Y(), state[1].radians()]
+        #             for state in transformedStates
+        #         ],
+        #         [],
+        #     ),
+        # )
         DataLogManager.log("begin trajectory")
 
     def getAllianceRespectivePoint(
