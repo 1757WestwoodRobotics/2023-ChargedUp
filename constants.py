@@ -838,7 +838,3 @@ kDriveDistanceAutoBalance = 5
 kSpeedFactorAutoBalance = 0.1
 
 kTiltThresholdAutoBalance = 10
-
-kAutoBalanceSpeed = 15.0 * kMetersPerInch
-kAngleThreshold = 3.0 * kRadiansPerDegree
-kAngularVelocityThreshold = 8.0 * kRadiansPerDegree
