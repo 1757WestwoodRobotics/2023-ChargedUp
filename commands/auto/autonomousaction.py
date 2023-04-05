@@ -70,7 +70,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 WaitCommand(0.25), GripperIntake(grip), SetArmPositionGroundIntake(arm)
             ),
             "outtake": SequentialCommandGroup(
-                ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.8)),
+                ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.6)),
             ),
         }
         self.paths = trajectoryFromFile(name)

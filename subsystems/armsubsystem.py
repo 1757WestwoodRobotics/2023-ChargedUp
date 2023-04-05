@@ -63,7 +63,11 @@ class ArmSubsystem(SubsystemBase):
             elif self == ArmSubsystem.ArmState.Top:
                 return constants.kArmTopScorePosition
             elif self == ArmSubsystem.ArmState.GroundLoading:
-                return constants.kArmGroundIntakePosition
+                return (
+                    constants.kArmGroundIntakePositionCube
+                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    else constants.kArmGroundIntakePositionCone
+                )
             elif self == ArmSubsystem.ArmState.TopSafe:
                 return constants.kArmTopSafePosition
             elif self == ArmSubsystem.ArmState.GroundCone:

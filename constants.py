@@ -304,9 +304,9 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.12
+kDrivePGain = 0.15
 kDriveIGain = 0.0
-kDriveDGain = 0.0
+kDriveDGain = 2.0
 
 kSteerPIDSlot = 0
 kSteerPGain = 0.6
@@ -755,7 +755,12 @@ kArmSingleSubstationPosition = Pose2d(
     35.526 * kMetersPerInch,
     Rotation2d.fromDegrees(180 - 61.617),
 )
-kArmGroundIntakePosition = Pose2d(
+kArmGroundIntakePositionCone = Pose2d(
+    -31.639 * kMetersPerInch,
+    8.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(128.10),
+)
+kArmGroundIntakePositionCube = Pose2d(
     -31.639 * kMetersPerInch,
     8.087 * kMetersPerInch,
     Rotation2d.fromDegrees(128.10),
