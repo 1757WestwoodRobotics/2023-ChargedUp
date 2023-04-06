@@ -77,8 +77,8 @@ class ArmSubsystem(SubsystemBase):
             return constants.kArmStoredPosition
 
         def oscilate(self) -> bool:
-            if self == ArmSubsystem.ArmState.GroundLoading:
-                return True
+            # if self == ArmSubsystem.ArmState.GroundLoading:
+            #     return True
             return False
 
     class InterpolationMethod(Enum):
