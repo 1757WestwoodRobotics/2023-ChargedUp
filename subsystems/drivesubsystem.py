@@ -466,13 +466,13 @@ class DriveSubsystem(SubsystemBase):
         self.resetGyro(Pose2d())
 
     def setOdometryPosition(self, pose: Pose2d):
-        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        # self.gyro.setAngleAdjustment(pose.rotation().degrees())
         self.rotationOffset = pose.rotation().degrees()
         self.resetOdometryAtPosition(pose)
 
     def resetGyro(self, pose: Pose2d):
         self.gyro.reset()
-        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        # self.gyro.setAngleAdjustment(pose.rotation().degrees())
         self.rotationOffset = pose.rotation().degrees()
         self.resetOdometryAtPosition(pose)
 

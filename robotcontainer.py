@@ -101,7 +101,7 @@ class RobotContainer:
                         WaitCommand(14.9),
                         [
                             AutonomousRoutine(
-                                self.drive, self.arm, self.grip, relevantName, []
+                                self.drive, self.arm, self.grip, self.light, relevantName, []
                             )
                         ],
                     ),

@@ -22,10 +22,12 @@ from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
 from commands.drive.chargestationautobalance import AutoBalance
 from commands.gripper import GripperHoldingState, GripperIntake, GripperOuttake
+from commands.light.cubeLights import CubeLights
 from commands.resetdrive import ResetDrive
 from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.grippersubsystem import GripperSubsystem
+from subsystems.lightsubsystem import LightSubsystem
 
 
 class AutonomousRoutine(SequentialCommandGroup):
@@ -36,6 +38,7 @@ class AutonomousRoutine(SequentialCommandGroup):
         drive: DriveSubsystem,
         arm: ArmSubsystem,
         grip: GripperSubsystem,
+        light: LightSubsystem,
         name: str,
         simultaneousCommands: List[Command],
     ):
@@ -44,11 +47,12 @@ class AutonomousRoutine(SequentialCommandGroup):
             "store": ParallelCommandGroup(
                 SetArmPositionStored(arm), GripperHoldingState(grip)
             ),
-            "top": SequentialCommandGroup(SetArmPositionTop(arm)),
+            "top":  SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.2)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm)),
             "safe": ParallelDeadlineGroup(
-                WaitCommand(0.4), [SetArmPositionSafeTop(arm)]
+                WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
             ),
+            "cube": CubeLights(light),
             "safestore": ParallelDeadlineGroup(
                 WaitCommand(0.4),
                 [
