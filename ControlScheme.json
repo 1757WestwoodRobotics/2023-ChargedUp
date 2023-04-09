@@ -21,16 +21,16 @@
     "replace me"
   ],
   "armFudgeFactorIncrease": [
-    0,
+    2,
     {
-      "POV": [0, 0]
+      "Button": 11
     },
     "POV up"
   ],
   "armFudgeFactorDecrease": [
-    0,
+    2,
     {
-      "POV": [0, 180]
+      "Button": 13
     },
     "POV down"
   ],
@@ -121,14 +121,14 @@
   "lightsCone": [
     0,
     {
-      "POV": [0,90]
+      "POV": [0, 90]
     },
     "replace me"
   ],
   "lightsCube": [
     0,
     {
-      "POV": [0,270]
+      "POV": [0, 270]
     },
     "replace me"
   ],
@@ -166,7 +166,7 @@
       "Button": 1
     },
     "PLACEHOLDER"
-    ],
+  ],
   "AutoBalance": [
     0,
     {

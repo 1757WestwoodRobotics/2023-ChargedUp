@@ -181,10 +181,10 @@ class RobotContainer:
             ResetArm(self.arm)
         )
 
-        commands2.button.POVButton(
+        commands2.button.JoystickButton(
             *self.operatorInterface.armFudgeIncrease
         ).whenPressed(IncreaseArmFudge(self.arm))
-        commands2.button.POVButton(
+        commands2.button.JoystickButton(
             *self.operatorInterface.armFudgeDecrease
         ).whenPressed(DecreaseArmFudge(self.arm))
 

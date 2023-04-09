@@ -179,8 +179,8 @@ class OperatorInterface:
         self.armGroundIntake = getPOVBindingOfName("armGroundIntake")
         self.armGroundCone = getPOVBindingOfName("armGroundCone")
 
-        self.armFudgeIncrease = getPOVBindingOfName("armFudgeFactorIncrease")
-        self.armFudgeDecrease = getPOVBindingOfName("armFudgeFactorDecrease")
+        self.armFudgeIncrease = getButtonBindingOfName("armFudgeFactorIncrease")
+        self.armFudgeDecrease = getButtonBindingOfName("armFudgeFactorDecrease")
 
         self.armDemo = getButtonBindingOfName("armDemo")
         self.resetArm = getButtonBindingOfName("resetArm")
