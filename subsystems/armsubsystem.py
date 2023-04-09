@@ -57,7 +57,11 @@ class ArmSubsystem(SubsystemBase):
             elif self == ArmSubsystem.ArmState.Mid:
                 return constants.kArmMidScorePosition
             elif self == ArmSubsystem.ArmState.DoubleSubstation:
-                return constants.kArmDoubleSubstationPosition
+                return (
+                    constants.kArmDoubleSubstationPositionCube
+                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    else constants.kArmDoubleSubstationPositionCone
+                )
             elif self == ArmSubsystem.ArmState.SingleSubtation:
                 return constants.kArmSingleSubstationPosition
             elif self == ArmSubsystem.ArmState.Top:
