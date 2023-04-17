@@ -144,21 +144,21 @@ class ArmSubsystem(SubsystemBase):
             constants.kArmShoulderLength / constants.kMetersPerInch,
             -90,
             10,
-            Color8Bit(Color.kGold),
+            Color8Bit(Color.kMediumAquamarine),
         )
         self.armElbowEncoder = self.armShoulderEncoder.appendLigament(
             "Arm Elbow Encoder",
             constants.kArmElbowLength / constants.kMetersPerInch,
             45,
             10,
-            Color8Bit(Color.kPurple),
+            Color8Bit(Color.kAquamarine),
         )
         self.armWristEncoder = self.armElbowEncoder.appendLigament(
             "Wrist Encoder",
             constants.kArmWristLength / constants.kMetersPerInch,
             10,
             10,
-            Color8Bit(Color.kWhite),
+            Color8Bit(Color.kAqua),
         )
 
         SmartDashboard.putData("Arm Sim", self.mech)
@@ -184,26 +184,20 @@ class ArmSubsystem(SubsystemBase):
 
     def _getShoulderEncoder(self) -> Rotation2d:
         return Rotation2d(
-            angleModulus(
-                -self.shoulderEncoder.getPosition().radians()
-                / constants.kArmEncoderToSprocketGearRatio
-            )
+            angleModulus(-self.shoulderEncoder.getPosition().radians())
+            / constants.kArmEncoderToSprocketGearRatio
         )
 
     def _getElbowEncoder(self) -> Rotation2d:
         return Rotation2d(
-            angleModulus(
-                self.elbowEncoder.getPosition().radians()
-                / constants.kArmEncoderToSprocketGearRatio
-            )
+            angleModulus(self.elbowEncoder.getPosition().radians())
+            / constants.kArmEncoderToSprocketGearRatio
         )
 
     def _getWristEncoder(self) -> Rotation2d:
         return Rotation2d(
-            angleModulus(
-                self.wristEncoder.getPosition().radians()
-                / constants.kArmEncoderToSprocketGearRatio
-            )
+            angleModulus(-self.wristEncoder.getPosition().radians())
+            / constants.kArmEncoderToSprocketGearRatio
         )
 
     def __init__(self) -> None:
@@ -364,6 +358,9 @@ class ArmSubsystem(SubsystemBase):
         shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
             Pose2d(twoLinkPosition, pose.rotation())
         )
+        # shoulderOffset = self._getShoulderEncoder().radians()
+        # elbowOffset = self._getElbowEncoder().radians()
+        # wristOffset = self._getWristEncoder().radians()
         shoulderOffset = 0
         elbowOffset = 0
         wristOffset = 0
@@ -379,12 +376,7 @@ class ArmSubsystem(SubsystemBase):
             * constants.kElbowArmGearRatio
         )
         self.wristArm.setEncoderPosition(
-            (
-                shoulderAngle
-                + elbowAngle
-                + wristAngle
-                + wristOffset
-            )
+            (shoulderAngle + elbowAngle + wristAngle + wristOffset)
             * constants.kTalonEncoderPulsesPerRadian
             * constants.kWristArmGearRatio
         )
@@ -646,14 +638,17 @@ class ArmSubsystem(SubsystemBase):
 
         self.armElbowEncoder.setAngle(
             self._getElbowEncoder().degrees()
-            + shoulderAngle / constants.kRadiansPerDegree
+            + elbowAngle / constants.kRadiansPerDegree
+            - self._getShoulderEncoder().degrees()
         )
         self.armShoulderEncoder.setAngle(
             self._getShoulderEncoder().degrees()
-            + elbowAngle / constants.kRadiansPerDegree
+            + shoulderAngle / constants.kRadiansPerDegree
         )
         self.armWristEncoder.setAngle(
-            self._getWristEncoder().degrees() + wristAngle / constants.kRadiansPerDegree
+            self._getWristEncoder().degrees()
+            + wristAngle / constants.kRadiansPerDegree
+            - self._getElbowEncoder().degrees()
         )
 
         endEffectorPose = self.getEndEffectorPosition()

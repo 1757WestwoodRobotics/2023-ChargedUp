@@ -604,7 +604,7 @@ kElbowFeedForwardLogKey = "arm/ff/elbow"
 kElbowArmFFFactor = 0.0
 
 kElbowArmCANCoderID = 35
-kElbowArmCANCoderOffset = 226.758
+kElbowArmCANCoderOffset = 328.11
 """
 to get encoder offsets for the arm motors
   1. bring the arm to the position you want to call zero
@@ -636,7 +636,7 @@ kShoulderFeedForwardLogKey = "arm/ff/shoulder"
 kShoulderArmFFFactor = 0.0
 
 kShoulderArmCANCoderID = 45
-kShoulderArmCANCoderOffset = 295.4
+kShoulderArmCANCoderOffset = 314.912
 
 kShoulderMinAngle = Rotation2d.fromDegrees(57)
 kShoulderMaxAngle = Rotation2d.fromDegrees(157)
@@ -654,7 +654,7 @@ kWristFeedForwardLogKey = "arm/ff/wrist"
 kWristArmFFFactor = 0.0
 
 kWristArmCANCoderID = 46
-kWristArmCANCoderOffset = 245.654
+kWristArmCANCoderOffset = 270.791
 
 kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
 kWristMaxAngle = Rotation2d.fromDegrees(180)
@@ -762,7 +762,7 @@ kArmSingleSubstationPosition = Pose2d(
 )
 kArmGroundIntakePositionCone = Pose2d(
     -32.484 * kMetersPerInch,
-    7.38 * kMetersPerInch,
+    7.08 * kMetersPerInch,
     Rotation2d.fromDegrees(145.188),
 )
 kArmGroundIntakePositionCube = Pose2d(
@@ -781,7 +781,7 @@ kArmTopSafePosition = Pose2d(
     Rotation2d.fromDegrees(51),
 )
 kArmGroundConeIntakePosition = Pose2d(
-    -30.357 * kMetersPerInch, -4.844 * kMetersPerInch, Rotation2d.fromDegrees(-115.685)
+    -30.357 * kMetersPerInch, -3.344 * kMetersPerInch, Rotation2d.fromDegrees(-115.685)
 )
 
 kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch
