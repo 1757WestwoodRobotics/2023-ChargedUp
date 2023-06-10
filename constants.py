@@ -677,18 +677,18 @@ kArmTranslationalPGain = 1.1
 kArmTranslationalIGain = 0
 kArmTranslationalDGain = 0
 
-kArmTranslationalMaxVelocity = 10
+kArmTranslationalMaxVelocity = 20
 """m/s"""
-kArmTranslationalMaxAcceleration = 15
+kArmTranslationalMaxAcceleration = 20
 """m/s^2"""
 
 kArmRotationalPGain = 0.9
 kArmRotationalIGain = 0
 kArmRotationalDGain = 0
 
-kArmRotationalMaxVelocity = 40
+kArmRotationalMaxVelocity = 60
 """rad/s"""
-kArmRotationalMaxAcceleration = 80
+kArmRotationalMaxAcceleration = 100
 """rad/s^2"""
 kElbowArmOverrideKey = "arm/override/elbow"
 kShoulderArmOverrideKey = "arm/override/shoulder"
