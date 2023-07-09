@@ -30,6 +30,7 @@ from wpimath.geometry import (
     Pose2d,
     Rotation2d,
     Rotation3d,
+    Transform2d,
     Transform3d,
     Translation2d,
     Translation3d,
@@ -775,6 +776,9 @@ kArmGroundIntakePositionCube = Pose2d(
     4.98 * kMetersPerInch,
     Rotation2d.fromDegrees(161.239),
 )
+kArmGroundIntakePositionCubeYoshi = kArmGroundIntakePositionCube + Transform2d(
+    20.0 * kMetersPerInch, 0, 0
+)  # larger extension outwards to not need as much rotation
 kArmGroundSafePosition = Pose2d(
     -30.639 * kMetersPerInch,
     37.087 * kMetersPerInch,

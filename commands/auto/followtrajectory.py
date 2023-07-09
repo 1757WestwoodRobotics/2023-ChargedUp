@@ -26,12 +26,15 @@ class FollowTrajectory(CommandBase):
         trajectory: PathPlannerTrajectory,
         markers: List[PathPlannerTrajectory.EventMarker],
         markerMap: Dict[str, Command],
+        doReset: bool = True
     ) -> None:
         CommandBase.__init__(self)
 
         self.drive = drive
         self.markers = markers
         self.markerMap = markerMap
+
+        self.doReset = doReset
 
         self.currentCommands: List[Tuple[Command, bool]] = []
 
@@ -79,6 +82,10 @@ class FollowTrajectory(CommandBase):
             self.xController, self.yController, self.thetaController
         )
 
+    @staticmethod
+    def allianceRespectivePoseFromState(state):
+        return FollowTrajectory.getAllianceRespectivePoint(state.pose, state.holonomicRotation)
+
     def initialize(self):
         self.timer.reset()
         self.timer.start()
@@ -90,12 +97,8 @@ class FollowTrajectory(CommandBase):
         allianceRespectiveStartingPoint = self.getAllianceRespectivePoint(
             initialState.pose, initialState.holonomicRotation
         )
-        self.drive.setOdometryPosition(
-            Pose2d(
-                allianceRespectiveStartingPoint[0].translation(),
-                allianceRespectiveStartingPoint[1],
-            ),
-        )
+        if self.doReset:
+            self.drive.setOdometryPosition(allianceRespectiveStartingPoint)
 
         self.setControllers()
 
@@ -117,20 +120,18 @@ class FollowTrajectory(CommandBase):
         # )
         DataLogManager.log("begin trajectory")
 
+    @staticmethod
     def getAllianceRespectivePoint(
-        self, pose: Pose2d, holonomicRotation: Rotation2d
-    ) -> Tuple[Pose2d, Rotation2d]:
+        pose: Pose2d, holonomicRotation: Rotation2d
+    ) -> Pose2d:
         if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
-            return (
-                Pose2d(
-                    constants.kFieldLength - pose.X(),
-                    pose.Y(),
-                    -pose.rotation() + Rotation2d(pi),
-                ),
+            return Pose2d(
+                constants.kFieldLength - pose.X(),
+                pose.Y(),
                 -holonomicRotation + Rotation2d(pi),
             )
         else:
-            return (pose, holonomicRotation)
+            return Pose2d(pose.translation(), holonomicRotation)
 
     def execute(self) -> None:
         for command, running in self.currentCommands:
@@ -153,25 +154,27 @@ class FollowTrajectory(CommandBase):
         SmartDashboard.putNumberArray(
             constants.kAutonomousPathError,
             [
-                currentState.X() - allianceRespectiveDesiredState[0].X(),
-                currentState.Y() - allianceRespectiveDesiredState[0].Y(),
-                (currentState.rotation() - allianceRespectiveDesiredState[1]).radians(),
+                currentState.X() - allianceRespectiveDesiredState.X(),
+                currentState.Y() - allianceRespectiveDesiredState.Y(),
+                (
+                    currentState.rotation() - allianceRespectiveDesiredState.rotation()
+                ).radians(),
             ],
         )
         SmartDashboard.putNumberArray(
             constants.kAutonomousPathSample,
             [
-                allianceRespectiveDesiredState[0].X(),
-                allianceRespectiveDesiredState[0].Y(),
-                allianceRespectiveDesiredState[1].radians(),
+                allianceRespectiveDesiredState.X(),
+                allianceRespectiveDesiredState.Y(),
+                allianceRespectiveDesiredState.rotation().radians()
             ],
         )
 
         targetChassisSpeeds = self.controller.calculate(
             currentState,
-            allianceRespectiveDesiredState[0],
+            allianceRespectiveDesiredState,
             desiredState.velocity,
-            allianceRespectiveDesiredState[1],
+            allianceRespectiveDesiredState.rotation(),
         )
 
         SmartDashboard.putNumberArray(
@@ -200,13 +203,15 @@ class FollowTrajectory(CommandBase):
         finalAllianceRespectivePose = self.getAllianceRespectivePoint(
             endState.pose, endState.holonomicRotation
         )
-        return Pose2d(
-            finalAllianceRespectivePose[0].translation(),
-            finalAllianceRespectivePose[1],
-        )
+        return finalAllianceRespectivePose
 
     def end(self, _interrupted: bool) -> None:
-        self.drive.resetOdometryAtPosition(self.getFinalPosition())
+        if self.doReset:
+            self.drive.resetOdometryAtPosition(self.getFinalPosition())
+
+        for command, running in self.currentCommands:
+            if running:
+                command.end(True)
         self.drive.arcadeDriveWithFactors(
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
         )

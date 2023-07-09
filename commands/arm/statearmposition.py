@@ -16,6 +16,7 @@ class SetArmPosition(CommandBase):
 
     def initialize(self) -> None:
         SmartDashboard.putBoolean(constants.kArmAtTargetKey, False)
+        self.arm.resetTimer()
 
     def execute(self) -> None:
         self.arm.state = self.state
@@ -54,6 +55,9 @@ class SetArmPositionGroundIntake(SetArmPosition):
 
 class SetArmPositionGroundCone(SetArmPosition):
     state = ArmSubsystem.ArmState.GroundCone
+
+class SetArmPositionGroundYoshi(SetArmPosition):
+    state = ArmSubsystem.ArmState.Yoshi
 
 
 class SetArmPositionSafeTop(SetArmPosition):

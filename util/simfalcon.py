@@ -165,7 +165,7 @@ class SimFalcon:  # a simulated Falcon 500
         elif mode == ControlMode.Position:
             positionError = self.pidController.calculate(currentPosition, demand)
             rawPercentOutput = (
-                positionError / constants.kTalonEncoderPulsesPerRevolution
+                positionError / 1023
             )  # convert the change in encoder ticks into change into motor %
 
         rawPercentOutput += demand1

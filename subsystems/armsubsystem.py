@@ -50,6 +50,7 @@ class ArmSubsystem(SubsystemBase):
         GroundCone = auto()
         TopSafe = auto()
         OverrideValue = auto()
+        Yoshi = auto()
 
         def position(self) -> Pose2d:
             if self == ArmSubsystem.ArmState.Stored:
@@ -78,6 +79,8 @@ class ArmSubsystem(SubsystemBase):
                 return constants.kArmGroundConeIntakePosition
             elif self == ArmSubsystem.ArmState.GroundSafe:
                 return constants.kArmGroundSafePosition
+            elif self == ArmSubsystem.ArmState.Yoshi:
+                return constants.kArmGroundIntakePositionCubeYoshi
             return constants.kArmStoredPosition
 
         def oscilate(self) -> bool:
@@ -350,14 +353,14 @@ class ArmSubsystem(SubsystemBase):
         self.inputButton = DigitalInput(0)
 
     def reset(self) -> None:
-        # pose = constants.kArmStartupPosition
-        # twoLinkPosition = Translation2d(
-        #     pose.X() - constants.kArmWristLength * pose.rotation().cos(),
-        #     pose.Y() - constants.kArmWristLength * pose.rotation().sin(),
-        # )
-        # shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
-        #     Pose2d(twoLinkPosition, pose.rotation())
-        # )
+        pose = constants.kArmStartupPosition
+        twoLinkPosition = Translation2d(
+            pose.X() - constants.kArmWristLength * pose.rotation().cos(),
+            pose.Y() - constants.kArmWristLength * pose.rotation().sin(),
+        )
+        shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
+            Pose2d(twoLinkPosition, pose.rotation())
+        )
 
         shoulderAngle, elbowAngle, wristAngle = constants.kArmStartupAngles
         # shoulderOffset = self._getShoulderEncoder().radians()
@@ -735,6 +738,10 @@ class ArmSubsystem(SubsystemBase):
         self._updateCOMs()
         self._updateArmPositionsLogging()
 
+    def resetTimer(self) -> None:
+        self.targetTimer.reset()
+        self.targetTimer.start()
+
     def _canElbowReachPosition(self, position: Translation2d):
         return (
             position.distance(Translation2d())
@@ -771,7 +778,7 @@ class ArmSubsystem(SubsystemBase):
                         else constants.kArmPositionTolerence
                     )
                 )
-                or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
+                # or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
             )
             and (
                 abs(
@@ -780,7 +787,7 @@ class ArmSubsystem(SubsystemBase):
                 )
                 < constants.kArmRotationTolerence
             )
-            and (self.targetTimer.get() > 0.6)
+            and (self.targetTimer.get() > 0.06)
         )
 
     def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:
