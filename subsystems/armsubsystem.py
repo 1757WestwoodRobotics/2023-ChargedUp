@@ -350,14 +350,16 @@ class ArmSubsystem(SubsystemBase):
         self.inputButton = DigitalInput(0)
 
     def reset(self) -> None:
-        pose = constants.kArmStartupPosition
-        twoLinkPosition = Translation2d(
-            pose.X() - constants.kArmWristLength * pose.rotation().cos(),
-            pose.Y() - constants.kArmWristLength * pose.rotation().sin(),
-        )
-        shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
-            Pose2d(twoLinkPosition, pose.rotation())
-        )
+        # pose = constants.kArmStartupPosition
+        # twoLinkPosition = Translation2d(
+        #     pose.X() - constants.kArmWristLength * pose.rotation().cos(),
+        #     pose.Y() - constants.kArmWristLength * pose.rotation().sin(),
+        # )
+        # shoulderAngle, elbowAngle, wristAngle = self._armAnglesAtPosiiton(
+        #     Pose2d(twoLinkPosition, pose.rotation())
+        # )
+
+        shoulderAngle, elbowAngle, wristAngle = constants.kArmStartupAngles
         # shoulderOffset = self._getShoulderEncoder().radians()
         # elbowOffset = self._getElbowEncoder().radians()
         # wristOffset = self._getWristEncoder().radians()

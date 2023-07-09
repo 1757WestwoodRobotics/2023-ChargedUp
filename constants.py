@@ -745,6 +745,11 @@ kArmStartupPosition = Pose2d(
     26.865289 * kMetersPerInch,
     Rotation2d.fromDegrees(51.338),
 )
+kArmStartupAngles = (
+    0.9643281370153848,
+    2.618827161508282,
+    -2.687138167134818,
+)  # radians
 kArmDoubleSubstationPositionCube = Pose2d(
     -21.907 * kMetersPerInch,
     42.693 * kMetersPerInch,
