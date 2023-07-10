@@ -48,6 +48,17 @@ class SetArmPositionStored(SetArmPosition):
 class SetArmPositionOverride(SetArmPosition):
     state = ArmSubsystem.ArmState.OverrideValue
 
+    def initialize(self) -> None:
+        SetArmPosition.initialize(self)
+        shoulder, elbow, wrist = (
+            self.arm.getShoulderArmRotation(),
+            self.arm.getElbowArmRotation(),
+            self.arm.getWristArmRotation(),
+        )
+        SmartDashboard.putNumber(constants.kShoulderArmOverrideKey, shoulder.degrees())
+        SmartDashboard.putNumber(constants.kElbowArmOverrideKey, elbow.degrees())
+        SmartDashboard.putNumber(constants.kWristArmOverrideKey, wrist.degrees())
+
 
 class SetArmPositionGroundIntake(SetArmPosition):
     state = ArmSubsystem.ArmState.GroundLoading
@@ -55,6 +66,7 @@ class SetArmPositionGroundIntake(SetArmPosition):
 
 class SetArmPositionGroundCone(SetArmPosition):
     state = ArmSubsystem.ArmState.GroundCone
+
 
 class SetArmPositionGroundYoshi(SetArmPosition):
     state = ArmSubsystem.ArmState.Yoshi

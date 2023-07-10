@@ -155,9 +155,6 @@ class RobotContainer:
             *self.operatorInterface.armSingleSubstation
         ).whileHeld(SetArmPositionSingleSubstation(self.arm))
 
-        commands2.button.JoystickButton(*self.operatorInterface.armOverride).whileHeld(
-            SetArmPositionOverride(self.arm)
-        )
         commands2.button.POVButton(*self.operatorInterface.armGroundIntake).whileHeld(
             SetArmPositionGroundIntake(self.arm)
         )
@@ -180,6 +177,10 @@ class RobotContainer:
 
         commands2.button.JoystickButton(*self.operatorInterface.resetArm).whenPressed(
             ResetArm(self.arm)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.armOverride).whileHeld(
+            SetArmPositionOverride(self.arm)
         )
 
         commands2.button.JoystickButton(
