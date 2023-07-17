@@ -746,14 +746,14 @@ kArmStartupPosition = Pose2d(
     Rotation2d.fromDegrees(51.338),
 )
 kArmDoubleSubstationPositionCube = Pose2d(
-    -21.907 * kMetersPerInch,
-    42.693 * kMetersPerInch,
-    Rotation2d.fromDegrees(143.433),
+    -31.989 * kMetersPerInch,
+    34.78 * kMetersPerInch,
+    Rotation2d.fromDegrees(164.465),
 )
 kArmDoubleSubstationPositionCone = Pose2d(
-    -20.881 * kMetersPerInch,
-    43.701 * kMetersPerInch,
-    Rotation2d.fromDegrees(144.344),
+    -28.5955* kMetersPerInch,
+    36.35* kMetersPerInch,
+    Rotation2d.fromDegrees(173.544),
 )
 kArmSingleSubstationPosition = Pose2d(
     -9.679 * kMetersPerInch,

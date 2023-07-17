@@ -1,4 +1,5 @@
 import os
+from commands.intake import IdleIntake, IntakeIntake, OuttakeIntake
 from commands2._impl import ParallelDeadlineGroup, SequentialCommandGroup, WaitCommand
 import wpilib
 from wpimath.geometry import Pose2d
@@ -29,12 +30,7 @@ from commands.arm.statearmposition import (
     SetArmPositionStored,
     SetArmPositionTop,
 )
-from commands.auto.autonomousaction import AutonomousRoutine
-from commands.gripper import (
-    GripperIntake,
-    GripperOuttake,
-    GripperHoldingState,
-)
+# from commands.auto.autonomousaction import AutonomousRoutine
 from commands.light.cubeLights import ConeLights, CubeLights
 from commands.drive.chargestationautobalance import AutoBalance
 
@@ -42,8 +38,8 @@ from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
-from subsystems.grippersubsystem import GripperSubsystem
 from subsystems.lightsubsystem import LightSubsystem
+from subsystems.intakesubsystem import IntakeSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -62,9 +58,9 @@ class RobotContainer:
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
+        self.intake = IntakeSubsystem()
         # self.vision = VisionSubsystem(self.drive)
         self.log = LoggingSubsystem(self.operatorInterface)
-        self.grip = GripperSubsystem()
         self.arm = ArmSubsystem()
         self.light = LightSubsystem()
 
@@ -80,7 +76,7 @@ class RobotContainer:
                 self.drive,
             ),
         )
-        self.grip.setDefaultCommand(GripperHoldingState(self.grip))
+        self.intake.setDefaultCommand(IdleIntake(self.intake))
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back
         self.complexAuto = ComplexAuto(self.drive)
@@ -91,23 +87,23 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        pathsPath = os.path.join(wpilib.getDeployDirectory(), "pathplanner")
-        for file in os.listdir(pathsPath):
-            relevantName = file.split(".")[0]
-            self.chooser.addOption(
-                relevantName,
-                SequentialCommandGroup(
-                    ParallelDeadlineGroup(
-                        WaitCommand(14.9),
-                        [
-                            AutonomousRoutine(
-                                self.drive, self.arm, self.grip, self.light, relevantName, []
-                            )
-                        ],
-                    ),
-                    DefenseState(self.drive),
-                ),
-            )
+        # pathsPath = os.path.join(wpilib.getDeployDirectory(), "pathplanner")
+        # for file in os.listdir(pathsPath):
+        #     relevantName = file.split(".")[0]
+        #     self.chooser.addOption(
+        #         relevantName,
+        #         SequentialCommandGroup(
+        #             ParallelDeadlineGroup(
+        #                 WaitCommand(14.9),
+        #                 [
+        #                     AutonomousRoutine(
+        #                         self.drive, self.arm, self.grip, self.light, relevantName, []
+        #                     )
+        #                 ],
+        #             ),
+        #             DefenseState(self.drive),
+        #         ),
+        #     )
 
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
 
@@ -234,10 +230,10 @@ class RobotContainer:
         # gripper subsystem related calls
 
         commands2.button.JoystickButton(*self.operatorInterface.gripIntake).whileHeld(
-            GripperIntake(self.grip)
+            IntakeIntake(self.intake)
         )
         commands2.button.JoystickButton(*self.operatorInterface.gripOuttake).whileHeld(
-            GripperOuttake(self.grip)
+            OuttakeIntake(self.intake)
         )
         commands2.button.POVButton(*self.operatorInterface.lightCone).whenPressed(
             ConeLights(self.light)
