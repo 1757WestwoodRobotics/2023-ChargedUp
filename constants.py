@@ -726,15 +726,15 @@ kArmElbowActualMotorKey = "arm/motors/actual/elbow"
 kArmWristActualMotorKey = "arm/motors/actual/wrist"
 
 # scoring positions, derived from cad geometry
-kArmTopScorePosition = Pose2d(
-    -41.430 * kMetersPerInch,
-    46.44 * kMetersPerInch,
-    Rotation2d.fromDegrees(138),
+kArmTopScorePositionCone = Pose2d(
+    -39.702 * kMetersPerInch,
+    41.385 * kMetersPerInch,
+    Rotation2d.fromDegrees(105),
 )
-kArmMidScorePosition = Pose2d(
-    -26.345 * kMetersPerInch,
-    35.015 * kMetersPerInch,
-    Rotation2d.fromDegrees(138),
+kArmMidScorePositionCone = Pose2d(
+    -26.106 * kMetersPerInch,
+    31.349 * kMetersPerInch,
+    Rotation2d.fromDegrees(-161),
 )
 kArmStoredPosition = Pose2d(
     4.5311 * kMetersPerInch,
@@ -752,14 +752,14 @@ kArmStartupAngles = (
     -2.687138167134818,
 )  # radians
 kArmDoubleSubstationPositionCube = Pose2d(
-    -21.907 * kMetersPerInch,
-    42.693 * kMetersPerInch,
-    Rotation2d.fromDegrees(143.433),
+    -31.989 * kMetersPerInch,
+    34.78 * kMetersPerInch,
+    Rotation2d.fromDegrees(164.465),
 )
 kArmDoubleSubstationPositionCone = Pose2d(
-    -20.881 * kMetersPerInch,
-    43.701 * kMetersPerInch,
-    Rotation2d.fromDegrees(144.344),
+    -28.5955* kMetersPerInch,
+    36.35* kMetersPerInch,
+    Rotation2d.fromDegrees(173.544),
 )
 kArmSingleSubstationPosition = Pose2d(
     -9.679 * kMetersPerInch,
@@ -767,14 +767,14 @@ kArmSingleSubstationPosition = Pose2d(
     Rotation2d.fromDegrees(180 - 61.617),
 )
 kArmGroundIntakePositionCone = Pose2d(
-    -32.484 * kMetersPerInch,
-    7.08 * kMetersPerInch,
-    Rotation2d.fromDegrees(145.188),
+    -18.465 * kMetersPerInch,
+    5.903 * kMetersPerInch,
+    Rotation2d.fromDegrees(-151.795),
 )
 kArmGroundIntakePositionCube = Pose2d(
-    -37.568 * kMetersPerInch,
-    4.98 * kMetersPerInch,
-    Rotation2d.fromDegrees(161.239),
+    -32.254 * kMetersPerInch,
+    4.992 * kMetersPerInch,
+    Rotation2d.fromDegrees(155.080),
 )
 kArmGroundIntakePositionCubeYoshi = kArmGroundIntakePositionCube + Transform2d(
     20.0 * kMetersPerInch, 0, 0
