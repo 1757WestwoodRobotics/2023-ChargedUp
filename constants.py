@@ -834,7 +834,7 @@ kApriltagHeight = kApriltagWidth
 # IntakeMotor Motors
 kIntakeCANID = 3
 kIntakePIDSlot = 0
-kIntakePGain = 0.0001
+kIntakePGain = 0.01
 kIntakeIGain = 0
 kIntakeDGain = 0
 kIntakeMotorPercent = 0.7
