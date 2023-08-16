@@ -56,7 +56,11 @@ class ArmSubsystem(SubsystemBase):
             if self == ArmSubsystem.ArmState.Stored:
                 return constants.kArmStoredPosition
             elif self == ArmSubsystem.ArmState.Mid:
-                return constants.kArmMidScorePosition
+                return (
+                    constants.kArmMidScorePositionCube
+                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    else constants.kArmMidScorePositionCone
+                )
             elif self == ArmSubsystem.ArmState.DoubleSubstation:
                 return (
                     constants.kArmDoubleSubstationPositionCube
@@ -66,7 +70,11 @@ class ArmSubsystem(SubsystemBase):
             elif self == ArmSubsystem.ArmState.SingleSubtation:
                 return constants.kArmSingleSubstationPosition
             elif self == ArmSubsystem.ArmState.Top:
-                return constants.kArmTopScorePosition
+                return (
+                    constants.kArmTopScorePositionCube
+                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    else constants.kArmTopScorePositionCone
+                )
             elif self == ArmSubsystem.ArmState.GroundLoading:
                 return (
                     constants.kArmGroundIntakePositionCube

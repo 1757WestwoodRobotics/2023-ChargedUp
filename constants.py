@@ -729,9 +729,20 @@ kArmWristActualMotorKey = "arm/motors/actual/wrist"
 kArmTopScorePositionCone = Pose2d(
     -39.702 * kMetersPerInch,
     41.385 * kMetersPerInch,
-    Rotation2d.fromDegrees(105),
+    Rotation2d.fromDegrees(163),
 )
+kArmTopScorePositionCube = Pose2d(
+    -35.256 * kMetersPerInch,
+    41.475 * kMetersPerInch,
+    Rotation2d.fromDegrees(121.754),
+)
+
 kArmMidScorePositionCone = Pose2d(
+    -26.106 * kMetersPerInch,
+    31.349 * kMetersPerInch,
+    Rotation2d.fromDegrees(-161),
+)
+kArmMidScorePositionCube = Pose2d(
     -26.106 * kMetersPerInch,
     31.349 * kMetersPerInch,
     Rotation2d.fromDegrees(-161),
@@ -757,8 +768,8 @@ kArmDoubleSubstationPositionCube = Pose2d(
     Rotation2d.fromDegrees(164.465),
 )
 kArmDoubleSubstationPositionCone = Pose2d(
-    -28.5955* kMetersPerInch,
-    36.35* kMetersPerInch,
+    -28.5955 * kMetersPerInch,
+    36.35 * kMetersPerInch,
     Rotation2d.fromDegrees(173.544),
 )
 kArmSingleSubstationPosition = Pose2d(
@@ -767,9 +778,9 @@ kArmSingleSubstationPosition = Pose2d(
     Rotation2d.fromDegrees(180 - 61.617),
 )
 kArmGroundIntakePositionCone = Pose2d(
-    -18.465 * kMetersPerInch,
-    5.903 * kMetersPerInch,
-    Rotation2d.fromDegrees(-151.795),
+    -18.368 * kMetersPerInch,
+    4.701 * kMetersPerInch,
+    Rotation2d.fromDegrees(-132.64),
 )
 kArmGroundIntakePositionCube = Pose2d(
     -32.254 * kMetersPerInch,
@@ -790,7 +801,7 @@ kArmTopSafePosition = Pose2d(
     Rotation2d.fromDegrees(51),
 )
 kArmGroundConeIntakePosition = Pose2d(
-    -30.357 * kMetersPerInch, -3.344 * kMetersPerInch, Rotation2d.fromDegrees(-115.685)
+    -23.616 * kMetersPerInch, -0.65 * kMetersPerInch, Rotation2d.fromDegrees(-145.251)
 )
 
 kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch
