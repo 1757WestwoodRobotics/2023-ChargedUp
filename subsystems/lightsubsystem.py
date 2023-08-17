@@ -40,12 +40,12 @@ class LightSubsystem(SubsystemBase):
         self.state = LightSubsystem.State.No
 
     def periodic(self) -> None:
-        if RobotState.isDisabled():
-            self.light.animate(self.disabledAnimation1)
-            self.light.animate(self.disabledAnimation2, 1)
-        elif RobotState.isEStopped():
+        if RobotState.isEStopped():
             self.light.animate(self.estopAnim1)
             self.light.animate(self.estopAnim2, 1)
+        elif RobotState.isDisabled():
+            self.light.animate(self.disabledAnimation1)
+            self.light.animate(self.disabledAnimation2, 1)
         else:
             if self.state == LightSubsystem.State.No:
                 self.light.animate(self.disabledAnimation1)

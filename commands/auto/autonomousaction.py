@@ -85,7 +85,9 @@ class AutonomousRoutine(SequentialCommandGroup):
         self.paths = trajectoryFromFile(name)
         followCommands = [
             SequentialCommandGroup(
-                self.stopEventGroup(path.getStartStopEvent()) if num == 0 else WaitCommand(0),
+                self.stopEventGroup(path.getStartStopEvent())
+                if num == 0
+                else WaitCommand(0),
                 FollowTrajectory(drive, path, path.getMarkers(), self.markerMap, False),
                 self.stopEventGroup(path.getEndStopEvent()),
             )

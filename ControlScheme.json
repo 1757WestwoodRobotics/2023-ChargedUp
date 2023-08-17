@@ -107,6 +107,13 @@
   "defenseStateControl": [
     0,
     {
+      "Button": 4
+    },
+    "right button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "hookScore": [
+    0,
+    {
       "Button": 3
     },
     "left button on top of joystick (ThrustmasterT16000M)"

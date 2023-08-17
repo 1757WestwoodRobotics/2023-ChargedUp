@@ -101,7 +101,12 @@ class RobotContainer:
                         WaitCommand(14.9),
                         [
                             AutonomousRoutine(
-                                self.drive, self.arm, self.grip, self.light, relevantName, []
+                                self.drive,
+                                self.arm,
+                                self.grip,
+                                self.light,
+                                relevantName,
+                                [],
                             )
                         ],
                     ),
@@ -166,8 +171,8 @@ class RobotContainer:
         commands2.button.POVButton(*self.operatorInterface.armGroundCone).whileHeld(
             SetArmPositionGroundCone(self.arm)
         ).whenReleased(
-            commands2.ParallelCommandGroup(
-                SetArmPositionMid(self.arm), commands2.WaitCommand(0.2)
+            commands2.ParallelDeadlineGroup(
+                commands2.WaitCommand(0.2), [SetArmPositionMid(self.arm)]
             )
         )
 

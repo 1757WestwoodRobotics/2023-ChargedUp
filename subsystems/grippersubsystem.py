@@ -37,7 +37,7 @@ class GripperSubsystem(SubsystemBase):
                 enable=True,
                 currentLimit=20,
                 triggerThresholdCurrent=30,
-                triggerThresholdTime=0.1,
+                triggerThresholdTime=0.4,
             )
         )
 

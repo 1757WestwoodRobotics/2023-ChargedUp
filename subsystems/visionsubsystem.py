@@ -5,9 +5,7 @@ from photonvision import PoseStrategy, RobotPoseEstimator
 from robotpy_apriltag import AprilTagField
 import robotpy_apriltag
 from wpilib import SmartDashboard
-from wpimath.geometry import (
-    Transform3d, Pose3d
-)
+from wpimath.geometry import Transform3d, Pose3d
 from photonvision import PhotonCamera
 
 import constants

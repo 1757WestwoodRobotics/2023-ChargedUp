@@ -510,7 +510,10 @@ class DriveSubsystem(SubsystemBase):
         self.backRightModule.applyState(backRightState)
 
     def getRotation(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(((self.gyro.getRotation2d().degrees() / 0.98801) % 360) + self.rotationOffset)
+        return Rotation2d.fromDegrees(
+            ((self.gyro.getRotation2d().degrees() / 0.98801) % 360)
+            + self.rotationOffset
+        )
 
     def getPitch(self) -> Rotation2d:
         return Rotation2d.fromDegrees(-self.gyro.getPitch() + 180)

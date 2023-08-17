@@ -26,7 +26,7 @@ class FollowTrajectory(CommandBase):
         trajectory: PathPlannerTrajectory,
         markers: List[PathPlannerTrajectory.EventMarker],
         markerMap: Dict[str, Command],
-        doReset: bool = True
+        doReset: bool = True,
     ) -> None:
         CommandBase.__init__(self)
 
@@ -84,7 +84,9 @@ class FollowTrajectory(CommandBase):
 
     @staticmethod
     def allianceRespectivePoseFromState(state):
-        return FollowTrajectory.getAllianceRespectivePoint(state.pose, state.holonomicRotation)
+        return FollowTrajectory.getAllianceRespectivePoint(
+            state.pose, state.holonomicRotation
+        )
 
     def initialize(self):
         self.timer.reset()
@@ -166,7 +168,7 @@ class FollowTrajectory(CommandBase):
             [
                 allianceRespectiveDesiredState.X(),
                 allianceRespectiveDesiredState.Y(),
-                allianceRespectiveDesiredState.rotation().radians()
+                allianceRespectiveDesiredState.rotation().radians(),
             ],
         )
 

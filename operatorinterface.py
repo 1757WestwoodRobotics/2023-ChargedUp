@@ -172,6 +172,7 @@ class OperatorInterface:
         # arm controls
 
         self.armMid = getPOVBindingOfName("armMid")
+        self.hookScore = getButtonBindingOfName("hookScore")
         self.armTop = getPOVBindingOfName("armTop")
         self.armDoubleSubstation = getButtonBindingOfName("armDoubleSubstation")
         self.armSingleSubstation = getButtonBindingOfName("armSingleSubstation")
