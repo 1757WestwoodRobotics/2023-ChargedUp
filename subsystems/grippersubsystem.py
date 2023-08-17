@@ -1,5 +1,6 @@
 # each roller alternates meaning if you were to pick up a cube you would eject a cone
 from enum import Enum, auto
+from ctre import SupplyCurrentLimitConfiguration
 from commands2 import SubsystemBase
 from util.simfalcon import Falcon
 from wpilib import SmartDashboard
@@ -26,9 +27,19 @@ class GripperSubsystem(SubsystemBase):
             constants.kIntakePGain,
             constants.kIntakeIGain,
             constants.kIntakeDGain,
+            True
         )
 
         self.motorIntake.setNeutralMode(Falcon.NeutralMode.Break)
+
+        self.motorIntake.setCurrentLimit(
+            SupplyCurrentLimitConfiguration(
+                enable=True,
+                currentLimit=20,
+                triggerThresholdCurrent=30,
+                triggerThresholdTime=0.1,
+            )
+        )
 
         self.state = GripperSubsystem.GripperState.HoldingState
         SmartDashboard.putBoolean(constants.kCubeModeKey, False)
