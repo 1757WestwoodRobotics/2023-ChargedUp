@@ -745,7 +745,7 @@ kArmMidScorePositionCone = Pose2d(
 kArmMidScorePositionCube = Pose2d(
     -26.106 * kMetersPerInch,
     31.349 * kMetersPerInch,
-    Rotation2d.fromDegrees(-161),
+    Rotation2d.fromDegrees(121.754),
 )
 kArmStoredPosition = Pose2d(
     4.5311 * kMetersPerInch,
