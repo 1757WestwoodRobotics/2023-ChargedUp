@@ -1,7 +1,8 @@
 from enum import Enum, auto
 
-from typing import Callable
+from typing import Any, Callable
 from commands2.button import Button
+from commands2 import CommandBase
 from wpilib import Joystick, SmartDashboard
 
 
@@ -20,6 +21,31 @@ class AxisButton(Button):
 class SmartDashboardButton(Button):
     def __init__(self, key: str) -> None:
         super().__init__(lambda: SmartDashboard.getBoolean(key, False))
+
+class SmartDashboardSetter(CommandBase):
+    def __init__(self, key: str, valueOn: Any, valueOff: Any) -> None:
+        CommandBase.__init__(self)
+        self.setName(__class__.__name__)
+
+        self.key = key
+        self.value = valueOn
+        self.valueOff = valueOff
+        self.addRequirements([])
+
+    def execute(self) -> None:
+        if type(self.value) == bool:
+            SmartDashboard.putBoolean(self.key, self.value)
+        else:
+            raise NotImplementedError("That type isn't implemented")
+
+    def isFinished(self) -> bool:
+        return False
+
+    def end(self, _interrupted: bool) -> None:
+        if type(self.value) == bool:
+            SmartDashboard.putBoolean(self.key, self.valueOff)
+        else:
+            raise NotImplementedError("That type isn't implemented")
 
 
 class DPadButton(Button):

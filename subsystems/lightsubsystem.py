@@ -2,7 +2,7 @@ from enum import Enum, auto
 from commands2 import SubsystemBase
 
 from ctre.led import CANdle, RainbowAnimation, ColorFlowAnimation, StrobeAnimation
-from wpilib import RobotState
+from wpilib import RobotState, SmartDashboard
 
 import constants
 
@@ -10,6 +10,7 @@ import constants
 class LightSubsystem(SubsystemBase):
     class State(Enum):
         Cone = auto()
+        ConeFlange = auto()
         Cube = auto()
 
         No = auto()
@@ -34,6 +35,9 @@ class LightSubsystem(SubsystemBase):
             255, 255, 0, 255, 0.7, 17, ledOffset=8 + 17
         )  # yellow
 
+        self.coneFlangeAnimation1 = StrobeAnimation(255, 255, 0, 255, 0.3, 17, 8)
+        self.coneFlangeAnimation2 = StrobeAnimation(255, 255, 0, 255, 0.3, 17, 8 + 17)
+
         self.estopAnim1 = StrobeAnimation(255, 0, 0, 255, 0.3, 17, 8)
         self.estopAnim2 = StrobeAnimation(255, 0, 0, 255, 0.3, 17, 8 + 17)
 
@@ -56,12 +60,18 @@ class LightSubsystem(SubsystemBase):
             elif self.state == LightSubsystem.State.Cube:
                 self.light.animate(self.cubeAnimation1)
                 self.light.animate(self.cubeAnimation2, 1)
+            elif self.state == LightSubsystem.State.ConeFlange:
+                self.light.animate(self.coneFlangeAnimation1)
+                self.light.animate(self.coneFlangeAnimation2, 1)
 
     def offLights(self) -> None:
         self.state = LightSubsystem.State.No
 
     def coneLights(self) -> None:
         self.state = LightSubsystem.State.Cone
+
+    def coneFlangeLights(self) -> None:
+        self.state = LightSubsystem.State.ConeFlange
 
     def cubeLights(self) -> None:
         self.state = LightSubsystem.State.Cube

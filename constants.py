@@ -732,15 +732,15 @@ kArmTopScorePositionCone = Pose2d(
     Rotation2d.fromDegrees(156.18),
 )
 kArmTopScorePositionCube = Pose2d(
-    -35.256 * kMetersPerInch,
-    41.475 * kMetersPerInch,
-    Rotation2d.fromDegrees(121.754),
+    -43.486 * kMetersPerInch,
+    44.602 * kMetersPerInch,
+    Rotation2d.fromDegrees(139.476),
 )
 
 kArmTopScorePositionConeHook = Pose2d (
-    -35.256 * kMetersPerInch,
-    41.475 * kMetersPerInch,
-    Rotation2d.fromDegrees(121.754),
+    -47.718 * kMetersPerInch,
+    39.116 * kMetersPerInch,
+    Rotation2d.fromDegrees(160.57),
 )
 
 kArmMidScorePositionCone = Pose2d(
@@ -749,10 +749,16 @@ kArmMidScorePositionCone = Pose2d(
     Rotation2d.fromDegrees(-147.313),
 )
 kArmMidScorePositionCube = Pose2d(
-    -26.106 * kMetersPerInch,
-    31.349 * kMetersPerInch,
-    Rotation2d.fromDegrees(121.754),
+    -26.932 * kMetersPerInch,
+    32.12 * kMetersPerInch,
+    Rotation2d.fromDegrees(137.093),
 )
+kArmMidScorePositionConeHook = Pose2d(
+    -28.529 * kMetersPerInch,
+    26.923 * kMetersPerInch,
+    Rotation2d.fromDegrees(174.97),
+)
+
 kArmStoredPosition = Pose2d(
     4.5311 * kMetersPerInch,
     30.1323 * kMetersPerInch,
@@ -859,13 +865,15 @@ kIntakeMotorPercent = 0.7
 
 kCubeLoadedKey = "intake/cubeInPos"
 kConeLoadedKey = "intake/coneInPos"
-kIntakeHoldingPercent = 0.0
+kIntakeHoldingPercent = 0.12
 """5%"""
 
 kIntakeStateKey = "intake/state"
 kIntakeMotorRPMKey = "intake/RPM"
 kIntakeGearRatio = 15
 kCubeModeKey = "intake/CubeMode"
+kFlangeModeKey = "intake/flageMode"
+kFlangeHookKey = "intake/hook"
 kIntakeMotorAMPS = 30
 kPitchMultiplicationValue = 0.2
 

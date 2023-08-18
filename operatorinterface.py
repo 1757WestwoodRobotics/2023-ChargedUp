@@ -188,4 +188,5 @@ class OperatorInterface:
 
         # light controls
         self.lightCone = getPOVBindingOfName("lightsCone")
+        self.lightConeFlange = getPOVBindingOfName("lightsConeFlange")
         self.lightCube = getPOVBindingOfName("lightsCube")

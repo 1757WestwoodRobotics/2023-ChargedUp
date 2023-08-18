@@ -59,12 +59,22 @@ class ArmSubsystem(SubsystemBase):
                 return (
                     constants.kArmMidScorePositionCube
                     if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
-                    else constants.kArmMidScorePositionCone
+                    else (
+                        (
+                            constants.kArmMidScorePositionConeHook
+                            if SmartDashboard.getBoolean(
+                                constants.kFlangeHookKey, False
+                            )
+                            else constants.kArmMidScorePositionCube
+                        )
+                        if SmartDashboard.getBoolean(constants.kFlangeModeKey, False)
+                        else constants.kArmMidScorePositionCone
+                    )
                 )
             elif self == ArmSubsystem.ArmState.DoubleSubstation:
                 return (
                     constants.kArmDoubleSubstationPositionCube
-                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    if not SmartDashboard.getBoolean(constants.kCubeModeKey, False)
                     else constants.kArmDoubleSubstationPositionCone
                 )
             elif self == ArmSubsystem.ArmState.SingleSubtation:
@@ -73,7 +83,17 @@ class ArmSubsystem(SubsystemBase):
                 return (
                     constants.kArmTopScorePositionCube
                     if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
-                    else constants.kArmTopScorePositionCone
+                    else (
+                        (
+                            constants.kArmTopScorePositionConeHook
+                            if SmartDashboard.getBoolean(
+                                constants.kFlangeHookKey, False
+                            )
+                            else constants.kArmTopScorePositionCube
+                        )
+                        if SmartDashboard.getBoolean(constants.kFlangeModeKey, False)
+                        else constants.kArmTopScorePositionCone
+                    )
                 )
             elif self == ArmSubsystem.ArmState.GroundLoading:
                 return (

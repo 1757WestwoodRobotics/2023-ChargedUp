@@ -27,7 +27,7 @@ class GripperSubsystem(SubsystemBase):
             constants.kIntakePGain,
             constants.kIntakeIGain,
             constants.kIntakeDGain,
-            True
+            True,
         )
 
         self.motorIntake.setNeutralMode(Falcon.NeutralMode.Break)
@@ -74,7 +74,15 @@ class GripperSubsystem(SubsystemBase):
                     Falcon.ControlMode.Percent, -constants.kIntakeMotorPercent
                 )
         elif self.state == self.GripperState.HoldingState:
-            self.motorIntake.set(Falcon.ControlMode.Percent, 0)
+            self.motorIntake.set(
+                Falcon.ControlMode.Percent,
+                constants.kIntakeHoldingPercent
+                * (
+                    1
+                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    else -1
+                ),
+            )
 
     def setGripIntake(self) -> None:
         self.state = GripperSubsystem.GripperState.Intake

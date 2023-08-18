@@ -1,5 +1,6 @@
 import os
 from commands2._impl import ParallelDeadlineGroup, SequentialCommandGroup, WaitCommand
+from util.helpfultriggerwrappers import SmartDashboardSetter
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -35,7 +36,7 @@ from commands.gripper import (
     GripperOuttake,
     GripperHoldingState,
 )
-from commands.light.cubeLights import ConeLights, CubeLights
+from commands.light.cubeLights import ConeLights, CubeLights, ConeFlangeLights
 from commands.drive.chargestationautobalance import AutoBalance
 
 from subsystems.armsubsystem import ArmSubsystem
@@ -153,6 +154,10 @@ class RobotContainer:
                 SetArmPositionSafeTop(self.arm), commands2.WaitCommand(0.4)
             )
         )
+
+        commands2.button.JoystickButton(*self.operatorInterface.hookScore).whileHeld(
+            SmartDashboardSetter(constants.kFlangeHookKey, True, False)
+        )
         commands2.button.JoystickButton(
             *self.operatorInterface.armDoubleSubstation
         ).whileHeld(SetArmPositionDoubleSubstation(self.arm))
@@ -251,6 +256,9 @@ class RobotContainer:
 
         commands2.button.POVButton(*self.operatorInterface.lightCube).whenPressed(
             CubeLights(self.light)
+        )
+        commands2.button.POVButton(*self.operatorInterface.lightConeFlange).whenPressed(
+            ConeFlangeLights(self.light)
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.AutoBalance).whileHeld(

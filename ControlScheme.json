@@ -132,6 +132,13 @@
     },
     "replace me"
   ],
+  "lightsConeFlange": [
+    0,
+    {
+      "POV": [0, 0]
+    },
+    "replace me"
+  ],
   "lightsCube": [
     0,
     {
