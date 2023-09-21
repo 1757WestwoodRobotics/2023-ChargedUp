@@ -810,8 +810,10 @@ class ArmSubsystem(SubsystemBase):
             )
             and (
                 abs(
-                    self.expectedWrist
-                    - self.getEndEffectorPosition().rotation().radians()
+                    angleModulus(
+                        self.expectedWrist
+                        - self.getEndEffectorPosition().rotation().radians()
+                    )
                 )
                 < constants.kArmRotationTolerence
             )
