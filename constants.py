@@ -146,7 +146,7 @@ kWheelDistancePerRevolution = kWheelCircumference
 kWheelDistancePerRadian = kWheelDistancePerRevolution / kRadiansPerRevolution
 """meters / radian"""
 
-kDriveGearingRatio = (50 / 14) * (17 / 27) * (45 / 15)
+kDriveGearingRatio = (50 / 14) * (16 / 28) * (45 / 15)
 """dimensionless"""
 
 kSteerGearingRatio = 150 / 7
