@@ -1,5 +1,5 @@
 from commands2 import CommandBase
-from wpilib._wpilib import SmartDashboard
+from wpilib import SmartDashboard
 from commands.arm.demostate import constants
 from subsystems.armsubsystem import ArmSubsystem
 
@@ -23,6 +23,18 @@ class SetArmPosition(CommandBase):
 
     def isFinished(self) -> bool:
         return self.arm.atTarget()
+
+class SetArmHookState(CommandBase):
+    def __init__(self, state: bool) -> None:
+        CommandBase.__init__(self)
+        self.setName(__class__.__name__)
+        self.state = state
+
+    def execute(self) -> None:
+        SmartDashboard.putBoolean(constants.kFlangeHookKey, self.state)
+
+    def isFinished(self) -> bool:
+        return True
 
 
 class SetArmPositionMid(SetArmPosition):

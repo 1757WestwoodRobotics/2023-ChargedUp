@@ -51,6 +51,7 @@ class ConeFlangeLights(CommandBase):
 
         self.lights = lightSubsystem
         self.addRequirements([self.lights])
+        SmartDashboard.putBoolean(constants.kFlangeModeKey, False)
 
     def execute(self) -> None:
         self.lights.coneFlangeLights()
@@ -58,7 +59,7 @@ class ConeFlangeLights(CommandBase):
         SmartDashboard.putBoolean(constants.kFlangeModeKey, True)
 
     def isFinished(self) -> bool:
-        return False
+        return True
 
     def end(self, _interrupted: bool) -> None:
         self.lights.offLights()

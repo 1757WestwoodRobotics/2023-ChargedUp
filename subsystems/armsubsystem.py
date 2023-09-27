@@ -691,6 +691,8 @@ class ArmSubsystem(SubsystemBase):
                 endEffectorPose.X() / constants.kMetersPerInch,
                 endEffectorPose.Y() / constants.kMetersPerInch,
                 endEffectorPose.rotation().degrees(),
+                (self.expectedTwoLink - self.getWristPosition().translation()).norm(),
+                abs(self.expectedWrist - endEffectorPose.rotation().radians()),
             ],  # publish how it is in constants
         )
 
@@ -727,9 +729,15 @@ class ArmSubsystem(SubsystemBase):
         )
         SmartDashboard.putNumber(constants.kArmFudgeFactorKey, self.fudgeFactor)
 
-        SmartDashboard.putNumber("arm/targetThought/x", self.expectedTwoLink.X())
-        SmartDashboard.putNumber("arm/targetThought/y", self.expectedTwoLink.Y())
-        SmartDashboard.putNumber("arm/targetThought/theta", self.expectedWrist)
+        SmartDashboard.putNumber(
+            "arm/targetThought/x", self.expectedTwoLink.X() / constants.kMetersPerInch
+        )
+        SmartDashboard.putNumber(
+            "arm/targetThought/y", self.expectedTwoLink.Y() / constants.kMetersPerInch
+        )
+        SmartDashboard.putNumber(
+            "arm/targetThought/theta", self.expectedWrist / constants.kRadiansPerDegree
+        )
 
         motorNeutralState: Falcon.NeutralMode = self.motorMode.getSelected()
 

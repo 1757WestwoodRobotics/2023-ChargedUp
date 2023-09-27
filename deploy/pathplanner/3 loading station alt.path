@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.838030226795609,
-        "y": 4.977925657941868
+        "x": 2.092465762271631,
+        "y": 5.041072819652434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.378576160270361,
-        "y": 4.749051458013829
+        "x": 2.6330116957463834,
+        "y": 4.812198619724395
       },
       "holonomicAngle": 179.54846311069912,
       "isReversal": false,
@@ -17,9 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "mid",
-          "outtake",
-          "store"
+          "midFlange",
+          "outtake"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -185,12 +184,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.993376816942314,
-        "y": 4.472681937277621
+        "x": 2.029451616357147,
+        "y": 4.473840215711231
       },
       "prevControl": {
-        "x": 3.7005601829518806,
-        "y": 4.918122199349142
+        "x": 3.7366349823667138,
+        "y": 4.919280477782752
       },
       "nextControl": null,
       "holonomicAngle": -179.88158742067625,

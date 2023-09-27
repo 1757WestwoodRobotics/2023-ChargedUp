@@ -11,6 +11,7 @@ from commands2 import (
 from pathplannerlib import PathPlannerTrajectory
 from wpilib import DataLogManager
 from commands.arm.statearmposition import (
+    SetArmHookState,
     SetArmPositionGroundIntake,
     SetArmPositionGroundYoshi,
     SetArmPositionMid,
@@ -24,7 +25,7 @@ from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
 from commands.drive.chargestationautobalance import AutoBalance
 from commands.gripper import GripperHoldingState, GripperIntake, GripperOuttake
-from commands.light.cubeLights import CubeLights
+from commands.light.cubeLights import ConeFlangeLights, CubeLights
 from commands.resetdrive import ResetDrive
 from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
@@ -47,10 +48,11 @@ class AutonomousRoutine(SequentialCommandGroup):
         self.name = name
         self.markerMap = {  # later todo: actual implementation
             "store": ParallelCommandGroup(
-                SetArmPositionStored(arm), GripperHoldingState(grip)
+                SetArmPositionStored(arm), GripperHoldingState(grip), SetArmHookState(False)
             ),
             "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.2)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm)),
+            "midFlange": SequentialCommandGroup(ConeFlangeLights(light), SetArmPositionMid(arm), WaitCommand(0.2),SetArmHookState(True), WaitCommand(0.3)),
             "safe": ParallelDeadlineGroup(
                 WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
             ),
