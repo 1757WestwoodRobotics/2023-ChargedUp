@@ -784,6 +784,11 @@ kArmDoubleSubstationPositionCone = Pose2d(
     36.35 * kMetersPerInch,
     Rotation2d.fromDegrees(173.544),
 )
+kArmDoubleSubstationPositionConeFlange = Pose2d(
+    -32.003 * kMetersPerInch,
+    32.715 * kMetersPerInch,
+    Rotation2d.fromDegrees(-147.313),
+)
 kArmSingleSubstationPosition = Pose2d(
     -9.679 * kMetersPerInch,
     35.526 * kMetersPerInch,
