@@ -727,9 +727,9 @@ kArmWristActualMotorKey = "arm/motors/actual/wrist"
 
 # scoring positions, derived from cad geometry
 kArmTopScorePositionCone = Pose2d(
-    -47.482 * kMetersPerInch,
-    39.94 * kMetersPerInch,
-    Rotation2d.fromDegrees(156.18),
+    -42.507 * kMetersPerInch,
+    41.615 * kMetersPerInch,
+    Rotation2d.fromDegrees(163.491),
 )
 kArmTopScorePositionCube = Pose2d(
     -43.486 * kMetersPerInch,
