@@ -193,10 +193,10 @@ class RobotContainer:
             SetArmPositionOverride(self.arm)
         )
 
-        commands2.button.JoystickButton(
+        commands2.button.POVButton(
             *self.operatorInterface.armFudgeIncrease
         ).whenPressed(IncreaseArmFudge(self.arm))
-        commands2.button.JoystickButton(
+        commands2.button.POVButton(
             *self.operatorInterface.armFudgeDecrease
         ).whenPressed(DecreaseArmFudge(self.arm))
 
