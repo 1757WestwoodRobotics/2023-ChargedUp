@@ -14,10 +14,6 @@ class SetArmPosition(CommandBase):
         self.arm = armSubsystem
         self.addRequirements([self.arm])
 
-    def initialize(self) -> None:
-        SmartDashboard.putBoolean(constants.kArmAtTargetKey, False)
-        self.arm.resetTimer()
-
     def execute(self) -> None:
         self.arm.state = self.state
 

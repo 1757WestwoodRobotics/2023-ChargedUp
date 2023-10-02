@@ -804,33 +804,31 @@ class ArmSubsystem(SubsystemBase):
             return position
 
     def atTarget(self) -> bool:
+        translationalOffset = abs(
+            (
+                self.targetPose.translation() - self.getEndEffectorPosition().translation()
+            ).norm()
+        )
+        rotationalOffset = abs(
+            angleModulus(
+                self.targetPose.rotation().radians()
+                - self.getEndEffectorPosition().rotation().radians()
+            )
+        )
+
+        SmartDashboard.putNumber("arm/distance/translation", translationalOffset)
+        SmartDashboard.putNumber("arm/distance/rotation", rotationalOffset)
         return (
             (
-                (
-                    abs(
-                        (
-                            self.expectedTwoLink - self.getWristPosition().translation()
-                        ).norm()
-                    )
-                    < (
-                        constants.kArmPositionStoredTolerence
-                        if self.state == ArmSubsystem.ArmState.Stored
-                        else constants.kArmPositionTolerence
-                    )
+                translationalOffset
+                < (
+                    constants.kArmPositionStoredTolerence
+                    if self.state == ArmSubsystem.ArmState.Stored
+                    else constants.kArmPositionTolerence
                 )
-                # or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
             )
-            and (
-                abs(
-                    angleModulus(
-                        self.expectedWrist
-                        - self.getEndEffectorPosition().rotation().radians()
-                    )
-                )
-                < constants.kArmRotationTolerence
-            )
-            and (self.targetTimer.get() > 0.06)
-        )
+            # or (self.elbowPID.atGoal() and self.shoulderPID.atGoal())
+        ) and (rotationalOffset < constants.kArmRotationTolerence)
 
     def _armAnglesAtPosiiton(self, pose: Pose2d) -> Tuple[float, float, float]:
         endAngle = math.acos(
