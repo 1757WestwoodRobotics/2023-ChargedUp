@@ -799,10 +799,15 @@ kArmGroundIntakePositionCone = Pose2d(
     5.201 * kMetersPerInch,
     Rotation2d.fromDegrees(-132.64),
 )
+kArmGroundIntakePositionConeTip = Pose2d(
+    -30.284 * kMetersPerInch,
+    -0.469 * kMetersPerInch,
+    Rotation2d.fromDegrees(-166.124),
+)
 kArmGroundIntakePositionCube = Pose2d(
     -32.254 * kMetersPerInch,
-    4.992 * kMetersPerInch,
-    Rotation2d.fromDegrees(155.080),
+    4.994 * kMetersPerInch,
+    Rotation2d.fromDegrees(155.075),
 )
 kArmGroundIntakePositionCubeYoshi = kArmGroundIntakePositionCube + Transform2d(
     20.0 * kMetersPerInch, 0, 0

@@ -108,7 +108,11 @@ class ArmSubsystem(SubsystemBase):
             elif self == ArmSubsystem.ArmState.TopSafe:
                 return constants.kArmTopSafePosition
             elif self == ArmSubsystem.ArmState.GroundCone:
-                return constants.kArmGroundConeIntakePosition
+                return (
+                    constants.kArmGroundConeIntakePosition
+                    if SmartDashboard.getBoolean(constants.kFlangeModeKey, False)
+                    else constants.kArmGroundIntakePositionConeTip
+                )
             elif self == ArmSubsystem.ArmState.GroundSafe:
                 return constants.kArmGroundSafePosition
             elif self == ArmSubsystem.ArmState.Yoshi:
@@ -806,7 +810,8 @@ class ArmSubsystem(SubsystemBase):
     def atTarget(self) -> bool:
         translationalOffset = abs(
             (
-                self.targetPose.translation() - self.getEndEffectorPosition().translation()
+                self.targetPose.translation()
+                - self.getEndEffectorPosition().translation()
             ).norm()
         )
         rotationalOffset = abs(
