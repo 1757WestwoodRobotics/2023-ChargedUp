@@ -20,6 +20,7 @@ class SetArmPosition(CommandBase):
     def isFinished(self) -> bool:
         return self.arm.atTarget()
 
+
 class SetArmHookState(CommandBase):
     def __init__(self, state: bool) -> None:
         CommandBase.__init__(self)

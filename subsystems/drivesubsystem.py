@@ -11,12 +11,10 @@ from wpilib import (
     DataLogManager,
 )
 from ctre import (
-    AbsoluteSensorRange,
-    CANCoder,
     ControlMode,
-    SensorInitializationStrategy,
     WPI_TalonFX,
 )
+from ctre.sensors import CANCoder, SensorInitializationStrategy, AbsoluteSensorRange
 from navx import AHRS
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.filter import SlewRateLimiter

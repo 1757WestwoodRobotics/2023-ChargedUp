@@ -22,6 +22,7 @@ class SmartDashboardButton(Button):
     def __init__(self, key: str) -> None:
         super().__init__(lambda: SmartDashboard.getBoolean(key, False))
 
+
 class SmartDashboardSetter(CommandBase):
     def __init__(self, key: str, valueOn: Any, valueOff: Any) -> None:
         CommandBase.__init__(self)
@@ -33,7 +34,7 @@ class SmartDashboardSetter(CommandBase):
         self.addRequirements([])
 
     def execute(self) -> None:
-        if type(self.value) == bool:
+        if isinstance(self.value, bool):
             SmartDashboard.putBoolean(self.key, self.value)
         else:
             raise NotImplementedError("That type isn't implemented")
@@ -42,7 +43,7 @@ class SmartDashboardSetter(CommandBase):
         return False
 
     def end(self, _interrupted: bool) -> None:
-        if type(self.value) == bool:
+        if isinstance(self.value, bool):
             SmartDashboard.putBoolean(self.key, self.valueOff)
         else:
             raise NotImplementedError("That type isn't implemented")

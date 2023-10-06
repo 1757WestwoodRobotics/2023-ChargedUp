@@ -1,11 +1,10 @@
 import math
-from commands2._impl import CommandBase
-from wpimath._controls._controls.controller import (
-    ProfiledPIDController,
+from commands2 import CommandBase
+from wpimath.controller import (
     ProfiledPIDControllerRadians,
 )
-from wpimath._controls._controls.trajectory import TrapezoidProfileRadians
-from wpimath.geometry._geometry import Transform2d
+from wpimath.trajectory import TrapezoidProfileRadians
+from wpimath.geometry import Transform2d
 
 from subsystems.drivesubsystem import DriveSubsystem
 
@@ -34,6 +33,8 @@ class RotateAuto(CommandBase):
             ),
         )
         self.thetaController.enableContinuousInput(-math.pi, math.pi)
+
+        self.rotationToTarget = math.inf
 
     def initialize(self) -> None:
         currentPose = self.drive.odometry.getPose()

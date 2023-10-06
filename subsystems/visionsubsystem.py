@@ -1,12 +1,11 @@
 from typing import List, Tuple
 from commands2 import SubsystemBase
 from ntcore import NetworkTableInstance
-from photonvision import PoseStrategy, RobotPoseEstimator
+from photonvision import PoseStrategy, RobotPoseEstimator, PhotonCamera
 from robotpy_apriltag import AprilTagField
 import robotpy_apriltag
 from wpilib import SmartDashboard
-from wpimath.geometry import Transform3d, Pose3d
-from photonvision import PhotonCamera
+from wpimath.geometry import Transform3d, Pose3d, Pose2d
 
 import constants
 from subsystems.drivesubsystem import DriveSubsystem
@@ -19,6 +18,7 @@ class VisionSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
         self.drive = drive
+        self.estimatedPosition = Pose2d()
 
         self.camera = PhotonCamera(
             NetworkTableInstance.getDefault(), constants.kPhotonvisionCameraName

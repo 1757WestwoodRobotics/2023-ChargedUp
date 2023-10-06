@@ -2,7 +2,7 @@ from enum import Enum, auto
 from commands2 import SubsystemBase
 
 from ctre.led import CANdle, RainbowAnimation, ColorFlowAnimation, StrobeAnimation
-from wpilib import RobotState, SmartDashboard
+from wpilib import RobotState
 
 import constants
 

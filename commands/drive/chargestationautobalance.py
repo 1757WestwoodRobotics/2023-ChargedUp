@@ -7,8 +7,6 @@ from subsystems.drivesubsystem import DriveSubsystem
 from util import convenientmath
 from util.angleoptimize import optimizeAngle
 
-import constants
-
 
 class AutoBalance(CommandBase):
     def __init__(

@@ -1,9 +1,8 @@
 import os
-from commands2._impl import ParallelDeadlineGroup, SequentialCommandGroup, WaitCommand
-from util.helpfultriggerwrappers import SmartDashboardSetter
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
+from commands2 import ParallelDeadlineGroup, SequentialCommandGroup, WaitCommand
 import commands2.button
 
 import constants
@@ -42,11 +41,12 @@ from commands.drive.chargestationautobalance import AutoBalance
 from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.loggingsubsystem import LoggingSubsystem
-from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.grippersubsystem import GripperSubsystem
 from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
+
+from util.helpfultriggerwrappers import SmartDashboardSetter
 
 
 class RobotContainer:

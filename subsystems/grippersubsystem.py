@@ -2,8 +2,8 @@
 from enum import Enum, auto
 from ctre import SupplyCurrentLimitConfiguration
 from commands2 import SubsystemBase
-from util.simfalcon import Falcon
 from wpilib import SmartDashboard
+from util.simfalcon import Falcon
 
 
 import constants

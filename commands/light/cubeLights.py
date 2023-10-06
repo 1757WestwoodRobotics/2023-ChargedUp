@@ -44,6 +44,7 @@ class ConeLights(CommandBase):
     def end(self, _interrupted: bool) -> None:
         self.lights.offLights()
 
+
 class ConeFlangeLights(CommandBase):
     def __init__(self, lightSubsystem: LightSubsystem) -> None:
         CommandBase.__init__(self)

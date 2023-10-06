@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 import math
 from enum import Enum, auto
 from typing import Tuple
@@ -239,24 +240,7 @@ class ArmSubsystem(SubsystemBase):
             / constants.kArmEncoderToSprocketGearRatio
         )
 
-    def __init__(self) -> None:
-        SubsystemBase.__init__(self)
-        self.setName(__class__.__name__)
-
-        self.initMechanism()
-
-        self.state = ArmSubsystem.ArmState.Stored
-        self.oldState = ArmSubsystem.ArmState.Stored
-        self.armFF = ArmFeedforward(0, constants.kShoulderArmFFFactor, 0, 0)
-        self.fudgeFactor = 0  # amount by which to adjust the wrist angle
-
-        self.targetTimer = Timer()
-
-        SmartDashboard.putNumber("arm/wristAdjust", 0)
-        SmartDashboard.putNumber(constants.kElbowArmOverrideKey, 0)
-        SmartDashboard.putNumber(constants.kShoulderArmOverrideKey, 0)
-        SmartDashboard.putNumber(constants.kWristArmOverrideKey, 0)
-
+    def instanceMotors(self) -> None:
         self.elbowArm = Falcon(
             constants.kElbowArmCANId,
             constants.kArmPIDSlot,
@@ -297,6 +281,26 @@ class ArmSubsystem(SubsystemBase):
         )
         self.wristArm.setNeutralMode(Falcon.NeutralMode.Break)
         self.wristArm.setCurrentLimit(constants.kDriveSupplyCurrentLimitConfiguration)
+
+    def __init__(self) -> None:
+        SubsystemBase.__init__(self)
+        self.setName(__class__.__name__)
+
+        self.initMechanism()
+
+        self.state = ArmSubsystem.ArmState.Stored
+        self.oldState = ArmSubsystem.ArmState.Stored
+        self.armFF = ArmFeedforward(0, constants.kShoulderArmFFFactor, 0, 0)
+        self.fudgeFactor = 0  # amount by which to adjust the wrist angle
+
+        self.targetTimer = Timer()
+
+        SmartDashboard.putNumber("arm/wristAdjust", 0)
+        SmartDashboard.putNumber(constants.kElbowArmOverrideKey, 0)
+        SmartDashboard.putNumber(constants.kShoulderArmOverrideKey, 0)
+        SmartDashboard.putNumber(constants.kWristArmOverrideKey, 0)
+
+        self.instanceMotors()
 
         self.xProfiledPID = ProfiledPIDController(
             constants.kArmTranslationalPGain,
@@ -644,7 +648,9 @@ class ArmSubsystem(SubsystemBase):
             ]
         )
 
-        targetPosesSerialized = convertToSendablePoses([targetTarget])
+        targetPosesSerialized = convertToSendablePoses(
+            [targetTarget, targetPose, targetElbow]
+        )
 
         comsSerialized = convertToSendablePoses(
             list(

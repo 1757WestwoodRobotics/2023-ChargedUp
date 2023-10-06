@@ -1,5 +1,9 @@
-from ctre import CANCoder, CANCoderSimCollection
-from ctre.sensors import AbsoluteSensorRange, SensorInitializationStrategy
+from ctre.sensors import (
+    AbsoluteSensorRange,
+    SensorInitializationStrategy,
+    CANCoder,
+    CANCoderSimCollection,
+)
 from wpimath.geometry import Rotation2d
 
 from util.ctrecheck import ctreCheckError

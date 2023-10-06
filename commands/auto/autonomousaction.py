@@ -48,11 +48,19 @@ class AutonomousRoutine(SequentialCommandGroup):
         self.name = name
         self.markerMap = {  # later todo: actual implementation
             "store": ParallelCommandGroup(
-                SetArmPositionStored(arm), GripperHoldingState(grip), SetArmHookState(False)
+                SetArmPositionStored(arm),
+                GripperHoldingState(grip),
+                SetArmHookState(False),
             ),
             "top": SequentialCommandGroup(SetArmPositionTop(arm)),
             "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(1.2)),
-            "midFlange": SequentialCommandGroup(ConeFlangeLights(light), SetArmPositionMid(arm), WaitCommand(0.2),SetArmHookState(True), WaitCommand(0.3)),
+            "midFlange": SequentialCommandGroup(
+                ConeFlangeLights(light),
+                SetArmPositionMid(arm),
+                WaitCommand(0.2),
+                SetArmHookState(True),
+                WaitCommand(0.3),
+            ),
             "safe": ParallelDeadlineGroup(
                 WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
             ),
@@ -61,9 +69,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 WaitCommand(0.4),
                 [
                     SequentialCommandGroup(
-                        ParallelCommandGroup(
-                            SetArmPositionSafeTop(arm)
-                        ),
+                        ParallelCommandGroup(SetArmPositionSafeTop(arm)),
                         ParallelCommandGroup(
                             SetArmPositionStored(arm),
                             WaitCommand(0.2),

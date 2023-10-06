@@ -1,13 +1,13 @@
-import math
 import typing
 from commands2 import CommandBase
 from wpilib import DriverStation
-from subsystems.drivesubsystem import DriveSubsystem
 from wpimath.controller import PIDController
 from wpimath.geometry import Rotation2d
 
-import constants
 from util.angleoptimize import optimizeAngle
+from subsystems.drivesubsystem import DriveSubsystem
+
+import constants
 
 
 class AngleAlignDrive(CommandBase):
@@ -28,6 +28,8 @@ class AngleAlignDrive(CommandBase):
         )
         self.addRequirements([self.drive])
         self.setName(__class__.__name__)
+
+        self.targetRotation = Rotation2d()
 
     def initialize(self) -> None:
         currentRotation = self.drive.getRotation()

@@ -1,9 +1,10 @@
 import argparse
 from os.path import basename
 from time import sleep
+import logging
 
 import ntcore
-import logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 parser = argparse.ArgumentParser(description="Gets the pose of the robot")
@@ -29,6 +30,5 @@ inst.setServer(args.host if not args.local else "127.0.0.1")
 sd = inst.getTable("SmartDashboard")
 
 for i in range(2):
-    print(sd.getNumberArray("arm/endeffectorPose", [0,0,0,0,0])[:3])
+    print(sd.getNumberArray("arm/endeffectorPose", [0, 0, 0, 0, 0])[:3])
     sleep(1)
-

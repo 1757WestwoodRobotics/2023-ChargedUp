@@ -220,6 +220,9 @@ kLimelightPoseKey = "vision/limelight"
 # CANivore
 kCANivoreName = "canivore"
 
+# Pigeon
+kPigeonIMUId = 44
+
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
@@ -609,7 +612,7 @@ kElbowArmCANCoderOffset = 328.11
 """
 to get encoder offsets for the arm motors
   1. bring the arm to the position you want to call zero
-    * the zero for the arm is with the elbow hitting its endstop 
+    * the zero for the arm is with the elbow hitting its endstop
     * with the shoulder touching the chain barely
     * with the intake buffer touching the CF tube
   2. Run Phoenix Tuner
@@ -737,7 +740,7 @@ kArmTopScorePositionCube = Pose2d(
     Rotation2d.fromDegrees(139.476),
 )
 
-kArmTopScorePositionConeHook = Pose2d (
+kArmTopScorePositionConeHook = Pose2d(
     -47.718 * kMetersPerInch,
     39.116 * kMetersPerInch,
     Rotation2d.fromDegrees(160.57),
