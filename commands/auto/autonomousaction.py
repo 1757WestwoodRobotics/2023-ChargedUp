@@ -50,8 +50,8 @@ class AutonomousRoutine(SequentialCommandGroup):
             "store": ParallelCommandGroup(
                 SetArmPositionStored(arm), GripperHoldingState(grip), SetArmHookState(False)
             ),
-            "top": SequentialCommandGroup(SetArmPositionTop(arm), WaitCommand(0.2)),
-            "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.3)),
+            "top": SequentialCommandGroup(SetArmPositionTop(arm)),
+            "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(1.2)),
             "midFlange": SequentialCommandGroup(ConeFlangeLights(light), SetArmPositionMid(arm), WaitCommand(0.2),SetArmHookState(True), WaitCommand(0.3)),
             "safe": ParallelDeadlineGroup(
                 WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
@@ -62,7 +62,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 [
                     SequentialCommandGroup(
                         ParallelCommandGroup(
-                            SetArmPositionSafeTop(arm), WaitCommand(0.2)
+                            SetArmPositionSafeTop(arm)
                         ),
                         ParallelCommandGroup(
                             SetArmPositionStored(arm),
