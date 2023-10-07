@@ -10,7 +10,7 @@
   {
     "name": "/Preferences/arm/smooth",
     "type": "boolean",
-    "value": false,
+    "value": true,
     "properties": {
       "persistent": true
     }

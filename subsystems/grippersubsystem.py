@@ -1,10 +1,10 @@
 # each roller alternates meaning if you were to pick up a cube you would eject a cone
 from enum import Enum, auto
+from ctre import SupplyCurrentLimitConfiguration
 from commands2 import SubsystemBase
-from rev import SparkMaxLimitSwitch
 from wpilib import SmartDashboard
+from util.simfalcon import Falcon
 
-from util.simneo import NEOBrushless
 
 import constants
 
@@ -21,68 +21,68 @@ class GripperSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.motorIntake = NEOBrushless(
+        self.motorIntake = Falcon(
             constants.kIntakeCANID,
             constants.kIntakePIDSlot,
             constants.kIntakePGain,
             constants.kIntakeIGain,
             constants.kIntakeDGain,
-            enableLimitSwitches=False,
-            limitSwitchPolarity=SparkMaxLimitSwitch.Type.kNormallyClosed,
+            True,
         )
-        self.motorIntake.setSmartCurrentLimit(limit=constants.kIntakeMotorAMPS)
+
+        self.motorIntake.setNeutralMode(Falcon.NeutralMode.Break)
+
+        self.motorIntake.setCurrentLimit(
+            SupplyCurrentLimitConfiguration(
+                enable=True,
+                currentLimit=20,
+                triggerThresholdCurrent=30,
+                triggerThresholdTime=0.4,
+            )
+        )
 
         self.state = GripperSubsystem.GripperState.HoldingState
-        self.cubeSensor = lambda: self.motorIntake.getLimitSwitch(
-            NEOBrushless.LimitSwitch.Forwards
-        )
-        self.coneSensor = lambda: self.motorIntake.getLimitSwitch(
-            NEOBrushless.LimitSwitch.Backwards
-        )
         SmartDashboard.putBoolean(constants.kCubeModeKey, False)
 
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kIntakeStateKey, str(self.state))
         SmartDashboard.putNumber(
             constants.kIntakeMotorRPMKey,
-            self.motorIntake.get(NEOBrushless.ControlMode.Velocity)
+            self.motorIntake.get(Falcon.ControlMode.Velocity)
             / constants.kIntakeGearRatio,
         )
-        SmartDashboard.putBoolean(constants.kCubeLoadedKey, self.cubeSensor())
-        SmartDashboard.putBoolean(constants.kConeLoadedKey, self.coneSensor())
         if self.state == self.GripperState.Intake:
             if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
                 self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent,
+                    Falcon.ControlMode.Percent,
                     -constants.kIntakeMotorPercent
                     # Motor will move forward (right)
                 )
             else:
                 self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent, constants.kIntakeMotorPercent
+                    Falcon.ControlMode.Percent, constants.kIntakeMotorPercent
                 )
         elif self.state == self.GripperState.Outtake:
             if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
                 self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent,
+                    Falcon.ControlMode.Percent,
                     constants.kIntakeMotorPercent
                     # Motor will move backward (left)
                 )
             else:
                 self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent, -constants.kIntakeMotorPercent
+                    Falcon.ControlMode.Percent, -constants.kIntakeMotorPercent
                 )
         elif self.state == self.GripperState.HoldingState:
-            if self.cubeSensor():
-                self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent, constants.kIntakeHoldingPercent
-                )
-            elif self.coneSensor():
-                self.motorIntake.set(
-                    NEOBrushless.ControlMode.Percent, -constants.kIntakeHoldingPercent
-                )
-            else:
-                self.motorIntake.set(NEOBrushless.ControlMode.Percent, 0)
+            self.motorIntake.set(
+                Falcon.ControlMode.Percent,
+                constants.kIntakeHoldingPercent
+                * (
+                    1
+                    if SmartDashboard.getBoolean(constants.kCubeModeKey, False)
+                    else -1
+                ),
+            )
 
     def setGripIntake(self) -> None:
         self.state = GripperSubsystem.GripperState.Intake

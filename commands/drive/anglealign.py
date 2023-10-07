@@ -1,16 +1,21 @@
 import typing
 from commands2 import CommandBase
-from wpilib import DriverStation, Preferences
+from wpilib import DriverStation
+from wpimath.controller import PIDController
+from wpimath.geometry import Rotation2d
+
+from util.angleoptimize import optimizeAngle
 from subsystems.drivesubsystem import DriveSubsystem
 
+import constants
 
-class FieldRelativeDrive(CommandBase):
+
+class AngleAlignDrive(CommandBase):
     def __init__(
         self,
         drive: DriveSubsystem,
         forward: typing.Callable[[], float],
         sideways: typing.Callable[[], float],
-        rotation: typing.Callable[[], float],
     ) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -18,26 +23,40 @@ class FieldRelativeDrive(CommandBase):
         self.drive = drive
         self.forward = forward
         self.sideways = sideways
-        self.rotation = rotation
-
+        self.rotationPid = PIDController(
+            constants.kRotationPGain, constants.kRotationIGain, constants.kRotationDGain
+        )
         self.addRequirements([self.drive])
         self.setName(__class__.__name__)
-        Preferences.initFloat("Robot Relative Sensitivity", 0.4)
+
+        self.targetRotation = Rotation2d()
+
+    def initialize(self) -> None:
+        currentRotation = self.drive.getRotation()
+        self.targetRotation = Rotation2d.fromDegrees(
+            round(currentRotation.degrees() / 90) * 90
+        )
+
+    def rotation(self) -> float:
+        optimizedDirection = optimizeAngle(
+            self.drive.getRotation(), self.targetRotation
+        ).radians()
+        return self.rotationPid.calculate(
+            self.drive.getRotation().radians(), optimizedDirection
+        )
 
     def execute(self) -> None:
         if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
             self.drive.arcadeDriveWithFactors(
                 -self.forward(),
                 -self.sideways(),
-                self.rotation()
-                * Preferences.getFloat("Robot Relative Sensitivity"),  # better control
+                self.rotation(),
                 DriveSubsystem.CoordinateMode.FieldRelative,
             )
         else:
             self.drive.arcadeDriveWithFactors(
                 self.forward(),
                 self.sideways(),
-                self.rotation()
-                * Preferences.getFloat("Robot Relative Sensitivity"),  # better control
+                self.rotation(),
                 DriveSubsystem.CoordinateMode.FieldRelative,
             )

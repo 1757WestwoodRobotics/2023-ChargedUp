@@ -26,14 +26,17 @@ Swerve Module Layout:
 import math
 from ctre import SupplyCurrentLimitConfiguration
 from wpimath.geometry import (
+    Pose3d,
     Pose2d,
     Rotation2d,
-    Translation2d,
-    Pose3d,
     Rotation3d,
+    Transform2d,
     Transform3d,
+    Translation2d,
+    Translation3d,
 )
 from wpimath.system.plant import DCMotor
+from commands.arm.demostate import constants
 
 from util.keyorganization import OptionalValueKeys
 
@@ -143,7 +146,7 @@ kWheelDistancePerRevolution = kWheelCircumference
 kWheelDistancePerRadian = kWheelDistancePerRevolution / kRadiansPerRevolution
 """meters / radian"""
 
-kDriveGearingRatio = (50 / 14) * (17 / 27) * (45 / 15)
+kDriveGearingRatio = (50 / 14) * (16 / 28) * (45 / 15)
 """dimensionless"""
 
 kSteerGearingRatio = 150 / 7
@@ -192,6 +195,8 @@ kFrontRightModuleName = "front_right"
 kBackLeftModuleName = "back_left"
 kBackRightModuleName = "back_right"
 
+kKilogramToLbs = 0.454
+
 # Limelight
 kLimelightTargetInvalidValue = 0.0
 kLimelightTargetValidValue = 1.0
@@ -207,11 +212,16 @@ kLimelightLEDModeKey = "ledMode"
 kLimelightTrackerModuleName = "limelight"
 kLimelightRelativeToRobotTransform = Transform3d(
     Pose3d(),
-    Pose3d(0.258, 0, 1.01, Rotation3d()),
+    Pose3d(0.236, 0.206, 0.197, Rotation3d()),
 )
+
+kLimelightPoseKey = "vision/limelight"
 
 # CANivore
 kCANivoreName = "canivore"
+
+# Pigeon
+kPigeonIMUId = 44
 
 # Motors
 kFrontLeftDriveMotorId = 10
@@ -298,9 +308,9 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.12
+kDrivePGain = 0.15
 kDriveIGain = 0.0
-kDriveDGain = 0.0
+kDriveDGain = 2.0
 
 kSteerPIDSlot = 0
 kSteerPGain = 0.6
@@ -345,7 +355,7 @@ kBackRightAbsoluteEncoderOffset = 331.260
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
-kRobotVisionPoseWeight = 0.05  # 5% vision data
+kRobotVisionPoseWeight = 0.00  # 5% vision data
 
 kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
@@ -470,11 +480,11 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Trajectory Following
-kTrajectoryPositionPGain = 4
+kTrajectoryPositionPGain = 8
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 15
+kTrajectoryAnglePGain = 8
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -499,8 +509,8 @@ kDriveToTargetControlButtonName = "driveToTargetControl"
 kXboxTriggerActivationThreshold = 0.5
 
 kTurboSpeedButtonName = "turboSpeed"
-kNormalSpeedMultiplier = 0.45  # half full on normal
-kTurboSpeedMultiplier = 0.90  # full speed!!!
+kNormalSpeedMultiplier = 0.80  # half full on normal
+kTurboSpeedMultiplier = 0.95  # full speed!!!
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
@@ -533,7 +543,7 @@ kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
 
 
-kSimFrontLeftDriveEncoderPorts = (0, 1)
+kSimFrontLeftDriveEncoderPorts = (16, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)
 kSimFrontRightDriveEncoderPorts = (4, 5)
 kSimFrontRightSteerEncoderPorts = (6, 7)
@@ -580,6 +590,257 @@ kTargetWaypointPoseKey = "waypoint/target"
 kTargetWaypointXControllerKey = "waypoint/x"
 kTargetWaypointYControllerKey = "waypoint/y"
 kTargetWaypointThetaControllerKey = "waypoint/theta"
+# Arm
+kArmPIDSlot = 0
+
+kArmEncoderToSprocketGearRatio = 60 / 12
+
+kElbowArmCANId = 30
+kElbowArmPGain = 0.02
+kElbowArmIGain = 0.0
+kElbowArmDGain = 0
+kElbowArmInverted = False
+
+kElbowArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kElbowArmRotationKey = "arm/rotation/elbow"
+kElbowArmTargetRotationKey = "arm/target/elbow"
+kElbowFeedForwardLogKey = "arm/ff/elbow"
+kElbowArmFFFactor = 0.0
+
+kElbowArmCANCoderID = 35
+kElbowArmCANCoderOffset = 328.11
+"""
+to get encoder offsets for the arm motors
+  1. bring the arm to the position you want to call zero
+    * the zero for the arm is with the elbow hitting its endstop
+    * with the shoulder touching the chain barely
+    * with the intake buffer touching the CF tube
+  2. Run Phoenix Tuner
+  3. Select desired encoder
+  4. Go to "Config" tab
+  5. Click "Factory Default"
+  6. Go to "Self-Test Snapshot" tab
+  7. Click "Self-Test Snapshot"
+  8. Record value from line: "Absolute Position (unsigned):"
+"""
+
+kElbowMinAngle = Rotation2d.fromDegrees(0)
+kElbowMaxAngle = Rotation2d.fromDegrees(145)
+
+kShoulderArmCANId = 31
+kShoulderArmPGain = 0.03
+kShoulderArmIGain = 0.0
+kShoulderArmDGain = 0
+kShoulderArmInverted = True
+
+kShoulderArmGearRatio = (4 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kShoulderArmRotationKey = "arm/rotation/shoulder"
+kShoulderTargetArmRotationKey = "arm/target/shoulder"
+kShoulderFeedForwardLogKey = "arm/ff/shoulder"
+kShoulderArmFFFactor = 0.0
+
+kShoulderArmCANCoderID = 45
+kShoulderArmCANCoderOffset = 314.912
+
+kShoulderMinAngle = Rotation2d.fromDegrees(57)
+kShoulderMaxAngle = Rotation2d.fromDegrees(157)
+
+kWristArmCANId = 32
+kWristArmPGain = 0.03
+kWristArmIGain = 0.0
+kWristArmDGain = 0
+kWristArmInverted = True
+
+kWristArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kWristArmRotationKey = "arm/rotation/wrist"
+kWristTargetArmRotationKey = "arm/target/wrist"
+kWristFeedForwardLogKey = "arm/ff/wrist"
+kWristArmFFFactor = 0.0
+
+kWristArmCANCoderID = 46
+kWristArmCANCoderOffset = 270.791
+
+kWristMinAngle = Rotation2d.fromDegrees(41 - 180)
+kWristMaxAngle = Rotation2d.fromDegrees(180)
+
+kArmElbowLength = 19 * kMetersPerInch
+kArmElbowMass = 24.5 * kKilogramToLbs
+kArmElbowCOM = 6 * kMetersPerInch
+
+kArmShoulderLength = 27 * kMetersPerInch
+kArmShoulderMass = 6.3 * kKilogramToLbs
+kArmShoulderCOM = 13 * kMetersPerInch
+
+kArmWristLength = 16.392506 * kMetersPerInch
+kArmWristMass = 12.8 * kKilogramToLbs
+kArmWristCOM = 7.35 * kMetersPerInch
+
+kArmStateKey = "arm/state"
+
+kArmTranslationalPGain = 1.1
+kArmTranslationalIGain = 0
+kArmTranslationalDGain = 0
+
+kArmTranslationalMaxVelocity = 10
+"""m/s"""
+kArmTranslationalMaxAcceleration = 15
+"""m/s^2"""
+
+kArmRotationalPGain = 0.9
+kArmRotationalIGain = 0
+kArmRotationalDGain = 0
+
+kArmRotationalMaxVelocity = 40
+"""rad/s"""
+kArmRotationalMaxAcceleration = 80
+"""rad/s^2"""
+kElbowArmOverrideKey = "arm/override/elbow"
+kShoulderArmOverrideKey = "arm/override/shoulder"
+kWristArmOverrideKey = "arm/override/wrist"
+
+kShoulderRobotOffset = Transform3d(
+    Translation3d(8 * kMetersPerInch, 0, 9.75 * kMetersPerInch),
+    Rotation3d(0, math.pi, 0),
+)
+kArmPosesKey = "arm/poses/actual"
+kArmTargetPosesKey = "arm/poses/target"
+kArmCOMs = "arm/coms"
+kArmObeyEndstopsKey = "arm/useEndstops"
+kArmInterpolationMethod = "arm/interpolationMethod"
+
+kArmPositionExtraEpsiolon = 0.001
+
+kArmPositionTolerence = 0.1
+"""meters"""
+kArmPositionStoredTolerence = 0.5
+"""meters"""
+kArmRotationTolerence = 0.15
+"""radians"""
+kArmAtTargetKey = "arm/atTarget"
+
+kArmDemoFilename = "demoFile.txt"
+
+kArmShoulderTargetMotorKey = "arm/motors/target/shoulder"
+kArmElbowTargetMotorKey = "arm/motors/target/elbow"
+kArmWristTargetMotorKey = "arm/motors/target/wrist"
+
+kArmShoulderActualMotorKey = "arm/motors/actual/shoulder"
+kArmElbowActualMotorKey = "arm/motors/actual/elbow"
+kArmWristActualMotorKey = "arm/motors/actual/wrist"
+
+# scoring positions, derived from cad geometry
+kArmTopScorePositionCone = Pose2d(
+    -42.507 * kMetersPerInch,
+    41.615 * kMetersPerInch,
+    Rotation2d.fromDegrees(163.491),
+)
+kArmTopScorePositionCube = Pose2d(
+    -43.486 * kMetersPerInch,
+    44.602 * kMetersPerInch,
+    Rotation2d.fromDegrees(139.476),
+)
+
+kArmTopScorePositionConeHook = Pose2d(
+    -47.718 * kMetersPerInch,
+    39.116 * kMetersPerInch,
+    Rotation2d.fromDegrees(160.57),
+)
+
+kArmMidScorePositionCone = Pose2d(
+    -32.003 * kMetersPerInch,
+    30.715 * kMetersPerInch,
+    Rotation2d.fromDegrees(-147.313),
+)
+kArmMidScorePositionCube = Pose2d(
+    -26.932 * kMetersPerInch,
+    32.12 * kMetersPerInch,
+    Rotation2d.fromDegrees(137.093),
+)
+kArmMidScorePositionConeHook = Pose2d(
+    -28.529 * kMetersPerInch,
+    26.923 * kMetersPerInch,
+    Rotation2d.fromDegrees(174.97),
+)
+
+kArmStoredPosition = Pose2d(
+    4.5311 * kMetersPerInch,
+    30.1323 * kMetersPerInch,
+    Rotation2d.fromDegrees(63),
+)
+kArmStartupPosition = Pose2d(
+    8.452357 * kMetersPerInch,
+    26.865289 * kMetersPerInch,
+    Rotation2d.fromDegrees(51.338),
+)
+kArmStartupAngles = (
+    0.9643281370153848,
+    2.618827161508282,
+    -2.687138167134818,
+)  # radians
+kArmDoubleSubstationPositionCube = Pose2d(
+    -31.989 * kMetersPerInch,
+    34.78 * kMetersPerInch,
+    Rotation2d.fromDegrees(164.465),
+)
+kArmDoubleSubstationPositionCone = Pose2d(
+    -28.5955 * kMetersPerInch,
+    36.35 * kMetersPerInch,
+    Rotation2d.fromDegrees(173.544),
+)
+kArmDoubleSubstationPositionConeFlange = Pose2d(
+    -32.003 * kMetersPerInch,
+    32.715 * kMetersPerInch,
+    Rotation2d.fromDegrees(-147.313),
+)
+kArmSingleSubstationPosition = Pose2d(
+    -9.679 * kMetersPerInch,
+    35.526 * kMetersPerInch,
+    Rotation2d.fromDegrees(180 - 61.617),
+)
+kArmGroundIntakePositionCone = Pose2d(
+    -18.368 * kMetersPerInch,
+    5.201 * kMetersPerInch,
+    Rotation2d.fromDegrees(-132.64),
+)
+kArmGroundIntakePositionConeTip = Pose2d(
+    -30.284 * kMetersPerInch,
+    -0.469 * kMetersPerInch,
+    Rotation2d.fromDegrees(-166.124),
+)
+kArmGroundIntakePositionCube = Pose2d(
+    -32.254 * kMetersPerInch,
+    4.994 * kMetersPerInch,
+    Rotation2d.fromDegrees(155.075),
+)
+kArmGroundIntakePositionCubeYoshi = kArmGroundIntakePositionCube + Transform2d(
+    20.0 * kMetersPerInch, 0, 0
+)  # larger extension outwards to not need as much rotation
+kArmGroundSafePosition = Pose2d(
+    -30.639 * kMetersPerInch,
+    37.087 * kMetersPerInch,
+    Rotation2d.fromDegrees(180),
+)
+kArmTopSafePosition = Pose2d(
+    -10.430 * kMetersPerInch,
+    49.622 * kMetersPerInch,
+    Rotation2d.fromDegrees(51),
+)
+kArmGroundConeIntakePosition = Pose2d(
+    -23.616 * kMetersPerInch, -0.65 * kMetersPerInch, Rotation2d.fromDegrees(-145.251)
+)
+
+kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch
+"""meters"""
+kArmFudgeFactorKey = "arm/fudge"
+
+kArmMotorBreakArmModeKey = "arm/motorMode"
+kArmEndEffectorPose = "arm/endeffectorPose"
+
+kArmMaxOscillationAmount = Rotation2d.fromDegrees(10)
+
+# lights
+kCANdleID = 2
+
 
 # Logging
 kSwerveActualStatesKey = "swerve/actual"
@@ -609,7 +870,7 @@ kApriltagHeight = kApriltagWidth
 # IntakeMotor Motors
 kIntakeCANID = 3
 kIntakePIDSlot = 0
-kIntakePGain = 0.0001
+kIntakePGain = 0.01
 kIntakeIGain = 0
 kIntakeDGain = 0
 kIntakeMotorPercent = 0.7
@@ -617,11 +878,20 @@ kIntakeMotorPercent = 0.7
 
 kCubeLoadedKey = "intake/cubeInPos"
 kConeLoadedKey = "intake/coneInPos"
-kIntakeHoldingPercent = 0.05
+kIntakeHoldingPercent = 0.12
 """5%"""
 
 kIntakeStateKey = "intake/state"
 kIntakeMotorRPMKey = "intake/RPM"
 kIntakeGearRatio = 15
 kCubeModeKey = "intake/CubeMode"
-kIntakeMotorAMPS = 25
+kFlangeModeKey = "intake/flageMode"
+kFlangeHookKey = "intake/hook"
+kIntakeMotorAMPS = 30
+kPitchMultiplicationValue = 0.2
+
+kDriveDistanceAutoBalance = 5
+
+kSpeedFactorAutoBalance = 0.1
+
+kTiltThresholdAutoBalance = 10

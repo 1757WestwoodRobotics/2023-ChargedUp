@@ -10,11 +10,27 @@ from commands2 import (
 )
 from pathplannerlib import PathPlannerTrajectory
 from wpilib import DataLogManager
+from commands.arm.statearmposition import (
+    SetArmHookState,
+    SetArmPositionGroundIntake,
+    SetArmPositionGroundYoshi,
+    SetArmPositionMid,
+    SetArmPositionSafeTop,
+    SetArmPositionSingleSubstation,
+    SetArmPositionStored,
+    SetArmPositionTop,
+)
 
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory
+from commands.drive.chargestationautobalance import AutoBalance
+from commands.gripper import GripperHoldingState, GripperIntake, GripperOuttake
+from commands.light.cubeLights import ConeFlangeLights, CubeLights
 from commands.resetdrive import ResetDrive
+from subsystems.armsubsystem import ArmSubsystem
 from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.grippersubsystem import GripperSubsystem
+from subsystems.lightsubsystem import LightSubsystem
 
 
 class AutonomousRoutine(SequentialCommandGroup):
@@ -23,31 +39,76 @@ class AutonomousRoutine(SequentialCommandGroup):
     def __init__(
         self,
         drive: DriveSubsystem,
+        arm: ArmSubsystem,
+        grip: GripperSubsystem,
+        light: LightSubsystem,
         name: str,
         simultaneousCommands: List[Command],
     ):
         self.name = name
         self.markerMap = {  # later todo: actual implementation
-            "store": WaitCommand(2),
-            "top": WaitCommand(2),
-            "mid": WaitCommand(2),
-            "hybrid": WaitCommand(2),
-            "engage": WaitCommand(5),
-            "intake": WaitCommand(0.25),
-            "outtake": WaitCommand(0.25),
+            "store": ParallelCommandGroup(
+                SetArmPositionStored(arm),
+                GripperHoldingState(grip),
+                SetArmHookState(False),
+            ),
+            "top": SequentialCommandGroup(SetArmPositionTop(arm)),
+            "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(1.2)),
+            "midFlange": SequentialCommandGroup(
+                ConeFlangeLights(light),
+                SetArmPositionMid(arm),
+                WaitCommand(0.2),
+                SetArmHookState(True),
+                WaitCommand(0.3),
+            ),
+            "safe": ParallelDeadlineGroup(
+                WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
+            ),
+            "cube": CubeLights(light),
+            "safestore": ParallelDeadlineGroup(
+                WaitCommand(0.4),
+                [
+                    SequentialCommandGroup(
+                        ParallelCommandGroup(SetArmPositionSafeTop(arm)),
+                        ParallelCommandGroup(
+                            SetArmPositionStored(arm),
+                            WaitCommand(0.2),
+                            GripperHoldingState(grip),
+                        ),
+                    )
+                ],
+            ),
+            "hybrid": SetArmPositionSingleSubstation(arm),
+            "engage": AutoBalance(drive),
+            "intake": ParallelCommandGroup(
+                WaitCommand(0.25), GripperIntake(grip), SetArmPositionGroundIntake(arm)
+            ),
+            "intakeYoshi": ParallelCommandGroup(
+                GripperIntake(grip), SetArmPositionGroundYoshi(arm)
+            ),
+            "outtake": SequentialCommandGroup(
+                ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.3)),
+            ),
         }
         self.paths = trajectoryFromFile(name)
         followCommands = [
             SequentialCommandGroup(
-                self.stopEventGroup(path.getStartStopEvent()),
-                FollowTrajectory(drive, path, path.getMarkers(), self.markerMap),
+                self.stopEventGroup(path.getStartStopEvent())
+                if num == 0
+                else WaitCommand(0),
+                FollowTrajectory(drive, path, path.getMarkers(), self.markerMap, False),
                 self.stopEventGroup(path.getEndStopEvent()),
             )
-            for path in self.paths
+            for num, path in enumerate(self.paths)
         ]
 
         super().__init__(
-            ResetDrive(drive),
+            ResetDrive(
+                drive,
+                FollowTrajectory.allianceRespectivePoseFromState(
+                    self.paths[0].getInitialState()
+                ),
+            ),
             ParallelCommandGroup(
                 SequentialCommandGroup(*followCommands), *simultaneousCommands
             ),

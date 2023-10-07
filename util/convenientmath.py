@@ -2,7 +2,7 @@ import functools
 import math
 import operator
 import typing
-from wpimath.geometry import Rotation2d, Translation2d, Pose2d, Pose3d, Rotation3d
+from wpimath.geometry import Pose3d, Rotation2d, Rotation3d, Translation2d, Pose2d
 
 number = typing.Union[float, int]
 

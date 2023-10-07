@@ -11,12 +11,10 @@ from wpilib import (
     DataLogManager,
 )
 from ctre import (
-    AbsoluteSensorRange,
-    CANCoder,
     ControlMode,
-    SensorInitializationStrategy,
     WPI_TalonFX,
 )
+from ctre.sensors import CANCoder, SensorInitializationStrategy, AbsoluteSensorRange
 from navx import AHRS
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.filter import SlewRateLimiter
@@ -27,7 +25,6 @@ from wpimath.kinematics import (
     SwerveDrive4Odometry,
     SwerveModulePosition,
 )
-from wpimath.estimator import SwerveDrive4PoseEstimator
 
 import constants
 from util import convenientmath
@@ -323,7 +320,7 @@ class CTRESwerveModule(SwerveModule):
         driveEncoderPulses = self.driveMotor.getSelectedSensorPosition()
         driveDistance = (
             driveEncoderPulses
-            / constants.kSwerveEncoderPulsesPerRadian
+            / constants.kWheelEncoderPulsesPerRadian
             * constants.kWheelRadius
         )
         return driveDistance
@@ -354,6 +351,8 @@ class DriveSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, False)
+
+        self.rotationOffset = 0
 
         if RobotBase.isReal():
             self.frontLeftModule = CTRESwerveModule(
@@ -453,35 +452,26 @@ class DriveSubsystem(SubsystemBase):
             ),
             Pose2d(),
         )
-        self.estimator = SwerveDrive4PoseEstimator(
-            self.kinematics,
-            self.getRotation(),
-            (
-                self.frontLeftModule.getPosition(),
-                self.frontRightModule.getPosition(),
-                self.backLeftModule.getPosition(),
-                self.backRightModule.getPosition(),
-            ),
-            Pose2d(),
-        )
-
         self.printTimer = Timer()
         self.vxLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
         self.vyLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
 
+        self.visionEstimate = Pose2d()
+
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
-        self.gyro.reset()
-        self.resetOdometryAtPosition(Pose2d())
+        self.resetGyro(Pose2d())
 
     def setOdometryPosition(self, pose: Pose2d):
-        self.gyro.setAngleAdjustment(-pose.rotation().degrees())
+        # self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.rotationOffset = pose.rotation().degrees()
         self.resetOdometryAtPosition(pose)
 
     def resetGyro(self, pose: Pose2d):
         self.gyro.reset()
-        self.gyro.setAngleAdjustment(-pose.rotation().degrees())
+        # self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.rotationOffset = pose.rotation().degrees()
         self.resetOdometryAtPosition(pose)
 
     def getPose(self) -> Pose2d:
@@ -518,7 +508,13 @@ class DriveSubsystem(SubsystemBase):
         self.backRightModule.applyState(backRightState)
 
     def getRotation(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(-self.gyro.getYaw())
+        return Rotation2d.fromDegrees(
+            ((self.gyro.getRotation2d().degrees() / 0.98801) % 360)
+            + self.rotationOffset
+        )
+
+    def getPitch(self) -> Rotation2d:
+        return Rotation2d.fromDegrees(-self.gyro.getPitch() + 180)
 
     def resetOdometryAtPosition(self, pose: Pose2d):
         self.odometry.resetPosition(
@@ -544,15 +540,6 @@ class DriveSubsystem(SubsystemBase):
             self.frontRightModule.getPosition(),
             self.backLeftModule.getPosition(),
             self.backRightModule.getPosition(),
-        )
-        self.estimator.update(
-            self.getRotation(),
-            (
-                self.frontLeftModule.getPosition(),
-                self.frontRightModule.getPosition(),
-                self.backLeftModule.getPosition(),
-                self.backRightModule.getPosition(),
-            ),
         )
         robotPose = self.getPose()
 
@@ -582,16 +569,19 @@ class DriveSubsystem(SubsystemBase):
 
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
 
-        visionPose = self.estimator.getEstimatedPosition()
+        if SmartDashboard.getBoolean(
+            constants.kRobotVisionPoseArrayKeys.validKey, False
+        ):
+            visionPose = self.visionEstimate
 
-        weightedPose = Pose2d(
-            visionPose.X() * constants.kRobotVisionPoseWeight
-            + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
-            visionPose.Y() * constants.kRobotVisionPoseWeight
-            + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
-            robotPose.rotation(),
-        )
-        self.resetOdometryAtPosition(weightedPose)
+            weightedPose = Pose2d(
+                visionPose.X() * constants.kRobotVisionPoseWeight
+                + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
+                visionPose.Y() * constants.kRobotVisionPoseWeight
+                + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
+                robotPose.rotation(),
+            )
+            self.resetOdometryAtPosition(weightedPose)
 
         SmartDashboard.putNumberArray(
             constants.kRobotPoseArrayKeys.valueKey, robotPoseArray

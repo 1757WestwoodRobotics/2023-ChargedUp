@@ -19,6 +19,7 @@
         "names": [
           "top",
           "outtake",
+          "safe",
           "store"
         ],
         "executionBehavior": "sequential",
@@ -99,9 +100,11 @@
       "stopEvent": {
         "names": [
           "top",
-          "outtake"
+          "outtake",
+          "safe",
+          "store"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 2.0
       }

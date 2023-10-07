@@ -1,3 +1,4 @@
+from math import copysign
 import typing
 import json
 
@@ -26,6 +27,14 @@ def Invert(inputFn: AnalogInput) -> AnalogInput:
         return -1 * inputFn()
 
     return invert
+
+
+def SignSquare(inputFn: AnalogInput) -> AnalogInput:
+    def square() -> float:
+        val = inputFn()
+        return copysign(val * val, val)
+
+    return square
 
 
 def MapRange(
@@ -100,45 +109,59 @@ class OperatorInterface:
             binding = controlScheme[name]
             return lambda: self.controllers[binding[0]].getRawAxis(binding[1]["Axis"])
 
+        # pylint disable-next=unused-variable
+        def getPOVBindingOfName(name: str) -> typing.Tuple[Joystick, int, int]:
+            binding = controlScheme[name]
+            return (
+                self.controllers[binding[0]],
+                binding[1]["POV"][1],
+                binding[1]["POV"][0],
+            )
+
         self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kFieldRelativeCoordinateModeControlButtonName
         )
         self.resetGyro = getButtonBindingOfName(constants.kResetGyroButtonName)
-        self.targetRelativeCoordinateModeControl = getButtonBindingOfName(
-            constants.kTargetRelativeCoordinateModeControlButtonName
-        )
-        self.driveToTargetControl = getButtonBindingOfName(
-            constants.kDriveToTargetControlButtonName
-        )
-
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
+
+        self.AutoBalance = getButtonBindingOfName("AutoBalance")
 
         self.turboSpeed = getButtonBindingOfName(constants.kTurboSpeedButtonName)
         self.alignClosestWaypoint = getButtonBindingOfName("alignClosestWaypoint")
 
         self.chassisControls = HolonomicInput(
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
-                    constants.kXboxJoystickDeadband,
-                ),
+            SignSquare(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(
+                            constants.kChassisForwardsBackwardsAxisName
+                        ),
+                        constants.kXboxJoystickDeadband,
+                    ),
+                )
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                    constants.kXboxJoystickDeadband,
-                ),
+            SignSquare(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
+                )
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisRotationXAxisName),
-                    constants.kXboxJoystickDeadband,
-                ),
+            SignSquare(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisRotationXAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
+                )
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisRotationYAxisName),
-                    constants.kXboxJoystickDeadband,
+            SignSquare(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisRotationYAxisName),
+                        constants.kXboxJoystickDeadband,
+                    )
                 )
             ),
         )
@@ -146,3 +169,24 @@ class OperatorInterface:
         # Gripper commands
         self.gripIntake = getButtonBindingOfName("intakeGamepiece")
         self.gripOuttake = getButtonBindingOfName("outtakeGamepiece")
+        # arm controls
+
+        self.armMid = getPOVBindingOfName("armMid")
+        self.hookScore = getButtonBindingOfName("hookScore")
+        self.armTop = getPOVBindingOfName("armTop")
+        self.armDoubleSubstation = getButtonBindingOfName("armDoubleSubstation")
+        self.armSingleSubstation = getButtonBindingOfName("armSingleSubstation")
+        self.armOverride = getButtonBindingOfName("armOverride")
+        self.armGroundIntake = getPOVBindingOfName("armGroundIntake")
+        self.armGroundCone = getPOVBindingOfName("armGroundCone")
+
+        self.armFudgeIncrease = getPOVBindingOfName("armFudgeFactorIncrease")
+        self.armFudgeDecrease = getPOVBindingOfName("armFudgeFactorDecrease")
+
+        self.armDemo = getButtonBindingOfName("armDemo")
+        self.resetArm = getButtonBindingOfName("resetArm")
+
+        # light controls
+        self.lightCone = getPOVBindingOfName("lightsCone")
+        self.lightConeFlange = getPOVBindingOfName("lightsConeFlange")
+        self.lightCube = getPOVBindingOfName("lightsCube")
