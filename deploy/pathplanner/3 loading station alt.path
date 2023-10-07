@@ -27,18 +27,43 @@
     },
     {
       "anchorPoint": {
-        "x": 3.7135800106346495,
-        "y": 4.676797696310211
+        "x": 3.5558892946573093,
+        "y": 4.68927776303297
       },
       "prevControl": {
-        "x": 3.2069208211340663,
-        "y": 4.617837342152506
+        "x": 3.049230105156726,
+        "y": 4.630317408875265
       },
       "nextControl": {
-        "x": 4.0817872483031605,
-        "y": 4.7196462808937945
+        "x": 3.924096532325821,
+        "y": 4.732126347616553
       },
-      "holonomicAngle": 9.737684670472929,
+      "holonomicAngle": 148.88977666853972,
+      "isReversal": false,
+      "velOverride": 2.0,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.871115918699479,
+        "y": 4.6457063040857385
+      },
+      "prevControl": {
+        "x": 4.466480987633345,
+        "y": 4.65470954266533
+      },
+      "nextControl": {
+        "x": 5.275750849765613,
+        "y": 4.636703065506147
+      },
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -52,16 +77,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.518816467083178,
-        "y": 4.711204276835755
+        "x": 5.9586300573356334,
+        "y": 4.628085014584845
       },
       "prevControl": {
-        "x": 5.051256623671376,
-        "y": 4.72227109264909
+        "x": 5.491070213923832,
+        "y": 4.6391518303981805
       },
       "nextControl": {
-        "x": 5.051256623671376,
-        "y": 4.72227109264909
+        "x": 5.491070213923832,
+        "y": 4.6391518303981805
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -213,34 +238,40 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 2.1090909090909116,
+      "position": 3.11,
       "names": [
         "store"
       ]
     },
     {
-      "position": 0.7636363636363636,
+      "position": 1.185817649147727,
       "names": [
         "cube",
-        "intakeYoshi"
+        "intake"
       ]
     },
     {
-      "position": 4.963636363636356,
+      "position": 5.928053977272727,
       "names": [
         "intake"
       ]
     },
     {
-      "position": 6.1090909090909,
+      "position": 7.11,
       "names": [
         "store"
       ]
     },
     {
-      "position": 2.990909090909091,
+      "position": 3.99,
       "names": [
         "safe"
+      ]
+    },
+    {
+      "position": 0.014914772727272829,
+      "names": [
+        "store"
       ]
     }
   ]
