@@ -22,7 +22,7 @@ from commands.arm.statearmposition import (
 )
 
 from commands.auto.autohelper import trajectoryFromFile
-from commands.auto.followtrajectory import FollowTrajectory
+from commands.auto.followtrajectory import FollowTrajectory, GoToPoint
 from commands.drive.chargestationautobalance import AutoBalance
 from commands.gripper import GripperHoldingState, GripperIntake, GripperOuttake
 from commands.light.cubeLights import ConeFlangeLights, CubeLights
@@ -93,11 +93,36 @@ class AutonomousRoutine(SequentialCommandGroup):
         self.paths = trajectoryFromFile(name)
         followCommands = [
             SequentialCommandGroup(
-                self.stopEventGroup(path.getStartStopEvent())
+                ParallelDeadlineGroup(
+                    self.stopEventGroup(path.getStartStopEvent()),
+                    [
+                        GoToPoint(
+                            drive,
+                            FollowTrajectory.allianceRespectivePoseFromState(
+                                path.getInitialState()
+                            ),
+                        )
+                    ],
+                )
                 if num == 0
                 else WaitCommand(0),
                 FollowTrajectory(drive, path, path.getMarkers(), self.markerMap, False),
-                self.stopEventGroup(path.getEndStopEvent()),
+                ParallelDeadlineGroup(
+                    self.stopEventGroup(path.getEndStopEvent()),
+                    [
+                        GoToPoint(
+                            drive,
+                            FollowTrajectory.allianceRespectivePoseFromState(
+                                path.getEndState()
+                            ),
+                        )
+                        if drive
+                        not in self.stopEventGroup(
+                            path.getEndStopEvent()
+                        ).getRequirements()
+                        else WaitCommand(0)
+                    ],
+                ),
             )
             for num, path in enumerate(self.paths)
         ]

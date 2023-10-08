@@ -862,6 +862,7 @@ kAutonomousPathKey = "auto/path"
 kAutonomousPathSample = "auto/desired"
 kAutonomousPathError = "auto/error"
 kAutonomousChassisSpeeds = "auto/speeds"
+kAutonomousDesiredSpeed = "auto/desiredSpeed"
 
 # photonvision parameters
 kPhotonvisionCameraName = "cam"

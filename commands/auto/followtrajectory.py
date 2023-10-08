@@ -8,6 +8,7 @@ from wpimath.controller import (
     ProfiledPIDControllerRadians,
     HolonomicDriveController,
 )
+from wpimath.kinematics import ChassisSpeeds
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.trajectory import TrapezoidProfileRadians
 
@@ -177,9 +178,19 @@ class FollowTrajectory(CommandBase):
             allianceRespectiveDesiredState.rotation(),
         )
 
+        # targetChassisSpeeds = ChassisSpeeds(
+        #     targetChassisSpeeds.vx,
+        #     targetChassisSpeeds.vy,
+        #     targetChassisSpeeds.omega + desiredState.angularVelocity * constants.kRadiansPerDegree,
+        # )
+
         SmartDashboard.putNumberArray(
             constants.kAutonomousChassisSpeeds,
             [targetChassisSpeeds.vx, targetChassisSpeeds.vy, targetChassisSpeeds.omega],
+        )
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousDesiredSpeed,
+            [desiredState.velocity, desiredState.angularVelocity],
         )
 
         self.drive.arcadeDriveWithSpeeds(
@@ -216,3 +227,88 @@ class FollowTrajectory(CommandBase):
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
         )
         DataLogManager.log("end trajectory")
+
+
+class GoToPoint(CommandBase):
+    def __init__(
+        self,
+        drive: DriveSubsystem,
+        point: Pose2d
+    ) -> None:
+        CommandBase.__init__(self)
+
+        self.drive = drive
+        self.point = point
+
+        self.setControllers()
+
+        self.addRequirements([self.drive])
+        self.setName(__class__.__name__)
+
+    def setControllers(self) -> None:
+        self.xController = PIDController(
+            constants.kTrajectoryPositionPGain,
+            constants.kTrajectoryPositionIGain,
+            constants.kTrajectoryPositionDGain,
+        )
+        self.yController = PIDController(
+            constants.kTrajectoryPositionPGain,
+            constants.kTrajectoryPositionIGain,
+            constants.kTrajectoryPositionDGain,
+        )
+        self.thetaController = ProfiledPIDControllerRadians(
+            constants.kTrajectoryAnglePGain,
+            constants.kTrajectoryAngleIGain,
+            constants.kTrajectoryAngleDGain,
+            TrapezoidProfileRadians.Constraints(
+                constants.kMaxRotationAngularVelocity,
+                constants.kMaxRotationAngularAcceleration,
+            ),
+        )
+        self.thetaController.enableContinuousInput(-pi, pi)
+
+        self.controller = HolonomicDriveController(
+            self.xController, self.yController, self.thetaController
+        )
+
+    def initialize(self):
+        self.setControllers()
+
+    def execute(self) -> None:
+        currentState = self.drive.getPose()
+
+
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousPathError,
+            [
+                currentState.X() - self.point.X(),
+                currentState.Y() - self.point.Y(),
+                (
+                    currentState.rotation() - self.point.rotation()
+                ).radians(),
+            ],
+        )
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousPathSample,
+            [
+                self.point.X(),
+                self.point.Y(),
+                self.point.rotation().radians(),
+            ],
+        )
+
+        targetChassisSpeeds = self.controller.calculate(
+            currentState,
+            self.point,
+            0,
+            self.point.rotation(),
+        )
+
+        SmartDashboard.putNumberArray(
+            constants.kAutonomousChassisSpeeds,
+            [targetChassisSpeeds.vx, targetChassisSpeeds.vy, targetChassisSpeeds.omega],
+        )
+
+        self.drive.arcadeDriveWithSpeeds(
+            targetChassisSpeeds, DriveSubsystem.CoordinateMode.RobotRelative
+        )
