@@ -653,27 +653,38 @@ class DriveSubsystem(SubsystemBase):
                 constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
             )
         )
+        vx, vy, om, dt = (
+            chassisSpeeds.vx,
+            chassisSpeeds.vy,
+            chassisSpeeds.omega,
+            constants.kRobotUpdatePeriod,
+        )
+        desiredPose = Pose2d(vx * dt, vy * dt, Rotation2d(om * dt))
+        twist = Pose2d().log(desiredPose)
+        discritizedSpeeds = ChassisSpeeds(
+            twist.dx / dt, twist.dy / dt, twist.dtheta / dt
+        )
 
         robotChassisSpeeds = None
         if coordinateMode is DriveSubsystem.CoordinateMode.RobotRelative:
-            robotChassisSpeeds = chassisSpeeds
+            robotChassisSpeeds = discritizedSpeeds
         elif coordinateMode is DriveSubsystem.CoordinateMode.FieldRelative:
             robotChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                chassisSpeeds.vx,
-                chassisSpeeds.vy,
-                chassisSpeeds.omega,
+                discritizedSpeeds.vx,
+                discritizedSpeeds.vy,
+                discritizedSpeeds.omega,
                 self.getRotation(),
             )
         elif coordinateMode is DriveSubsystem.CoordinateMode.TargetRelative:
             if SmartDashboard.getBoolean(
                 constants.kTargetAngleRelativeToRobotKeys.validKey, False
             ):
-                robotSpeeds = Translation2d(chassisSpeeds.vx, chassisSpeeds.vy)
+                robotSpeeds = Translation2d(discritizedSpeeds.vx, discritizedSpeeds.vy)
                 targetAlignedSpeeds = robotSpeeds.rotateBy(targetAngle)
                 robotChassisSpeeds = ChassisSpeeds(
                     targetAlignedSpeeds.X(),
                     targetAlignedSpeeds.Y(),
-                    chassisSpeeds.omega,
+                    discritizedSpeeds.omega,
                 )
             else:
                 robotChassisSpeeds = ChassisSpeeds()
