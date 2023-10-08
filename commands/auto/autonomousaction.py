@@ -20,7 +20,7 @@ from commands.arm.statearmposition import (
     SetArmPositionStored,
     SetArmPositionTop,
 )
-
+from commands.defensestate import DefenseState
 from commands.auto.autohelper import trajectoryFromFile
 from commands.auto.followtrajectory import FollowTrajectory, GoToPoint
 from commands.drive.chargestationautobalance import AutoBalance
@@ -137,6 +137,7 @@ class AutonomousRoutine(SequentialCommandGroup):
             ParallelCommandGroup(
                 SequentialCommandGroup(*followCommands), *simultaneousCommands
             ),
+            DefenseState(drive),
         )
         self.setName(name)
 

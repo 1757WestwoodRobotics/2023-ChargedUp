@@ -30,7 +30,6 @@ from wpimath.geometry import (
     Pose2d,
     Rotation2d,
     Rotation3d,
-    Transform2d,
     Transform3d,
     Translation2d,
     Translation3d,
@@ -484,7 +483,7 @@ kTrajectoryPositionPGain = 8
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 12
+kTrajectoryAnglePGain = 5
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -819,7 +818,7 @@ kArmGroundIntakePositionCube = Pose2d(
 kArmGroundIntakePositionCubeYoshi = Pose2d(
     kArmGroundIntakePositionCube.translation()
     + Translation2d(-20.0 * kMetersPerInch, 0),
-    kArmGroundIntakePositionCube.rotation()
+    kArmGroundIntakePositionCube.rotation(),
 )  # larger extension outwards to not need as much rotation
 kArmGroundSafePosition = Pose2d(
     -30.639 * kMetersPerInch,
@@ -855,7 +854,7 @@ kConsoleLog = "log"
 kPDHCanID = 1
 kPDHPublishKey = "powerDistribution"
 
-kJoystickKeyLogPrefix = "DriverStation"
+kJoystickKeyLogPrefix = "AdvantageKit/DriverStation"
 kFieldSimTargetKey = "SimTargets"
 kFieldRelativeTargets = "RelTargets"
 kAutonomousPathKey = "auto/path"

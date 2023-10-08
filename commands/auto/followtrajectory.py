@@ -8,7 +8,6 @@ from wpimath.controller import (
     ProfiledPIDControllerRadians,
     HolonomicDriveController,
 )
-from wpimath.kinematics import ChassisSpeeds
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.trajectory import TrapezoidProfileRadians
 
@@ -230,11 +229,7 @@ class FollowTrajectory(CommandBase):
 
 
 class GoToPoint(CommandBase):
-    def __init__(
-        self,
-        drive: DriveSubsystem,
-        point: Pose2d
-    ) -> None:
+    def __init__(self, drive: DriveSubsystem, point: Pose2d) -> None:
         CommandBase.__init__(self)
 
         self.drive = drive
@@ -277,15 +272,12 @@ class GoToPoint(CommandBase):
     def execute(self) -> None:
         currentState = self.drive.getPose()
 
-
         SmartDashboard.putNumberArray(
             constants.kAutonomousPathError,
             [
                 currentState.X() - self.point.X(),
                 currentState.Y() - self.point.Y(),
-                (
-                    currentState.rotation() - self.point.rotation()
-                ).radians(),
+                (currentState.rotation() - self.point.rotation()).radians(),
             ],
         )
         SmartDashboard.putNumberArray(

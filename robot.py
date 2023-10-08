@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 
 import typing
+import functools
+import operator
+from commands.auto.autohelper import trajectoryFromFile
+from commands.auto.followtrajectory import FollowTrajectory
 import wpilib
 import commands2
 
 from robotcontainer import RobotContainer
+
+import constants
 
 
 class MentorBot(commands2.TimedCommandRobot):
@@ -30,12 +36,37 @@ class MentorBot(commands2.TimedCommandRobot):
         # Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         # autonomous chooser on the dashboard.
         self.container = RobotContainer()
+        self.pastAuto = ""
 
     def disabledInit(self) -> None:
         """This function is called once each time the robot enters Disabled mode."""
 
     def disabledPeriodic(self) -> None:
         """This function is called periodically when disabled"""
+        currentAuto = wpilib.SmartDashboard.getString("Autonomous/selected", "")
+
+        if currentAuto != self.pastAuto:
+            autonPath = trajectoryFromFile(currentAuto)
+            states = functools.reduce(
+                operator.add,
+                [
+                    list(map(FollowTrajectory.allianceRespectivePoseFromState,path.getStates()))
+                    for path in autonPath
+                ],
+                [],
+            )
+            wpilib.SmartDashboard.putNumberArray(
+                constants.kAutonomousPathKey,
+                functools.reduce(
+                    operator.add,
+                    [
+                        [state.X(), state.Y(), state.rotation().radians()]
+                        for state in states
+                    ],
+                    [],
+                ),
+            )
+            self.pastAuto = currentAuto
 
     def autonomousInit(self) -> None:
         """This autonomous runs the autonomous command selected by your RobotContainer class."""
