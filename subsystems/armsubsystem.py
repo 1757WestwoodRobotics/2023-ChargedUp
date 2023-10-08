@@ -94,7 +94,7 @@ class ArmSubsystem(SubsystemBase):
                             if SmartDashboard.getBoolean(
                                 constants.kFlangeHookKey, False
                             )
-                            else constants.kArmTopScorePositionCube
+                            else constants.kArmTopScorePositionConeFlange
                         )
                         if SmartDashboard.getBoolean(constants.kFlangeModeKey, False)
                         else constants.kArmTopScorePositionCone

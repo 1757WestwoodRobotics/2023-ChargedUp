@@ -484,7 +484,7 @@ kTrajectoryPositionPGain = 8
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 8
+kTrajectoryAnglePGain = 12
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -509,7 +509,7 @@ kDriveToTargetControlButtonName = "driveToTargetControl"
 kXboxTriggerActivationThreshold = 0.5
 
 kTurboSpeedButtonName = "turboSpeed"
-kNormalSpeedMultiplier = 0.80  # half full on normal
+kNormalSpeedMultiplier = 0.50  # half full on normal
 kTurboSpeedMultiplier = 0.95  # full speed!!!
 
 # Simulation Parameters
@@ -740,6 +740,10 @@ kArmTopScorePositionCube = Pose2d(
     Rotation2d.fromDegrees(139.476),
 )
 
+kArmTopScorePositionConeFlange = Pose2d(
+    -41.537 * kMetersPerInch, 46.226 * kMetersPerInch, Rotation2d.fromDegrees(123.449)
+)
+
 kArmTopScorePositionConeHook = Pose2d(
     -47.718 * kMetersPerInch,
     39.116 * kMetersPerInch,
@@ -783,14 +787,14 @@ kArmDoubleSubstationPositionCube = Pose2d(
     Rotation2d.fromDegrees(164.465),
 )
 kArmDoubleSubstationPositionCone = Pose2d(
-    -28.5955 * kMetersPerInch,
-    36.35 * kMetersPerInch,
-    Rotation2d.fromDegrees(173.544),
+    -20.623 * kMetersPerInch,
+    34.391 * kMetersPerInch,
+    Rotation2d.fromDegrees(-171.330),
 )
 kArmDoubleSubstationPositionConeFlange = Pose2d(
-    -32.003 * kMetersPerInch,
-    32.715 * kMetersPerInch,
-    Rotation2d.fromDegrees(-147.313),
+    -21.195 * kMetersPerInch,
+    38.836 * kMetersPerInch,
+    Rotation2d.fromDegrees(-165.089),
 )
 kArmSingleSubstationPosition = Pose2d(
     -9.679 * kMetersPerInch,
@@ -803,17 +807,19 @@ kArmGroundIntakePositionCone = Pose2d(
     Rotation2d.fromDegrees(-132.64),
 )
 kArmGroundIntakePositionConeTip = Pose2d(
-    -30.284 * kMetersPerInch,
-    -0.469 * kMetersPerInch,
-    Rotation2d.fromDegrees(-166.124),
+    -35.393 * kMetersPerInch,
+    -2.00 * kMetersPerInch,
+    Rotation2d.fromDegrees(-170.107),
 )
 kArmGroundIntakePositionCube = Pose2d(
     -32.254 * kMetersPerInch,
     4.994 * kMetersPerInch,
     Rotation2d.fromDegrees(155.075),
 )
-kArmGroundIntakePositionCubeYoshi = kArmGroundIntakePositionCube + Transform2d(
-    20.0 * kMetersPerInch, 0, 0
+kArmGroundIntakePositionCubeYoshi = Pose2d(
+    kArmGroundIntakePositionCube.translation()
+    + Translation2d(20.0 * kMetersPerInch, 0),
+    kArmGroundIntakePositionCube.rotation()
 )  # larger extension outwards to not need as much rotation
 kArmGroundSafePosition = Pose2d(
     -30.639 * kMetersPerInch,

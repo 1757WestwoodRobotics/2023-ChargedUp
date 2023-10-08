@@ -95,7 +95,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intakeYoshi"
+          "intake"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
