@@ -818,7 +818,7 @@ kArmGroundIntakePositionCube = Pose2d(
 )
 kArmGroundIntakePositionCubeYoshi = Pose2d(
     kArmGroundIntakePositionCube.translation()
-    + Translation2d(20.0 * kMetersPerInch, 0),
+    + Translation2d(-20.0 * kMetersPerInch, 0),
     kArmGroundIntakePositionCube.rotation()
 )  # larger extension outwards to not need as much rotation
 kArmGroundSafePosition = Pose2d(
