@@ -338,7 +338,9 @@ class CTRESwerveModule(SwerveModule):
         swerveEncoderAngle = (
             self.swerveEncoder.getAbsolutePosition() * constants.kRadiansPerDegree
         )
-        self.setSwerveAngle(Rotation2d(swerveEncoderAngle))
+        self.setSwerveAngle(
+            optimizeAngle(self.getSwerveAngle(), Rotation2d(swerveEncoderAngle))
+        )
 
 
 class DriveSubsystem(SubsystemBase):
@@ -509,7 +511,8 @@ class DriveSubsystem(SubsystemBase):
 
     def getRotation(self) -> Rotation2d:
         return Rotation2d.fromDegrees(
-            ((self.gyro.getRotation2d().degrees() / 0.98801) % 360)
+            # ((self.gyro.getRotation2d().degrees() / 0.98801) % 360)
+            ((self.gyro.getRotation2d().degrees()) % 360)
             + self.rotationOffset
         )
 
