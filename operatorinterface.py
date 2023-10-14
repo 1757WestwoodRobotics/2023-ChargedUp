@@ -190,3 +190,7 @@ class OperatorInterface:
         self.lightCone = getPOVBindingOfName("lightsCone")
         self.lightConeFlange = getPOVBindingOfName("lightsConeFlange")
         self.lightCube = getPOVBindingOfName("lightsCube")
+
+        self.lightCone2 = getButtonBindingOfName("lightsCone2")
+        self.lightConeFlange2 = getButtonBindingOfName("lightsConeFlange2")
+        self.lightCube2 = getButtonBindingOfName("lightsCube2")

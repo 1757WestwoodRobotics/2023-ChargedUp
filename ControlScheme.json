@@ -30,7 +30,7 @@
   "armFudgeFactorDecrease": [
     1,
     {
-        "POV": [0, 180]
+      "POV": [0, 180]
     },
     "POV down"
   ],
@@ -132,6 +132,13 @@
     },
     "replace me"
   ],
+  "lightsCone2": [
+    1,
+    {
+      "Button": 2
+    },
+    "b button"
+  ],
   "lightsConeFlange": [
     0,
     {
@@ -139,12 +146,26 @@
     },
     "replace me"
   ],
+  "lightsConeFlange2": [
+    1,
+    {
+      "Button": 4
+    },
+    "y button"
+  ],
   "lightsCube": [
     0,
     {
       "POV": [0, 270]
     },
     "replace me"
+  ],
+  "lightsCube2": [
+    1,
+    {
+      "Button": 3
+    },
+    "X button"
   ],
   "resetArm": [
     2,

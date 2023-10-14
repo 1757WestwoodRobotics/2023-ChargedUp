@@ -261,6 +261,18 @@ class RobotContainer:
             ConeFlangeLights(self.light)
         )
 
+        # xbox controller lights
+        commands2.button.JoystickButton(*self.operatorInterface.lightCone2).whenPressed(
+            ConeLights(self.light)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.lightCube2).whenPressed(
+            CubeLights(self.light)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.lightConeFlange2).whenPressed(
+            ConeFlangeLights(self.light)
+        )
+
         commands2.button.JoystickButton(*self.operatorInterface.AutoBalance).whileHeld(
             AutoBalance(self.drive)
         )
