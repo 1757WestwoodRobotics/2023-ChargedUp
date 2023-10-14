@@ -483,7 +483,7 @@ kTrajectoryPositionPGain = 8
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 5
+kTrajectoryAnglePGain = 8
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -787,7 +787,7 @@ kArmDoubleSubstationPositionCube = Pose2d(
 )
 kArmDoubleSubstationPositionCone = Pose2d(
     -20.623 * kMetersPerInch,
-    34.391 * kMetersPerInch,
+    34.891 * kMetersPerInch,
     Rotation2d.fromDegrees(-171.330),
 )
 kArmDoubleSubstationPositionConeFlange = Pose2d(
@@ -831,7 +831,7 @@ kArmTopSafePosition = Pose2d(
     Rotation2d.fromDegrees(51),
 )
 kArmGroundConeIntakePosition = Pose2d(
-    -23.616 * kMetersPerInch, -0.65 * kMetersPerInch, Rotation2d.fromDegrees(-145.251)
+    -27.619 * kMetersPerInch, -0.584 * kMetersPerInch, Rotation2d.fromDegrees(-153.766)
 )
 
 kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch

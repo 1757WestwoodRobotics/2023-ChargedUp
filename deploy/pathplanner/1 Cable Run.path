@@ -18,12 +18,12 @@
       "stopEvent": {
         "names": [
           "safe",
-          "top",
+          "mid",
           "outtake",
           "safestore"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "after",
+        "waitBehavior": "none",
         "waitTime": 2.0
       }
     },

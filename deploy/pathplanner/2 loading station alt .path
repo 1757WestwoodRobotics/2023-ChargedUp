@@ -17,6 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "safe",
           "mid",
           "outtake",
           "store"
@@ -32,14 +33,14 @@
         "y": 4.676797696310211
       },
       "prevControl": {
-        "x": 3.2069208211340663,
-        "y": 4.617837342152506
+        "x": 3.1119864016085574,
+        "y": 4.5678591072896335
       },
       "nextControl": {
-        "x": 4.0817872483031605,
-        "y": 4.7196462808937945
+        "x": 4.078339813476233,
+        "y": 4.7428496251485415
       },
-      "holonomicAngle": 9.737684670472929,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -71,7 +72,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intakeYoshi"
+          "intakeFlange"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -124,7 +125,7 @@
       "stopEvent": {
         "names": [
           "safe",
-          "top",
+          "mid",
           "outtake",
           "safestore"
         ],
@@ -139,12 +140,12 @@
         "y": 4.851069424988438
       },
       "prevControl": {
-        "x": 4.221224013716725,
-        "y": 4.7295960707662115
+        "x": 4.209388319206443,
+        "y": 4.825588950520723
       },
       "nextControl": {
-        "x": 5.775392357444849,
-        "y": 5.049571906239651
+        "x": 5.424765481856791,
+        "y": 4.877044348981416
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -160,12 +161,12 @@
     },
     {
       "anchorPoint": {
-        "x": 7.349233458793741,
-        "y": 5.8294030825836956
+        "x": 6.519536285279949,
+        "y": 4.748910932361091
       },
       "prevControl": {
-        "x": 6.427614795841687,
-        "y": 5.333146879455666
+        "x": 5.783782848191811,
+        "y": 4.816904479692175
       },
       "nextControl": null,
       "holonomicAngle": 0.0,
@@ -181,8 +182,8 @@
       }
     }
   ],
-  "maxVelocity": 4.95,
-  "maxAcceleration": 2.5,
+  "maxVelocity": 5.48,
+  "maxAcceleration": 2.74,
   "isReversed": null,
   "markers": [
     {
@@ -192,16 +193,10 @@
       ]
     },
     {
-      "position": 0.7636363636363636,
+      "position": 0.13902698863636376,
       "names": [
-        "cube",
-        "intakeYoshi"
-      ]
-    },
-    {
-      "position": 4.963636363636356,
-      "names": [
-        "intake"
+        "flange",
+        "intakeFlange"
       ]
     }
   ]

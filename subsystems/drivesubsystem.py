@@ -511,8 +511,8 @@ class DriveSubsystem(SubsystemBase):
 
     def getRotation(self) -> Rotation2d:
         return Rotation2d.fromDegrees(
-            # ((self.gyro.getRotation2d().degrees() / 0.98801) % 360)
-            ((self.gyro.getRotation2d().degrees()) % 360)
+            ((self.gyro.getRotation2d().degrees() / 0.98801) % 360)
+            # ((self.gyro.getRotation2d().degrees()) % 360)
             + self.rotationOffset
         )
 
@@ -653,38 +653,38 @@ class DriveSubsystem(SubsystemBase):
                 constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
             )
         )
-        vx, vy, om, dt = (
-            chassisSpeeds.vx,
-            chassisSpeeds.vy,
-            chassisSpeeds.omega,
-            constants.kRobotUpdatePeriod,
-        )
-        desiredPose = Pose2d(vx * dt, vy * dt, Rotation2d(om * dt))
-        twist = Pose2d().log(desiredPose)
-        discritizedSpeeds = ChassisSpeeds(
-            twist.dx / dt, twist.dy / dt, twist.dtheta / dt
-        )
+        # vx, vy, om, dt = (
+        #     chassisSpeeds.vx,
+        #     chassisSpeeds.vy,
+        #     chassisSpeeds.omega,
+        #     constants.kRobotUpdatePeriod,
+        # )
+        # desiredPose = Pose2d(vx * dt, vy * dt, Rotation2d(om * dt))
+        # twist = Pose2d().log(desiredPose)
+        # discritizedSpeeds = ChassisSpeeds(
+        #     twist.dx / dt, twist.dy / dt, twist.dtheta / dt
+        # )
 
         robotChassisSpeeds = None
         if coordinateMode is DriveSubsystem.CoordinateMode.RobotRelative:
-            robotChassisSpeeds = discritizedSpeeds
+            robotChassisSpeeds = chassisSpeeds
         elif coordinateMode is DriveSubsystem.CoordinateMode.FieldRelative:
             robotChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                discritizedSpeeds.vx,
-                discritizedSpeeds.vy,
-                discritizedSpeeds.omega,
+                chassisSpeeds.vx,
+                chassisSpeeds.vy,
+                chassisSpeeds.omega,
                 self.getRotation(),
             )
         elif coordinateMode is DriveSubsystem.CoordinateMode.TargetRelative:
             if SmartDashboard.getBoolean(
                 constants.kTargetAngleRelativeToRobotKeys.validKey, False
             ):
-                robotSpeeds = Translation2d(discritizedSpeeds.vx, discritizedSpeeds.vy)
+                robotSpeeds = Translation2d(chassisSpeeds.vx, chassisSpeeds.vy)
                 targetAlignedSpeeds = robotSpeeds.rotateBy(targetAngle)
                 robotChassisSpeeds = ChassisSpeeds(
                     targetAlignedSpeeds.X(),
                     targetAlignedSpeeds.Y(),
-                    discritizedSpeeds.omega,
+                    chassisSpeeds.omega,
                 )
             else:
                 robotChassisSpeeds = ChassisSpeeds()

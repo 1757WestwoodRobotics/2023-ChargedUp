@@ -12,6 +12,7 @@ from pathplannerlib import PathPlannerTrajectory
 from wpilib import DataLogManager
 from commands.arm.statearmposition import (
     SetArmHookState,
+    SetArmPositionGroundCone,
     SetArmPositionGroundIntake,
     SetArmPositionGroundYoshi,
     SetArmPositionMid,
@@ -53,7 +54,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 SetArmHookState(False),
             ),
             "top": SequentialCommandGroup(SetArmPositionTop(arm)),
-            "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(1.2)),
+            "mid": SequentialCommandGroup(SetArmPositionMid(arm), WaitCommand(0.4)),
             "midFlange": SequentialCommandGroup(
                 ConeFlangeLights(light),
                 SetArmPositionMid(arm),
@@ -65,6 +66,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
             ),
             "cube": CubeLights(light),
+            "flange": ConeFlangeLights(light),
             "safestore": ParallelDeadlineGroup(
                 WaitCommand(0.4),
                 [
@@ -85,6 +87,9 @@ class AutonomousRoutine(SequentialCommandGroup):
             ),
             "intakeYoshi": ParallelCommandGroup(
                 GripperIntake(grip), SetArmPositionGroundYoshi(arm)
+            ),
+            "intakeFlange": ParallelCommandGroup(
+                GripperIntake(grip), SetArmPositionGroundCone(arm)
             ),
             "outtake": SequentialCommandGroup(
                 ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.3)),
