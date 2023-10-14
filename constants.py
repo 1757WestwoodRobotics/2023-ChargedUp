@@ -781,14 +781,14 @@ kArmStartupAngles = (
     -2.687138167134818,
 )  # radians
 kArmDoubleSubstationPositionCube = Pose2d(
-    -31.989 * kMetersPerInch,
-    34.78 * kMetersPerInch,
-    Rotation2d.fromDegrees(164.465),
+    -10.88 * kMetersPerInch,
+    37.97 * kMetersPerInch,
+    Rotation2d.fromDegrees(-166.54),
 )
 kArmDoubleSubstationPositionCone = Pose2d(
-    -20.623 * kMetersPerInch,
-    34.891 * kMetersPerInch,
-    Rotation2d.fromDegrees(-171.330),
+    -14.816 * kMetersPerInch,
+    32.41 * kMetersPerInch,
+    Rotation2d.fromDegrees(-168.598),
 )
 kArmDoubleSubstationPositionConeFlange = Pose2d(
     -21.195 * kMetersPerInch,
