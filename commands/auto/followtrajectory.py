@@ -1,5 +1,5 @@
 from math import pi
-from typing import Dict, List, Tuple
+from typing import Callable, Dict, List, Tuple
 from commands2 import Command, CommandBase
 from pathplannerlib import PathPlannerTrajectory
 from wpilib import DataLogManager, DriverStation, SmartDashboard, Timer
@@ -229,11 +229,13 @@ class FollowTrajectory(CommandBase):
 
 
 class GoToPoint(CommandBase):
-    def __init__(self, drive: DriveSubsystem, point: Pose2d) -> None:
+    def __init__(self, drive: DriveSubsystem, state: PathPlannerTrajectory.PathPlannerState, allianceRespective: bool = True) -> None:
         CommandBase.__init__(self)
 
         self.drive = drive
-        self.point = point
+        self.state = state
+        self.point = Pose2d()
+        self.allianceRespective = allianceRespective
 
         self.setControllers()
 
@@ -268,6 +270,7 @@ class GoToPoint(CommandBase):
 
     def initialize(self):
         self.setControllers()
+        self.point = FollowTrajectory.allianceRespectivePoseFromState(self.state)
 
     def execute(self) -> None:
         currentState = self.drive.getPose()

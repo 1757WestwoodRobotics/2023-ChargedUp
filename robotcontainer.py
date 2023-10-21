@@ -235,7 +235,7 @@ class RobotContainer:
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
-            ResetDrive(self.drive, Pose2d(0, 0, 0))
+            ResetDrive(self.drive)
         )
 
         commands2.button.JoystickButton(

@@ -1,3 +1,4 @@
+from typing import Callable
 from commands2 import CommandBase
 from wpimath.geometry import Pose2d
 
@@ -7,7 +8,7 @@ from subsystems.drivesubsystem import DriveSubsystem
 
 
 class ResetDrive(CommandBase):
-    def __init__(self, drive: DriveSubsystem, position: Pose2d = Pose2d()) -> None:
+    def __init__(self, drive: DriveSubsystem, position: Callable[[], Pose2d] = lambda: Pose2d()) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.drive = drive
@@ -19,7 +20,7 @@ class ResetDrive(CommandBase):
 
     def execute(self) -> None:
         self.drive.resetSwerveModules()
-        self.drive.setOdometryPosition(self.position)
+        self.drive.setOdometryPosition(self.position())
 
     def end(self, _interrupted: bool) -> None:
         DataLogManager.log("... DONE")

@@ -18,9 +18,9 @@
       "stopEvent": {
         "names": [
           "safe",
-          "mid",
-          "outtake",
-          "store"
+          "top",
+          "flickOuttake",
+          "safestore"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -54,16 +54,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.518816467083178,
-        "y": 4.711204276835755
+        "x": 6.457354147590948,
+        "y": 4.63774365130154
       },
       "prevControl": {
-        "x": 5.051256623671376,
-        "y": 4.72227109264909
+        "x": 5.989794304179147,
+        "y": 4.648810467114876
       },
       "nextControl": {
-        "x": 5.051256623671376,
-        "y": 4.72227109264909
+        "x": 5.989794304179147,
+        "y": 4.648810467114876
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -72,7 +72,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intakeFlange"
+          "intake"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -195,8 +195,8 @@
     {
       "position": 0.13902698863636376,
       "names": [
-        "flange",
-        "intakeFlange"
+        "cube",
+        "intake"
       ]
     }
   ]

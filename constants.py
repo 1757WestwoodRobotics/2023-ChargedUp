@@ -34,6 +34,7 @@ from wpimath.geometry import (
     Translation2d,
     Translation3d,
 )
+from wpimath.geometry._geometry import Transform2d
 from wpimath.system.plant import DCMotor
 from commands.arm.demostate import constants
 
@@ -483,7 +484,7 @@ kTrajectoryPositionPGain = 8
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 8
+kTrajectoryAnglePGain = 10
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -733,6 +734,14 @@ kArmTopScorePositionCone = Pose2d(
     41.615 * kMetersPerInch,
     Rotation2d.fromDegrees(163.491),
 )
+kArmTopScoreFlickRotation = Rotation2d.fromDegrees(-50)
+kArmTopScorePositionConeFlick = (
+    kArmTopScorePositionCone
+    + Transform2d(-constants.kArmWristLength, 0, 0)
+    + Transform2d(Translation2d(), kArmTopScoreFlickRotation)
+    + Transform2d(constants.kArmWristLength, 0, 0)
+)
+
 kArmTopScorePositionCube = Pose2d(
     -43.486 * kMetersPerInch,
     44.602 * kMetersPerInch,
@@ -787,7 +796,7 @@ kArmDoubleSubstationPositionCube = Pose2d(
 )
 kArmDoubleSubstationPositionCone = Pose2d(
     -14.816 * kMetersPerInch,
-    32.41 * kMetersPerInch,
+    34.41 * kMetersPerInch,
     Rotation2d.fromDegrees(-168.598),
 )
 kArmDoubleSubstationPositionConeFlange = Pose2d(
@@ -831,7 +840,7 @@ kArmTopSafePosition = Pose2d(
     Rotation2d.fromDegrees(51),
 )
 kArmGroundConeIntakePosition = Pose2d(
-    -27.619 * kMetersPerInch, -0.584 * kMetersPerInch, Rotation2d.fromDegrees(-153.766)
+    -22.679 * kMetersPerInch, -2.013 * kMetersPerInch, Rotation2d.fromDegrees(-147.56)
 )
 
 kArmFudgeFactorIncrements = 0.5 * constants.kMetersPerInch

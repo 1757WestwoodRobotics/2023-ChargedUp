@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.092465762271631,
-        "y": 5.041072819652434
+        "x": 1.8424079746797315,
+        "y": 5.017762357414739
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6330116957463834,
-        "y": 4.812198619724395
+        "x": 2.3829539081544837,
+        "y": 4.7888881574867
       },
       "holonomicAngle": 179.54846311069912,
       "isReversal": false,
@@ -17,8 +17,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "mid",
-          "outtake"
+          "safe",
+          "top",
+          "flickOuttake"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

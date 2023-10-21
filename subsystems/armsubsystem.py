@@ -97,7 +97,13 @@ class ArmSubsystem(SubsystemBase):
                             else constants.kArmTopScorePositionConeFlange
                         )
                         if SmartDashboard.getBoolean(constants.kFlangeModeKey, False)
-                        else constants.kArmTopScorePositionCone
+                        else (
+                            constants.kArmTopScorePositionConeFlick
+                            if SmartDashboard.getBoolean(
+                                constants.kFlangeHookKey, False
+                            )
+                            else constants.kArmTopScorePositionCone
+                        )
                     )
                 )
             elif self == ArmSubsystem.ArmState.GroundLoading:

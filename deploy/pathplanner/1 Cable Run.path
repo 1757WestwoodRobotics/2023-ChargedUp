@@ -18,8 +18,8 @@
       "stopEvent": {
         "names": [
           "safe",
-          "mid",
-          "outtake",
+          "top",
+          "flickOuttake",
           "safestore"
         ],
         "executionBehavior": "sequential",

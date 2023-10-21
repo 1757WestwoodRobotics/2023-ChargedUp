@@ -94,6 +94,11 @@ class AutonomousRoutine(SequentialCommandGroup):
             "outtake": SequentialCommandGroup(
                 ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.3)),
             ),
+            "flickOuttake": SequentialCommandGroup(
+                ParallelCommandGroup(SetArmHookState(True), WaitCommand(0.05)),
+                ParallelCommandGroup(GripperOuttake(grip), WaitCommand(0.3)),
+                SetArmHookState(False)
+            ),
         }
         self.paths = trajectoryFromFile(name)
         followCommands = [
@@ -103,9 +108,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                     [
                         GoToPoint(
                             drive,
-                            FollowTrajectory.allianceRespectivePoseFromState(
-                                path.getInitialState()
-                            ),
+                            path.getInitialState()
                         )
                     ],
                 )
@@ -117,9 +120,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                     [
                         GoToPoint(
                             drive,
-                            FollowTrajectory.allianceRespectivePoseFromState(
-                                path.getEndState()
-                            ),
+                            path.getEndState()
                         )
                         if drive
                         not in self.stopEventGroup(
@@ -135,7 +136,7 @@ class AutonomousRoutine(SequentialCommandGroup):
         super().__init__(
             ResetDrive(
                 drive,
-                FollowTrajectory.allianceRespectivePoseFromState(
+                lambda: FollowTrajectory.allianceRespectivePoseFromState(
                     self.paths[0].getInitialState()
                 ),
             ),
