@@ -66,6 +66,7 @@ class AutonomousRoutine(SequentialCommandGroup):
                 WaitCommand(0.1), [SetArmPositionSafeTop(arm)]
             ),
             "cube": CubeLights(light),
+            "cubeFin": CubeLights(light, True),
             "flange": ConeFlangeLights(light),
             "safestore": ParallelDeadlineGroup(
                 WaitCommand(0.4),
