@@ -22,8 +22,6 @@ class CubeLights(CommandBase):
     def isFinished(self) -> bool:
         return self.fin
 
-    def end(self, _interrupted: bool) -> None:
-        self.lights.offLights()
 
 
 class ConeLights(CommandBase):
@@ -42,16 +40,15 @@ class ConeLights(CommandBase):
     def isFinished(self) -> bool:
         return False
 
-    def end(self, _interrupted: bool) -> None:
-        self.lights.offLights()
 
 
 class ConeFlangeLights(CommandBase):
-    def __init__(self, lightSubsystem: LightSubsystem) -> None:
+    def __init__(self, lightSubsystem: LightSubsystem, fin: bool = False) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
 
         self.lights = lightSubsystem
+        self.fin = fin
         self.addRequirements([self.lights])
         SmartDashboard.putBoolean(constants.kFlangeModeKey, False)
 
@@ -61,7 +58,5 @@ class ConeFlangeLights(CommandBase):
         SmartDashboard.putBoolean(constants.kFlangeModeKey, True)
 
     def isFinished(self) -> bool:
-        return True
+        return self.fin
 
-    def end(self, _interrupted: bool) -> None:
-        self.lights.offLights()

@@ -854,6 +854,7 @@ kArmMaxOscillationAmount = Rotation2d.fromDegrees(10)
 
 # lights
 kCANdleID = 2
+kLightStateKey = "lights/state"
 
 
 # Logging
@@ -898,6 +899,7 @@ kIntakeHoldingPercent = 0.12
 
 kIntakeStateKey = "intake/state"
 kIntakeMotorRPMKey = "intake/RPM"
+kIntakeMotorHoldingKey = "intake/holding"
 kIntakeGearRatio = 15
 kCubeModeKey = "intake/CubeMode"
 kFlangeModeKey = "intake/flageMode"

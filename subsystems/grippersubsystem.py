@@ -2,7 +2,7 @@
 from enum import Enum, auto
 from ctre import SupplyCurrentLimitConfiguration
 from commands2 import SubsystemBase
-from wpilib import SmartDashboard
+from wpilib import SmartDashboard, RobotState
 from util.simfalcon import Falcon
 
 
@@ -51,6 +51,15 @@ class GripperSubsystem(SubsystemBase):
             self.motorIntake.get(Falcon.ControlMode.Velocity)
             / constants.kIntakeGearRatio,
         )
+        if RobotState.isEnabled():
+            SmartDashboard.putBoolean(
+                constants.kIntakeMotorHoldingKey,
+                abs(
+                    self.motorIntake.get(Falcon.ControlMode.Velocity)
+                    / constants.kIntakeGearRatio
+                )
+                < 50,
+            )
         if self.state == self.GripperState.Intake:
             if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
                 self.motorIntake.set(
