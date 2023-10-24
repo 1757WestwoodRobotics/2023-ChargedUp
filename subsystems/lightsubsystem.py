@@ -1,5 +1,6 @@
 from enum import Enum, auto
 from commands2 import SubsystemBase
+from ctre._ctre.led import LarsonAnimation
 
 from ctre.led import CANdle, RainbowAnimation, ColorFlowAnimation, StrobeAnimation
 from wpilib import RobotState, Timer
@@ -43,8 +44,8 @@ class LightSubsystem(SubsystemBase):
         self.estopAnim1 = StrobeAnimation(255, 0, 0, 255, 0.3, 17, 8)
         self.estopAnim2 = StrobeAnimation(255, 0, 0, 255, 0.3, 17, 8 + 17)
 
-        self.holdingAmination1 = StrobeAnimation(0, 255, 0, 255, 0.3, 17, 8)
-        self.holdingAnimation2 = StrobeAnimation(0, 255, 0, 255, 0.3, 17, 8 + 17)
+        self.holdingAmination1 = LarsonAnimation(0, 255, 0, 255, 0.7, 17, ledOffset = 8)
+        self.holdingAnimation2 = LarsonAnimation(0, 255, 0, 255, 0.7, 17, ledOffset =8 + 17)
 
         self.state = LightSubsystem.State.No
 
@@ -65,7 +66,7 @@ class LightSubsystem(SubsystemBase):
                 self.gamepieceTimer.reset()
                 self.gamepieceTimer.start()
 
-            if not self.gamepieceTimer.hasElapsed(2):
+            if not self.gamepieceTimer.hasElapsed(0.5):
                 self.light.animate(self.holdingAmination1)
                 self.light.animate(self.holdingAnimation2, 1)
                 SmartDashboard.putString(constants.kLightStateKey, str(LightSubsystem.State.Holding))

@@ -3,6 +3,7 @@ from enum import Enum, auto
 from ctre import SupplyCurrentLimitConfiguration
 from commands2 import SubsystemBase
 from wpilib import SmartDashboard, RobotState
+from wpimath.filter import Debouncer
 from util.simfalcon import Falcon
 
 
@@ -44,6 +45,8 @@ class GripperSubsystem(SubsystemBase):
         self.state = GripperSubsystem.GripperState.HoldingState
         SmartDashboard.putBoolean(constants.kCubeModeKey, False)
 
+        self.debouncer = Debouncer(0.1)
+
     def periodic(self) -> None:
         SmartDashboard.putString(constants.kIntakeStateKey, str(self.state))
         SmartDashboard.putNumber(
@@ -54,11 +57,11 @@ class GripperSubsystem(SubsystemBase):
         if RobotState.isEnabled():
             SmartDashboard.putBoolean(
                 constants.kIntakeMotorHoldingKey,
-                abs(
+                self.debouncer.calculate(abs(
                     self.motorIntake.get(Falcon.ControlMode.Velocity)
                     / constants.kIntakeGearRatio
                 )
-                < 50,
+                < 50),
             )
         if self.state == self.GripperState.Intake:
             if not SmartDashboard.getBoolean(constants.kCubeModeKey, False):  # Intake
