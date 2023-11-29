@@ -975,13 +975,14 @@ class ArmSubsystem(SubsystemBase):
                 + currentElbowRaw.radians()
             )
 
-        thetaDelta = self.thetaProfiledPID.calculate(self.expectedWrist, trueWristPos)
-        trueWristPos = (
-            thetaDelta
-            + self.expectedWrist
-            - SmartDashboard.getNumber("arm/wristAdjust", 0)
-            * constants.kRadiansPerDegree
-        )
+        if desiredInterpolation != ArmSubsystem.InterpolationMethod.NoInterp:
+            thetaDelta = self.thetaProfiledPID.calculate(self.expectedWrist, trueWristPos)
+            trueWristPos = (
+                thetaDelta
+                + self.expectedWrist
+                - SmartDashboard.getNumber("arm/wristAdjust", 0)
+                * constants.kRadiansPerDegree
+            )
 
         self.expectedWrist = trueWristPos
 
