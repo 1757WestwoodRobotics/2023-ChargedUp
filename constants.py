@@ -651,7 +651,7 @@ kWristArmIGain = 0.0
 kWristArmDGain = 0
 kWristArmInverted = True
 
-kWristArmGearRatio = (3 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
+kWristArmGearRatio = (1 / 1) * (58 / 10) * (58 / 18) * (60 / 12)
 kWristArmRotationKey = "arm/rotation/wrist"
 kWristTargetArmRotationKey = "arm/target/wrist"
 kWristFeedForwardLogKey = "arm/ff/wrist"
