@@ -8,7 +8,7 @@ Code for the FRC 1757 2023 Competition Bot
 
 [Website](https://whsrobotics.org)
 
-## Installation
+## Installation (but for landon specifically)
 
 ### Visual Studio 2019 redistributable
 
